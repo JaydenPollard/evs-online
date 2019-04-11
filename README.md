@@ -2,7 +2,7 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
-## Conventional Commits
+## Conventional Commits 
 
 Your commit messages must follow this format: 
 ```
