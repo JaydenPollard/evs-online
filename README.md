@@ -12,6 +12,8 @@ e.g.
 feat(evs-online): added a new menu
 ```
 
+You can generate your commit messages by running ```npm run commit```
+
 ## Available Scripts
 
 In the project directory, you can run:
