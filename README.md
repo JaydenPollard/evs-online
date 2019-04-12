@@ -2,6 +2,18 @@
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
+## Conventional Commits 
+
+Your commit messages must follow this format: 
+```
+<type>[optional scope]: <description>
+
+e.g. 
+feat(evs-online): added a new menu
+```
+
+You can generate your commit messages by running ```npm run commit```
+
 ## Available Scripts
 
 In the project directory, you can run:
