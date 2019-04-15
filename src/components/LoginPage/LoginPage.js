@@ -13,7 +13,7 @@ import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
 import withStyles from "@material-ui/core/styles/withStyles";
 import Image from "../../assests/popcorn-login-background.jpg";
-import Divider from "@material-ui/core/Divider";
+
 
 const styles = theme => ({
 	background: {
@@ -56,8 +56,8 @@ const styles = theme => ({
 		marginTop: theme.spacing.unit * 3
 	},
 	divider: {
-		height: theme.spacing.unit/5,
-		backgroundColor: "#000",
+		height: theme.spacing.unit/6,
+		backgroundColor: "#8c8c8c",
 		width: "80%",
 		marginTop: theme.spacing.unit*2,
 	}
@@ -99,7 +99,7 @@ function LogIn(props) {
 							type="submit"
 							fullWidth
 							variant="contained"
-							color="primary"
+							color="inherit"
 							className={classes.submit}
 						>
 							Log in
@@ -107,6 +107,7 @@ function LogIn(props) {
 					</form>
 					<div className={classes.divider} />
 					<form className={classes.form}>
+
 					</form>
 				</Paper>
 			</main>
