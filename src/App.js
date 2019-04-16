@@ -1,11 +1,10 @@
-import React, { Component } from "react";
-import LayoutExample from "./layouts/LayoutExample";
+import React from "react";
 import LoginPage from "./layouts/LoginPageLayout";
 
-class App extends Component {
-	render() {
-    return <LoginPage/>
-	}
-}
+const App = () => (
+	<div>
+		<LoginPage></LoginPage>
+	</div>
 
+)
 export default App;
