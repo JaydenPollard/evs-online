@@ -1,19 +1,18 @@
-import React from "react";
-import PropTypes from "prop-types";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
+import Checkbox from "@material-ui/core/Checkbox";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import FormControl from "@material-ui/core/FormControl";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Checkbox from "@material-ui/core/Checkbox";
+import Image from "../../assests/popcorn-login-background.jpg";
 import Input from "@material-ui/core/Input";
 import InputLabel from "@material-ui/core/InputLabel";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Paper from "@material-ui/core/Paper";
+import PropTypes from "prop-types";
+import React from "react";
 import Typography from "@material-ui/core/Typography";
 import withStyles from "@material-ui/core/styles/withStyles";
-import Image from "../../assests/popcorn-login-background.jpg";
-
 
 const styles = theme => ({
 	background: {
@@ -26,15 +25,15 @@ const styles = theme => ({
 		position: "relative"
 	},
 	main: {
-		width: "100%",
+		width: "80vw",
 		display: "block", // Fix IE 11 issue.
 		marginLeft: "auto",
 		marginRight: "auto",
-		[theme.breakpoints.up(400 + theme.spacing.unit * 3 * 2)]: {
-			width: 400
+		[theme.breakpoints.up("md")]: {
+			width: 700
 		},
 		paddingTop: "10vh",
-		top: "10%"
+		top: "10vh"
 	},
 	paper: {
 		display: "flex",
@@ -56,14 +55,14 @@ const styles = theme => ({
 		marginTop: theme.spacing.unit * 3
 	},
 	divider: {
-		height: theme.spacing.unit/6,
+		height: theme.spacing.unit / 6,
 		backgroundColor: "#8c8c8c",
 		width: "80%",
-		marginTop: theme.spacing.unit*2,
+		marginTop: theme.spacing.unit * 2
 	}
 });
 
-function LogIn(props) {
+function LoginPage(props) {
 	const { classes } = props;
 
 	return (
@@ -107,7 +106,7 @@ function LogIn(props) {
 					</form>
 					<div className={classes.divider} />
 					<form className={classes.form}>
-
+						{/* TODO: Add Google and Facebook Login Button here */}
 					</form>
 				</Paper>
 			</main>
@@ -115,8 +114,8 @@ function LogIn(props) {
 	);
 }
 
-LogIn.propTypes = {
+LoginPage.propTypes = {
 	classes: PropTypes.object.isRequired
 };
 
-export default withStyles(styles)(LogIn);
+export default withStyles(styles)(LoginPage);

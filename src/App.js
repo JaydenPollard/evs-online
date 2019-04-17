@@ -1,10 +1,12 @@
+import HomePage from "./layouts/pages/HomePage";
+import LoginPage from "./layouts/pages/LoginPage";
 import React from "react";
-import LoginPage from "./layouts/LoginPageLayout";
+import { Route } from "react-router-dom";
 
 const App = () => (
 	<div>
-		<LoginPage></LoginPage>
+		<Route path="/" exact component={HomePage} />
+		<Route path="/login" exact component={LoginPage} />
 	</div>
-
-)
+);
 export default App;
