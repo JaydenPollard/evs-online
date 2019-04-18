@@ -1,3 +1,4 @@
+import ArrowBackIcon from "@material-ui/icons/ArrowBackRounded";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import Checkbox from "@material-ui/core/Checkbox";
@@ -13,6 +14,7 @@ import PropTypes from "prop-types";
 import React from "react";
 import Typography from "@material-ui/core/Typography";
 import withStyles from "@material-ui/core/styles/withStyles";
+import { Link } from "react-router-dom";
 
 const styles = theme => ({
 	background: {
@@ -29,11 +31,10 @@ const styles = theme => ({
 		display: "block", // Fix IE 11 issue.
 		marginLeft: "auto",
 		marginRight: "auto",
+		paddingTop: "10vh",
 		[theme.breakpoints.up("md")]: {
 			width: 700
-		},
-		paddingTop: "10vh",
-		top: "10vh"
+		}
 	},
 	paper: {
 		display: "flex",
@@ -59,6 +60,12 @@ const styles = theme => ({
 		backgroundColor: "#8c8c8c",
 		width: "80%",
 		marginTop: theme.spacing.unit * 2
+	},
+	button: {
+		alignSelf: "start",
+		backgroundColor: "#e5e5e5",
+		borderRadius: "5px",
+		padding: "0 5px 4px"
 	}
 });
 
@@ -70,6 +77,13 @@ function LoginPage(props) {
 			<main className={classes.main}>
 				<CssBaseline />
 				<Paper className={classes.paper}>
+					<Button className={classes.button} color="default">
+						<Link to="/home" style={{ textDecoration: "none" }}>
+							<ArrowBackIcon style={{ transform: "translateY(7px)" }} />
+							Return
+						</Link>
+					</Button>
+
 					<Avatar className={classes.avatar}>
 						<LockOutlinedIcon />
 					</Avatar>
@@ -104,7 +118,7 @@ function LoginPage(props) {
 							Log in
 						</Button>
 					</form>
-					<div className={classes.divider} />
+					{/* <div className={classes.divider} /> */}
 					<form className={classes.form}>
 						{/* TODO: Add Google and Facebook Login Button here */}
 					</form>

@@ -1,17 +1,17 @@
 import AppBar from "../../components/AppBar";
 import PropTypes from "prop-types";
 import React from "react";
-import Typography from "@material-ui/core/Typography";
 import withStyles from "@material-ui/core/styles/withStyles";
-import { Link } from "react-router-dom";
-import Carousel from "../../components/Carousel";
+import Image from "../../assests/wolf-temp-hero.jpg";
 
 const styles = theme => ({
 	background: {
 		width: "100%",
 		height: "4000px",
-		backgroundColor: "#000",
-		position: "relative"
+		backgroundColor: "#ccc",
+		position: "relative",
+		margin: "0",
+		padding: "0"
 	},
 	main: {
 		width: "100%",
@@ -24,7 +24,7 @@ const styles = theme => ({
 		[theme.breakpoints.up("lg")]: {
 			width: 1200
 		},
-		border: "1px solid #000"
+		border: "1px solid rgb(255, 0, 0)"
 	}
 });
 
@@ -33,9 +33,8 @@ function HomePage(props) {
 	return (
 		<div className={classes.background}>
 			<AppBar />
-			<div className={classes.main}>
-				
-			</div>
+			<img src={Image} alt="" width="100%" />
+			<div className={classes.main} />
 		</div>
 	);
 }
