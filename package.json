@@ -19,7 +19,14 @@
     "@commitlint/cli": "^7.5.2",
     "@commitlint/config-conventional": "^7.5.0",
     "cz-conventional-changelog": "^2.1.0",
-    "husky": "^1.3.1"
+    "eslint-config-airbnb": "^17.1.0",
+    "eslint-config-prettier": "4.1.0",
+    "eslint-plugin-import": "^2.14.0",
+    "eslint-plugin-jsx-a11y": "^6.1.1",
+    "eslint-plugin-react": "^7.11.0",
+    "husky": "^1.3.1",
+    "lint-staged": "^8.1.5",
+    "prettier": "1.17.0"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -27,10 +34,8 @@
     "test": "set CI=true && react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
     "commit": "npx git-cz",
-    "lint": "eslint src"
-  },
-  "eslintConfig": {
-    "extends": "react-app"
+    "lint": "eslint src",
+    "prettier": "prettier --write src/**/*.{js,jsx,css}"
   },
   "browserslist": [
     ">0.2%",
@@ -40,8 +45,13 @@
   ],
   "husky": {
     "hooks": {
-      "pre-commit": "npm test",
+      "pre-commit": "npm test && lint-staged",
       "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+    }
+  },
+  "lint-staged": {
+    "linters": {
+      "src/**/*.{js,jsx,css}": ["prettier --write", "git add"]
     }
   },
   "config": {

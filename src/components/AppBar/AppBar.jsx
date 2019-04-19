@@ -13,54 +13,57 @@ import { withStyles } from "@material-ui/core/styles";
 import { appBarStyles } from "./AppBarStyles";
 
 function SearchAppBar(props) {
-  const { classes } = props;
-  return (
-    <div className={classes.root}>
-      <AppBar position="static" color="primary">
-        <Toolbar>
-          <IconButton
-            className={classes.menuButton}
-            color="inherit"
-            aria-label="Open drawer"
-          >
-            <MenuIcon />
-          </IconButton>
-          <Typography
-            className={classes.title}
-            variant="h4"
-            color="inherit"
-            noWrap
-          >
-            Epic Video Store
-          </Typography>
-          <div className={classes.grow} />
-          <div className={classes.search}>
-            <div className={classes.searchIcon}>
-              <SearchIcon />
-            </div>
-            <InputBase
-              placeholder="Search…"
-              classes={{
-                root: classes.inputRoot,
-                input: classes.inputInput
-              }}
-            />
-          </div>
-          <div>
-            <Button variant="contained" color="inherit">
-              <Link to="/login" style={{ textDecoration: "none" }}>
-                Login
-              </Link>
-            </Button>
-          </div>
-        </Toolbar>
-      </AppBar>
-    </div>
-  );
+    const { classes } = props;
+    return (
+        <div className={classes.root}>
+            <AppBar position="static" color="primary">
+                <Toolbar>
+                    <IconButton
+                        className={classes.menuButton}
+                        color="inherit"
+                        aria-label="Open drawer"
+                    >
+                        <MenuIcon />
+                    </IconButton>
+                    <Typography
+                        className={classes.title}
+                        variant="h4"
+                        color="inherit"
+                        noWrap
+                    >
+                        Epic Video Store
+                    </Typography>
+                    <div className={classes.grow} />
+                    <div className={classes.search}>
+                        <div className={classes.searchIcon}>
+                            <SearchIcon />
+                        </div>
+                        <InputBase
+                            placeholder="Search…"
+                            classes={{
+                                root: classes.inputRoot,
+                                input: classes.inputInput
+                            }}
+                        />
+                    </div>
+                    <div>
+                        <Button variant="contained" color="inherit">
+                            <Link
+                                to="/login"
+                                style={{ textDecoration: "none" }}
+                            >
+                                Login
+                            </Link>
+                        </Button>
+                    </div>
+                </Toolbar>
+            </AppBar>
+        </div>
+    );
 }
 
 SearchAppBar.propTypes = {
-  classes: PropTypes.object.isRequired
+    classes: PropTypes.object.isRequired
 };
 
 export default withStyles(appBarStyles)(SearchAppBar);

@@ -5,12 +5,12 @@ import HomePage from "./layouts/HomePageLayout/HomePageLayout";
 import LoginPage from "./layouts/LoginPageLayout/LoginPageLayout";
 
 const App = () => (
-  <BrowserRouter>
-    <Switch>
-      <Route path="/home" exact component={HomePage} />
-      <Route path="/login" exact component={LoginPage} />
-      <Route component={HomePage} />
-    </Switch>
-  </BrowserRouter>
+    <BrowserRouter>
+        <Switch>
+            <Route path="/home" exact component={HomePage} />
+            <Route path="/login" exact component={LoginPage} />
+            <Route component={HomePage} />
+        </Switch>
+    </BrowserRouter>
 );
 export default App;
