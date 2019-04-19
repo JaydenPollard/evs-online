@@ -1,4 +1,3 @@
-/* eslint-disable jsx-a11y/alt-text */
 import React from "react";
 import { AutoRotatingCarousel } from "material-auto-rotating-carousel";
 import Button from "@material-ui/core/Button";
@@ -9,10 +8,12 @@ class Carousel extends React.Component {
   state = {
     open: false
   };
+
   constructor(props) {
     super(props);
     this.setState(this.state);
   }
+
   render() {
     return (
       <div style={{ position: "relative", width: "100%", height: 500 }}>

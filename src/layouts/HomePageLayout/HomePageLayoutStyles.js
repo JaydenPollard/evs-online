@@ -1,4 +1,4 @@
-export const homePageStyles = theme => ({
+export const homePageLayoutStyles = theme => ({
   background: {
     backgroundColor: "#ccc",
     position: "relative",
@@ -6,8 +6,6 @@ export const homePageStyles = theme => ({
     padding: "0"
   },
   main: {
-    width: "100%",
-    height: "100%",
     display: "block", // Fix IE 11 issue.
     marginLeft: "auto",
     marginRight: "auto",
