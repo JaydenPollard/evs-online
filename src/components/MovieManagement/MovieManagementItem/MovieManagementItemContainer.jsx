@@ -7,7 +7,8 @@ const mockMovie = {
     movieRating: "R",
     movieLength: "120 min",
     movieGenre: "Action",
-    moviePrice: "$19.99"
+    moviePrice: "$19.99",
+    movieReleaseDate: "04/05/2018"
 };
 
 const MovieManagementItemContainer = () => {

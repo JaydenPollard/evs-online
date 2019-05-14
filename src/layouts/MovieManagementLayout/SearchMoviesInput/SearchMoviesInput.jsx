@@ -1,10 +1,18 @@
 import * as React from "react";
-import InputBase from "@material-ui/core/InputBase";
+import { InputBase, Paper, Button } from "@material-ui/core";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { requestSearchCatalogue } from "../../../reducers/search-catalogue/search-catalogue-actions";
 
-const SearchMoviesLayout = props => {
+const searchMoviesInputStyle = {
+    display: "flex",
+    width: "40%",
+    margin: "auto",
+    marginBottom: "16px",
+    padding: "8px"
+};
+
+const SearchMoviesInput = props => {
     const [searchKeywords, setSearchKeywords] = React.useState("");
 
     function handleSearch() {
@@ -18,14 +26,15 @@ const SearchMoviesLayout = props => {
     };
 
     return (
-        <React.Fragment>
+        <Paper style={searchMoviesInputStyle}>
             <InputBase
                 onChange={handleSearchInput}
                 value={searchKeywords}
-                placeholder="Search..."
+                placeholder="Search for movies to modify..."
+                fullWidth={true}
             />
-            <div>Search Movies Layout</div>
-        </React.Fragment>
+            <Button onClick={handleSearch}>Search</Button>
+        </Paper>
     );
 };
 
@@ -36,15 +45,15 @@ function mapDispatchToProps(dispatch) {
     };
 }
 
-SearchMoviesLayout.propTypes = {
+SearchMoviesInput.propTypes = {
     requestSearchCatalogue: PropTypes.func
 };
 
-SearchMoviesLayout.defaultProps = {
+SearchMoviesInput.defaultProps = {
     requestSearchCatalogue: () => {}
 };
 
 export default connect(
     null,
     mapDispatchToProps
-)(SearchMoviesLayout);
+)(SearchMoviesInput);

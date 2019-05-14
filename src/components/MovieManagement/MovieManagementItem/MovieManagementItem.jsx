@@ -2,18 +2,19 @@ import * as React from "react";
 import { Paper, Typography, Grid, CardMedia, Button } from "@material-ui/core";
 import stockMovieImage from "../../../assests/stockMovieImage.jpg";
 
-const style = {
-    padding: "16px"
+const imagePreviewStyle = {
+    height: "200px",
+    width: "140px"
 };
 
 const MovieManagementItem = props => {
     const { movie } = props;
     return (
-        <Paper style={style}>
+        <Paper style={{ padding: 16 }}>
             <Grid container direction="row" spacing={16}>
                 <Grid item>
                     <CardMedia
-                        style={{ height: 200, width: 140 }}
+                        style={imagePreviewStyle}
                         title={movie.movieName}
                         image={stockMovieImage}
                     />
@@ -31,6 +32,7 @@ const MovieManagementItem = props => {
                                 <Typography>Rating:</Typography>
                                 <Typography>Length:</Typography>
                                 <Typography>Genre:</Typography>
+                                <Typography>Release Date:</Typography>
                             </Grid>
                         </Grid>
                         <Grid item>
@@ -38,6 +40,9 @@ const MovieManagementItem = props => {
                                 <Typography>{movie.movieRating}</Typography>
                                 <Typography>{movie.movieLength}</Typography>
                                 <Typography>{movie.movieGenre}</Typography>
+                                <Typography>
+                                    {movie.movieReleaseDate}
+                                </Typography>
                             </Grid>
                         </Grid>
                     </Grid>
