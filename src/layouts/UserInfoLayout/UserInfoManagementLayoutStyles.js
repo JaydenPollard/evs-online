@@ -1,10 +1,6 @@
-import Image from "../../assests/popcorn-login-background.jpg";
-
-export const loginPageLayoutStyles = theme => ({
+export const userInfoManagementStyles = theme => ({
     background: {
-        width: "100vw",
-        height: "100vh",
-        backgroundImage: `url(${Image})`,
+        backgroundColor: "#f7fbff",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
         backgroundSize: "cover",

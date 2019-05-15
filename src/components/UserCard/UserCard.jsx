@@ -10,11 +10,26 @@ const UserCard = () => {
     return (
         <Card>
             <CardContent>
-                <Typography>User Basic Info</Typography>
-                <Typography>Name:</Typography>
-                <Typography>User Type:</Typography>
-                <Typography>Email:</Typography>
-                <Typography>Phone Number:</Typography>
+                <Grid container spacing={24}>
+                    <Grid item xs={12}>
+                        <Typography>User Basic Info</Typography>
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                        <Typography>Name: Sam Smith</Typography>
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                        <Typography>DoB: 11/9/2000</Typography>
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                        <Typography>Joined Date:14/5/2019</Typography>
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                        <Typography>Memeber Type:</Typography>
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                        <Typography>Phone Number:</Typography>
+                    </Grid>
+                </Grid>
             </CardContent>
             <CardActions>
                 <Button size="small">Edit</Button>
@@ -23,4 +38,4 @@ const UserCard = () => {
     );
 };
 
-export default UserCard;
+export default withStyles()(UserCard);

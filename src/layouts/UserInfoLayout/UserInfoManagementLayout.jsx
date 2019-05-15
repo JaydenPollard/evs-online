@@ -1,27 +1,41 @@
 import React from "react";
 import Grid from "@material-ui/core/Grid";
+import PropTypes from "prop-types";
+import withStyles from "@material-ui/core/styles/withStyles";
 import UserCard from "../../components/UserCard/UserCard";
+import { userInfoManagementStyles } from "./UserInfoManagementLayoutStyles";
+import AppBar from "../../components/AppBar/AppBar";
 
-const UserInfoManagementLayout = () => {
+function UserInfoManagementLayout(props) {
+    const { classes } = props;
     return (
-        <Grid container spacing={24}>
-            <Grid item xs={6}>
-                <UserCard />
-            </Grid>
-            <Grid item xs={6}>
-                <UserCard />
-            </Grid>
-            <Grid item xs={6}>
-                <UserCard />
-            </Grid>
-            <Grid item xs={6}>
-                <UserCard />
-            </Grid>
-            <Grid item xs={6}>
-                <UserCard />
-            </Grid>
-        </Grid>
+        <div className={classes.background}>
+            <AppBar />
+            <div className={classes.main}>
+                <Grid container spacing={24}>
+                    <Grid item xs={12}>
+                        <UserCard />
+                    </Grid>
+                    <Grid item xs={12}>
+                        <UserCard />
+                    </Grid>
+                    <Grid item xs={12}>
+                        <UserCard />
+                    </Grid>
+                    <Grid item xs={12}>
+                        <UserCard />
+                    </Grid>
+                    <Grid item xs={12}>
+                        <UserCard />
+                    </Grid>
+                </Grid>
+            </div>
+        </div>
     );
+}
+
+UserInfoManagementLayout.propTypes = {
+    classes: PropTypes.object.isRequired
 };
 
-export default UserInfoManagementLayout;
+export default withStyles(userInfoManagementStyles)(UserInfoManagementLayout);
