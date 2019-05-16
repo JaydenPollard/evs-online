@@ -24,7 +24,7 @@ function LoginPageLayout(props) {
             <main className={classes.main}>
                 <CssBaseline />
                 <Paper className={classes.paper}>
-                    <Button className={classes.button} color="default">
+                    <Button className={classes.button} color="primary">
                         <Link to="/home" style={{ textDecoration: "none" }}>
                             <ArrowBackIcon
                                 style={{ transform: "translateY(7px)" }}
@@ -33,7 +33,7 @@ function LoginPageLayout(props) {
                         </Link>
                     </Button>
 
-                    <Avatar className={classes.avatar}>
+                    <Avatar className={classes.avatar} color="primary">
                         <LockOutlinedIcon />
                     </Avatar>
                     <Typography component="h1" variant="h5">
@@ -62,7 +62,7 @@ function LoginPageLayout(props) {
                         </FormControl>
                         <FormControlLabel
                             control={
-                                <Checkbox value="remember" color="primary" />
+                                <Checkbox value="remember" color="secondary" />
                             }
                             label="Remember me"
                         />

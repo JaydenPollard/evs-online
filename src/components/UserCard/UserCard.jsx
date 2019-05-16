@@ -32,7 +32,7 @@ const UserCard = () => {
                 </Grid>
             </CardContent>
             <CardActions>
-                <Button size="small">Edit</Button>
+                <Button>Edit</Button>
             </CardActions>
         </Card>
     );
