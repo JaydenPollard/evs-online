@@ -13,21 +13,9 @@ function UserInfoManagementLayout(props) {
             <AppBar />
             <div className={classes.main}>
                 <Grid container spacing={24}>
-                    <Grid item xs={12}>
-                        <UserCard />
-                    </Grid>
-                    <Grid item xs={12}>
-                        <UserCard />
-                    </Grid>
-                    <Grid item xs={12}>
-                        <UserCard />
-                    </Grid>
-                    <Grid item xs={12}>
-                        <UserCard />
-                    </Grid>
-                    <Grid item xs={12}>
-                        <UserCard />
-                    </Grid>
+                    <UserCard />
+                    <UserCard />
+                    <UserCard />
                 </Grid>
             </div>
         </div>
