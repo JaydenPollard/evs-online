@@ -16,17 +16,37 @@ const imagePreviewStyle = {
     marginRight: "16px"
 };
 
+const moviesLayoutStyle = {
+    width: "40%",
+    margin: "auto",
+    marginTop: "16px",
+    padding: "16px"
+};
+
 const AddMoviesLayout = () => {
-    const moviesLayoutStyle = {
-        width: "80%",
-        margin: "auto",
-        marginTop: "16px",
-        padding: "16px"
+    // Have to make it a readable format..
+    // https://codepen.io/hartzis/pen/VvNGZP
+    const [movieImage, setMovieImage] = React.useContext(stockMovieImage);
+
+    const handleImageSelect = event => {
+        event.preventDefault();
+
+        const reader = new FileReader();
+        reader.readAsDataURL(event.target.files[0]);
+        reader.onloadend = () => {
+            setMovieImage(reader.result);
+        };
     };
 
     return (
-        <React.Fragment>
+        <Grid container direction="column" justify="center" alignItems="center">
             <AppBar />
+            <Typography variant="h2" style={{ marginTop: 16 }}>
+                Add a Movie
+            </Typography>
+            <Typography variant="subtitle1">
+                Enter the movie details here:
+            </Typography>
             <Paper style={moviesLayoutStyle}>
                 <Grid
                     container
@@ -35,10 +55,6 @@ const AddMoviesLayout = () => {
                     alignItems="center"
                     spacing={8}
                 >
-                    <Typography variant="h3">Add a Movie</Typography>
-                    <Typography variant="subtitle1">
-                        Enter the movie details here:
-                    </Typography>
                     <Grid
                         container
                         direction="row"
@@ -46,11 +62,32 @@ const AddMoviesLayout = () => {
                         alignItems="center"
                         spacing={8}
                     >
-                        <CardMedia
-                            style={imagePreviewStyle}
-                            title="Uploaded Movie Image Preview"
-                            image={stockMovieImage}
-                        />
+                        <Grid item>
+                            <Grid
+                                container
+                                direction="column"
+                                justify="center"
+                                alignItems="center"
+                            >
+                                <CardMedia
+                                    style={imagePreviewStyle}
+                                    title="Uploaded Movie Image Preview"
+                                    image={movieImage}
+                                />
+                                <input
+                                    id="upload-image-button"
+                                    accept="image/*"
+                                    type="file"
+                                    style={{ display: "none" }}
+                                    onChange={handleImageSelect}
+                                />
+                                <label htmlFor="upload-image-button">
+                                    <Button component="span">
+                                        Upload Movie Image
+                                    </Button>
+                                </label>
+                            </Grid>
+                        </Grid>
                         <Grid item>
                             <Grid
                                 container
@@ -119,13 +156,13 @@ const AddMoviesLayout = () => {
                                         autoComplete="movieReleaseDate"
                                     />
                                 </Grid>
-                                <Button>Add Movie</Button>
                             </Grid>
                         </Grid>
                     </Grid>
                 </Grid>
+                <Button style={{ float: "right" }}>Add Movie</Button>
             </Paper>
-        </React.Fragment>
+        </Grid>
     );
 };
 
