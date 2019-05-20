@@ -1,5 +1,6 @@
 import * as React from "react";
 import { Paper, Typography, Grid, CardMedia, Button } from "@material-ui/core";
+import { Link } from "react-router-dom";
 import stockMovieImage from "../../../assests/stockMovieImage.jpg";
 
 const imagePreviewStyle = {
@@ -20,12 +21,19 @@ const MovieManagementItem = props => {
                     />
                 </Grid>
                 <Grid item style={{ width: 440 }}>
-                    <Typography variant="subtitle1">
-                        {movie.movieName}
-                    </Typography>
-                    <Typography variant="subtitle1">
-                        {movie.moviePrice}
-                    </Typography>
+                    <Grid
+                        container
+                        direction="row"
+                        justify="space-between"
+                        alignItems="center"
+                    >
+                        <Typography variant="subtitle1">
+                            {movie.movieName}
+                        </Typography>
+                        <Typography variant="subtitle1">
+                            {movie.moviePrice}
+                        </Typography>
+                    </Grid>
                     <Grid container direction="row" spacing={8}>
                         <Grid item>
                             <Grid container direction="column">
@@ -54,7 +62,12 @@ const MovieManagementItem = props => {
                         egestas id eu urna. Maecenas in leo efficitur, volutpat
                         purus vitae, malesuada erat.
                     </Typography>
-                    <Button>Edit Movie Details</Button>
+                    <Button
+                        component={Link}
+                        to={`/management/movie/${movie.movieID}/edit`}
+                    >
+                        Edit Movie Details
+                    </Button>
                     <Button>Remove Movie</Button>
                 </Grid>
             </Grid>

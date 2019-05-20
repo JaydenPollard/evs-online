@@ -3,6 +3,7 @@ import MovieManagementItem from "./MovieManagementItem";
 import { Grid } from "@material-ui/core";
 
 const mockMovie = {
+    movieID: "M123",
     movieName: "Movie Name",
     movieRating: "R",
     movieLength: "120 min",
@@ -13,7 +14,7 @@ const mockMovie = {
 
 const MovieManagementItemContainer = () => {
     return (
-        <Grid item>
+        <Grid item style={{ margin: 8 }}>
             <MovieManagementItem movie={mockMovie} />
         </Grid>
     );

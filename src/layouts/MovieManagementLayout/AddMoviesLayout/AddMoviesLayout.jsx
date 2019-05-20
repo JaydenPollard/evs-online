@@ -74,7 +74,7 @@ const AddMoviesLayout = () => {
                                         required
                                         id="movieRating"
                                         name="movieRating"
-                                        label="Movie Rating"
+                                        label="Movie Rating (1~10)"
                                         fullWidth
                                         autoComplete="movieRating"
                                     />
