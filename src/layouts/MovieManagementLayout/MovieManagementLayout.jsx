@@ -26,9 +26,12 @@ const MovieManagementPage = () => {
                 <AppBar />
                 <Typography
                     variant="h2"
-                    style={{ marginTop: 8, marginBottom: 8 }}
+                    style={{ marginTop: 16, marginBottom: 8 }}
                 >
                     Movie Management
+                </Typography>
+                <Typography variant="subtitle1">
+                    Search for movies to manage:
                 </Typography>
                 <SearchMoviesInput />
                 {/* Placeholders */}

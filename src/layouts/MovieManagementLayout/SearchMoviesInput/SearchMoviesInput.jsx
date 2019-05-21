@@ -30,7 +30,7 @@ const SearchMoviesInput = props => {
             <InputBase
                 onChange={handleSearchInput}
                 value={searchKeywords}
-                placeholder="Search for movies to modify..."
+                placeholder="Search for movies..."
                 fullWidth={true}
             />
             <Button onClick={handleSearch}>Search</Button>
