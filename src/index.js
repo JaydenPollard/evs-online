@@ -4,7 +4,6 @@ import React from "react";
 import ReactDOM from "react-dom";
 import { BrowserRouter } from "react-router-dom";
 import { createMuiTheme, MuiThemeProvider } from "@material-ui/core";
-import { blue, amber } from "@material-ui/core/colors";
 import App from "./App";
 
 const theme = createMuiTheme({
@@ -15,7 +14,10 @@ const theme = createMuiTheme({
         secondary: {
             main: "#ff5722"
         },
-        type: "dark"
+        type: "dark",
+        typography: {
+            useNextVariants: true
+        }
     }
 });
 

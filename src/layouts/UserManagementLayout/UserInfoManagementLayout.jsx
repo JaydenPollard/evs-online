@@ -8,14 +8,14 @@ import AppBar from "../../components/AppBar/AppBar";
 
 function UserInfoManagementLayout(props) {
     const { classes } = props;
+    const userId = "C1001";
     return (
         <div className={classes.background}>
             <AppBar />
             <div className={classes.main}>
                 <Grid container spacing={24}>
-                    <UserCard />
-                    <UserCard />
-                    <UserCard />
+                    {/* for each userid found in database ref, create a new user acrd and pass the id as arguements */}
+                    <UserCard dataId={userId} />
                 </Grid>
             </div>
         </div>
