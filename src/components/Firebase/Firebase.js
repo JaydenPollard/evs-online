@@ -13,5 +13,9 @@ const firebaseConfig = {
 //init firebase
 Firebase.initializeApp(firebaseConfig);
 
+const databaseRef = Firebase.database().ref();
+
+export const orderRef = databaseRef.child("Order");
+
 //import this file to use firebase in your component
 export default Firebase;
