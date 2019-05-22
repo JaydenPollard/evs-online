@@ -1,6 +1,9 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-console */
 /* eslint-disable func-names */
 import React, { useState, useEffect } from "react";
+import InputAdornment from "@material-ui/core/InputAdornment";
+import { ValidatorForm, TextValidator } from "react-material-ui-form-validator";
 import {
     Typography,
     Grid,
@@ -25,8 +28,9 @@ const firebaseConfig = {
 };
 firebase.initializeApp(firebaseConfig);
 
-// const UserCard = props => {
-function UserCard(props) {
+const UserCard = props => {
+    // function UserCard(props) {
+
     const rootRef = firebase
         .database()
         .ref()
@@ -70,7 +74,7 @@ function UserCard(props) {
         setMemberType(e.target.value);
     };
     const handlePhoneNumChange = e => {
-        // Creates a pattern that matches ONLY NUMBER and check if the target.value has the pattern or not
+        // Creates a pattern that matches ONLY NUMBER or EMPTY STRING and check if the target.value has the pattern or not
         const re = /^[0-9\b]+$/;
         if (e.target.value === "" || re.test(e.target.value)) {
             setPhoneNum(e.target.value);
@@ -156,28 +160,26 @@ function UserCard(props) {
                 console.log(error.code);
             }
         );
-        // eslint-disable-next-line react-hooks/exhaustive-deps. Stops Quickfix from adding rootRef here
+        // TODO: Investigate why rootRef is causing problem when passed into 2nd arg
     }, [props.userId]);
 
     return (
         <Grid item xs={12}>
             <Card>
                 <CardContent>
-                    <form autoComplete="off" onSubmit={handleSubmit}>
+                    <ValidatorForm autoComplete="off" onSubmit={handleSubmit}>
                         <Grid container spacing={24}>
                             <Grid item xs={12}>
                                 <Typography>User Basic Info</Typography>
                             </Grid>
                             <Grid item xs={12} sm={6}>
                                 <Typography>Name:</Typography>
-                                <FormControl>
-                                    <Input
-                                        placeholder="Name"
-                                        value={name}
-                                        onChange={handleNameChange}
-                                        required
-                                    />
-                                </FormControl>
+                                <Input
+                                    placeholder="Name"
+                                    value={name}
+                                    onChange={handleNameChange}
+                                    required
+                                />
                             </Grid>
                             <Grid item xs={12} sm={6}>
                                 <Typography>DoB:</Typography>
@@ -195,14 +197,15 @@ function UserCard(props) {
                             </Grid>
                             <Grid item xs={12} sm={6}>
                                 <Typography>Email:</Typography>
-                                <FormControl>
-                                    <Input
-                                        placeholder="Email"
-                                        value={email}
-                                        onChange={handleEmailChange}
-                                        required
-                                    />
-                                </FormControl>
+                                <TextValidator
+                                    name="email"
+                                    placeholder="Email"
+                                    value={email}
+                                    onChange={handleEmailChange}
+                                    validators={["isEmail"]}
+                                    errorMessages={["Email is not valid"]}
+                                    required
+                                />
                             </Grid>
                             <Grid item xs={12} sm={6}>
                                 <Typography>Joined Date:</Typography>
@@ -239,38 +242,43 @@ function UserCard(props) {
                             </Grid>
                             <Grid item xs={12} sm={6}>
                                 <Typography>Phone Number:</Typography>
-                                <FormControl>
-                                    <Input
-                                        placeholder="Phone Number"
-                                        value={phoneNum}
-                                        onChange={handlePhoneNumChange}
-                                        required
-                                    />
-                                </FormControl>
+                                <Input
+                                    placeholder="Phone Number"
+                                    value={phoneNum}
+                                    onChange={handlePhoneNumChange}
+                                    required
+                                    startAdornment={
+                                        <InputAdornment position="start">
+                                            +64
+                                        </InputAdornment>
+                                    }
+                                />
                             </Grid>
-                            <Grid item xs={12}>
+                            <Grid item xs={12} sm={6}>
                                 <Typography>Address:</Typography>
                                 <Input
                                     placeholder="Address"
                                     value={address}
                                     onChange={handleAddressChange}
                                     required
-                                    fullWidth
+                                    multiline
                                 />
                             </Grid>
-                            <Button
-                                type="submit"
-                                variant="contained"
-                                color="inherit"
-                            >
-                                Submit Changes
-                            </Button>
+                            <Grid item xs={12} sm={12}>
+                                <Button
+                                    type="submit"
+                                    variant="contained"
+                                    color="inherit"
+                                >
+                                    Submit Changes
+                                </Button>
+                            </Grid>
                         </Grid>
-                    </form>
+                    </ValidatorForm>
                 </CardContent>
             </Card>
         </Grid>
     );
-}
+};
 
 export default UserCard;
