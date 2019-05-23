@@ -1,11 +1,10 @@
 import * as React from "react";
-import { InputBase, Paper, Button } from "@material-ui/core";
+import { TextField, Paper, Button } from "@material-ui/core";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { requestSearchCatalogue } from "../../../reducers/search-catalogue/search-catalogue-actions";
 
 const searchMoviesInputStyle = {
-    display: "flex",
     width: "40%",
     margin: "auto",
     marginBottom: "16px",
@@ -15,7 +14,8 @@ const searchMoviesInputStyle = {
 const SearchMoviesInput = props => {
     const [searchKeywords, setSearchKeywords] = React.useState("");
 
-    function handleSearch() {
+    function handleSearch(event) {
+        event.preventDefault();
         if (searchKeywords) {
             props.requestSearchCatalogue(searchKeywords);
         }
@@ -27,13 +27,16 @@ const SearchMoviesInput = props => {
 
     return (
         <Paper style={searchMoviesInputStyle}>
-            <InputBase
-                onChange={handleSearchInput}
-                value={searchKeywords}
-                placeholder="Search for movies..."
-                fullWidth={true}
-            />
-            <Button onClick={handleSearch}>Search</Button>
+            <form style={{ display: "flex" }} onSubmit={handleSearch}>
+                <TextField
+                    required
+                    onChange={handleSearchInput}
+                    value={searchKeywords}
+                    placeholder="Search for movies..."
+                    fullWidth={true}
+                />
+                <Button type="submit">Search</Button>
+            </form>
         </Paper>
     );
 };
