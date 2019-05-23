@@ -11,29 +11,10 @@ export const userInfoManagementStyles = theme => ({
         display: "block", // Fix IE 11 issue.
         marginLeft: "auto",
         marginRight: "auto",
-        paddingTop: "10vh",
+        paddingTop: "5vh",
         [theme.breakpoints.up("md")]: {
             width: 768
         }
-    },
-    paper: {
-        display: "flex",
-        flexDirection: "column",
-        alignItems: "center",
-        padding: `${theme.spacing.unit * 2}px ${theme.spacing.unit *
-            3}px ${theme.spacing.unit * 3}px`
-    },
-    avatar: {
-        margin: theme.spacing.unit,
-        backgroundColor: theme.palette.secondary.main
-    },
-    form: {
-        width: "100%", // Fix IE 11 issue.
-        marginTop: theme.spacing.unit,
-        marginBottom: theme.spacing.unit
-    },
-    submit: {
-        marginTop: theme.spacing.unit * 3
     },
     divider: {
         height: theme.spacing.unit / 6,

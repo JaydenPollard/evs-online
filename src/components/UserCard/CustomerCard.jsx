@@ -30,7 +30,6 @@ firebase.initializeApp(firebaseConfig);
 
 const UserCard = props => {
     // function UserCard(props) {
-
     const rootRef = firebase
         .database()
         .ref()
