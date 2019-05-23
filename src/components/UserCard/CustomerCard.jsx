@@ -1,21 +1,21 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-console */
 /* eslint-disable func-names */
-import React, { useState, useEffect } from "react";
-import InputAdornment from "@material-ui/core/InputAdornment";
-import { ValidatorForm, TextValidator } from "react-material-ui-form-validator";
 import {
-    Typography,
+    FormControl,
     Grid,
     Input,
-    FormControl,
+    MenuItem,
     TextField,
-    MenuItem
+    Typography
 } from "@material-ui/core";
+import Button from "@material-ui/core/Button";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
-import Button from "@material-ui/core/Button";
+import InputAdornment from "@material-ui/core/InputAdornment";
 import firebase from "firebase";
+import React, { useEffect, useState } from "react";
+import { TextValidator, ValidatorForm } from "react-material-ui-form-validator";
 
 const firebaseConfig = {
     apiKey: "AIzaSyCTT8GvpjD5AMOMkAQZlP8Pj8P57n70jJg",
@@ -82,6 +82,7 @@ const UserCard = props => {
     const handleSubmit = e => {
         // Stops the page from refreshing
         e.preventDefault();
+        // TODO: Add confirmation?
         updateFirebse();
     };
 
@@ -181,6 +182,15 @@ const UserCard = props => {
                                 />
                             </Grid>
                             <Grid item xs={12} sm={6}>
+                                <Typography>ID:</Typography>
+                                <Input
+                                    placeholder="Name"
+                                    value={props.userId}
+                                    disabled
+                                    required
+                                />
+                            </Grid>
+                            <Grid item xs={12} sm={6}>
                                 <Typography>DoB:</Typography>
                                 <FormControl>
                                     <TextField
@@ -260,7 +270,6 @@ const UserCard = props => {
                                     value={address}
                                     onChange={handleAddressChange}
                                     required
-                                    multiline
                                 />
                             </Grid>
                             <Grid item xs={12} sm={12}>

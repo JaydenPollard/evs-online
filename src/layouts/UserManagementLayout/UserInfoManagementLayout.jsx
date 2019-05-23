@@ -31,11 +31,13 @@ function UserInfoManagementLayout(props) {
         <div className={classes.background}>
             <AppBar />
             <div className={classes.main}>
-                {userKey.map(userId => (
-                    <Grid container spacing={24}>
-                        <CustomerCard userId={userId} />
-                    </Grid>
-                ))}
+                <Grid container spacing={24}>
+                    {userKey.map(userId => (
+                        <Grid item key={userId}>
+                            <CustomerCard userId={userId} />
+                        </Grid>
+                    ))}
+                </Grid>
             </div>
         </div>
     );
