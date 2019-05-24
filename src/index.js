@@ -5,10 +5,16 @@ import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
 import App from "./App";
 import store from "./reducers/store/store";
+import { BrowserRouter } from "react-router-dom";
+import Firebase, { FirebaseContext } from "./components/Firebase";
 
 ReactDOM.render(
-    <Provider store={store}>
-        <App />
-    </Provider>,
+    <FirebaseContext.Provider value={new Firebase()}>
+        <Provider store={store}>
+            <BrowserRouter>
+                <App />
+            </BrowserRouter>
+        </Provider>
+    </FirebaseContext.Provider>,
     document.getElementById("root")
 );
