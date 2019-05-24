@@ -1,7 +1,7 @@
 import React from "react";
 
-//firebase context
+// Create React Context for Firebase
 const FirebaseContext = React.createContext(null);
 
-//import this file to use FirebaseContext in your component
+// Export FirebaseContext
 export default FirebaseContext;
