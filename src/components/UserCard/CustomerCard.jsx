@@ -1,6 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable no-console */
-/* eslint-disable func-names */
 import {
     FormControl,
     Grid,
@@ -12,10 +9,10 @@ import {
 import Button from "@material-ui/core/Button";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
-import InputAdornment from "@material-ui/core/InputAdornment";
 import firebase from "firebase";
 import React, { useEffect, useState } from "react";
 import { TextValidator, ValidatorForm } from "react-material-ui-form-validator";
+import NumberFormat from "react-number-format";
 
 const firebaseConfig = {
     apiKey: "AIzaSyCTT8GvpjD5AMOMkAQZlP8Pj8P57n70jJg",
@@ -28,16 +25,17 @@ const firebaseConfig = {
 };
 firebase.initializeApp(firebaseConfig);
 
-const UserCard = props => {
-    // function UserCard(props) {
+// function CustomerCard(props) {
+const CustomerCard = props => {
+    const user = props;
     const rootRef = firebase
         .database()
         .ref()
         .child("Users")
         .child("Customers")
-        .child(props.userId);
+        .child(user.userId);
     const [name, setName] = useState("");
-    const [dob, setDob] = useState("");
+    const [dob, setDoB] = useState("");
     const [email, setEmail] = useState("");
     const [joinedDate, setJoinedDate] = useState("");
     const [memberType, setMemberType] = useState("");
@@ -61,7 +59,7 @@ const UserCard = props => {
         setAddress(e.target.value);
     };
     const handleDoBChange = e => {
-        setDob(e.target.value);
+        setDoB(e.target.value);
     };
     const handleEmailChange = e => {
         setEmail(e.target.value);
@@ -73,11 +71,7 @@ const UserCard = props => {
         setMemberType(e.target.value);
     };
     const handlePhoneNumChange = e => {
-        // Creates a pattern that matches ONLY NUMBER or EMPTY STRING and check if the target.value has the pattern or not
-        const re = /^[0-9\b]+$/;
-        if (e.target.value === "" || re.test(e.target.value)) {
-            setPhoneNum(e.target.value);
-        }
+        setPhoneNum(e.target.value);
     };
     const handleSubmit = e => {
         // Stops the page from refreshing
@@ -97,71 +91,37 @@ const UserCard = props => {
     }
 
     useEffect(() => {
-        rootRef.child("Address").on(
-            "value",
-            function(snapshot) {
-                setAddress(snapshot.val());
-            },
-            function(error) {
-                console.log(error.code);
-            }
-        );
-        rootRef.child("DoB").on(
-            "value",
-            function(snapshot) {
-                setDob(snapshot.val());
-            },
-            function(error) {
-                console.log(error.code);
-            }
-        );
-        rootRef.child("Email").on(
-            "value",
-            function(snapshot) {
-                setEmail(snapshot.val());
-            },
-            function(error) {
-                console.log(error.code);
-            }
-        );
-        rootRef.child("JoinedDate").on(
-            "value",
-            function(snapshot) {
-                setJoinedDate(snapshot.val());
-            },
-            function(error) {
-                console.log(error.code);
-            }
-        );
-        rootRef.child("MemberType").on(
-            "value",
-            function(snapshot) {
-                setMemberType(snapshot.val());
-            },
-            function(error) {
-                console.log(error.code);
-            }
-        );
-        rootRef.child("Name").on(
-            "value",
-            function(snapshot) {
-                setName(snapshot.val());
-            },
-            function(error) {
-                console.log(error.code);
-            }
-        );
-        rootRef.child("PhoneNum").on(
-            "value",
-            function(snapshot) {
-                setPhoneNum(snapshot.val());
-            },
-            function(error) {
-                console.log(error.code);
-            }
-        );
-        // TODO: Investigate why rootRef is causing problem when passed into 2nd arg
-    }, [props.userId]);
+        rootRef.once("value").then(snapshot => {
+            snapshot.forEach(attributes => {
+                switch (attributes.key) {
+                    case "Address":
+                        setAddress(attributes.val());
+                        break;
+                    case "DoB":
+                        setDoB(attributes.val());
+                        break;
+                    case "Email":
+                        setEmail(attributes.val());
+                        break;
+                    case "JoinedDate":
+                        setJoinedDate(attributes.val());
+                        break;
+                    case "MemberType":
+                        setMemberType(attributes.val());
+                        break;
+                    case "Name":
+                        setName(attributes.val());
+                        break;
+                    case "PhoneNum":
+                        setPhoneNum(attributes.val());
+                        break;
+                    default:
+                }
+            });
+        });
+    // Stops rootRef from being passed into watchlist, which stops user from editing cards
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     return (
         <Grid item xs={12}>
@@ -185,7 +145,7 @@ const UserCard = props => {
                                 <Typography>ID:</Typography>
                                 <Input
                                     placeholder="Name"
-                                    value={props.userId}
+                                    value={user.userId}
                                     disabled
                                     required
                                 />
@@ -251,16 +211,13 @@ const UserCard = props => {
                             </Grid>
                             <Grid item xs={12} sm={6}>
                                 <Typography>Phone Number:</Typography>
-                                <Input
+                                <NumberFormat
+                                    customInput={TextField}
+                                    format="+64 ### ### ###"
                                     placeholder="Phone Number"
                                     value={phoneNum}
                                     onChange={handlePhoneNumChange}
                                     required
-                                    startAdornment={
-                                        <InputAdornment position="start">
-                                            +64
-                                        </InputAdornment>
-                                    }
                                 />
                             </Grid>
                             <Grid item xs={12} sm={6}>
@@ -289,4 +246,4 @@ const UserCard = props => {
     );
 };
 
-export default UserCard;
+export default CustomerCard;

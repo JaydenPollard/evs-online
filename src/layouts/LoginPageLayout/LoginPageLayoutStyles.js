@@ -17,7 +17,7 @@ export const loginPageLayoutStyles = theme => ({
         marginRight: "auto",
         paddingTop: "10vh",
         [theme.breakpoints.up("md")]: {
-            width: 768
+            width: 700
         }
     },
     paper: {

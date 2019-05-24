@@ -24,7 +24,7 @@ function LoginPageLayout(props) {
             <main className={classes.main}>
                 <CssBaseline />
                 <Paper className={classes.paper}>
-                    <Button className={classes.button} color="primary">
+                    <Button className={classes.button} color="default">
                         <Link to="/home" style={{ textDecoration: "none" }}>
                             <ArrowBackIcon
                                 style={{ transform: "translateY(7px)" }}
