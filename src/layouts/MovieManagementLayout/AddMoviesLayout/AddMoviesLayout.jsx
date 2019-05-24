@@ -13,6 +13,7 @@ import MoneyTextField from "../../../components/common/MoneyTextField";
 import CustomDatePicker from "../../../components/common/CustomDatePicker";
 import movie from "../../../models/movie";
 import NumberFormat from "react-number-format";
+import ErrorSnackbar from "../../../components/common/ErrorSnackbar";
 
 const imagePreviewStyle = {
     height: "336px",
@@ -28,12 +29,10 @@ const moviesLayoutStyle = {
 
 const AddMoviesLayout = () => {
     const [newMovie, setNewMovie] = React.useState(movie);
+    const [ratingError, setRatingError] = React.useState(false);
+    const [openSnackbar, setOpenSnackbar] = React.useState(false);
 
-    const [movieImage, setMovieImage] = React.useState();
-    const [moviePrice, setMoviePrice] = React.useState();
-    const [movieReleaseDate, setMovieReleaseDate] = React.useState(new Date());
-
-    const handleImageSelect = event => {
+    function handleImageSelect(event) {
         event.preventDefault();
 
         const reader = new FileReader();
@@ -41,18 +40,25 @@ const AddMoviesLayout = () => {
         if (selectedImage) {
             reader.readAsDataURL(selectedImage);
             reader.onloadend = () => {
-                setMovieImage(reader.result);
+                setNewMovie(movieData => {
+                    return { ...movieData, movieImage: reader.result };
+                });
             };
         }
-    };
+    }
 
-    const handleMoviePriceChange = event => {
-        setMoviePrice(event.target.value);
-    };
+    function handleSnackbarClosing() {
+        setOpenSnackbar(false);
+    }
 
     return (
         <Grid container direction="column" justify="center" alignItems="center">
             <AppBar />
+            <ErrorSnackbar
+                open={openSnackbar}
+                onClose={handleSnackbarClosing}
+                message="Missing movie image. Please add an image before adding the movie."
+            />
             <Typography variant="h2" style={{ marginTop: 16 }}>
                 Add a Movie
             </Typography>
@@ -79,12 +85,14 @@ const AddMoviesLayout = () => {
                                 justify="center"
                                 alignItems="center"
                             >
-                                {movieImage ? (
-                                    <CardMedia
-                                        style={imagePreviewStyle}
-                                        title="Uploaded Movie Image Preview"
-                                        image={movieImage}
-                                    />
+                                {newMovie.movieImage ? (
+                                    <React.Fragment>
+                                        <CardMedia
+                                            style={imagePreviewStyle}
+                                            title="Uploaded Movie Image Preview"
+                                            image={newMovie.movieImage}
+                                        />
+                                    </React.Fragment>
                                 ) : (
                                     <React.Fragment>
                                         <AddPhotoAlternate
@@ -121,8 +129,13 @@ const AddMoviesLayout = () => {
                                 alignItems="stretch"
                                 component="form"
                                 spacing={8}
-                                onSubmit={() => {
-                                    console.log("help");
+                                onSubmit={event => {
+                                    event.preventDefault();
+                                    if (!newMovie.movieImage) {
+                                        setOpenSnackbar(true);
+                                    } else if (!ratingError) {
+                                        // Submit to Firebase Database
+                                    }
                                 }}
                             >
                                 <Grid item>
@@ -136,33 +149,86 @@ const AddMoviesLayout = () => {
                                     />
                                 </Grid>
                                 <Grid item>
-                                    <TextField
+                                    <NumberFormat
+                                        customInput={TextField}
+                                        error={ratingError}
+                                        helperText={
+                                            ratingError
+                                                ? "Rating must be between 1 to 10"
+                                                : ""
+                                        }
+                                        format="##"
                                         required
                                         id="movieRating"
                                         name="movieRating"
                                         label="Movie Rating (1~10)"
                                         fullWidth
+                                        value={newMovie.movieRating}
+                                        onChange={event => {
+                                            const rating = event.target.value;
+                                            setNewMovie(movieData => {
+                                                return {
+                                                    ...movieData,
+                                                    movieRating: rating
+                                                };
+                                            });
+
+                                            if (rating < 1 || rating > 10) {
+                                                setRatingError(true);
+                                            } else {
+                                                setRatingError(false);
+                                            }
+                                        }}
                                     />
                                 </Grid>
                                 <Grid item>
-                                    <TextField
+                                    <NumberFormat
+                                        customInput={TextField}
+                                        format="###"
                                         required
                                         id="movieLength"
                                         name="movieLength"
                                         label="Movie Length (min)"
                                         fullWidth
-                                        autoComplete="movieLength"
+                                        value={newMovie.movieLength}
+                                        onChange={event =>
+                                            setNewMovie(movieData => {
+                                                let movieLength =
+                                                    event.target.value;
+                                                console.log(movieLength);
+                                                if (
+                                                    movieLength &&
+                                                    movieLength <= 0
+                                                ) {
+                                                    movieLength = 1;
+                                                }
+                                                console.log(movieLength);
+                                                return {
+                                                    ...movieData,
+                                                    movieLength: movieLength
+                                                };
+                                            })
+                                        }
                                     />
                                 </Grid>
                                 <Grid item>
                                     <TextField
                                         required
-                                        id="movieGenre"
-                                        name="movieGenre"
-                                        label="Movie Genre"
+                                        id="movieGenres"
+                                        name="movieGenres"
+                                        label="Movie Genres"
                                         fullWidth
                                         multiline
-                                        autoComplete="movieGenre"
+                                        value={newMovie.movieGenres}
+                                        onChange={event =>
+                                            setNewMovie(movieData => {
+                                                return {
+                                                    ...movieData,
+                                                    movieGenres:
+                                                        event.target.value
+                                                };
+                                            })
+                                        }
                                     />
                                 </Grid>
                                 <Grid item>
@@ -172,9 +238,16 @@ const AddMoviesLayout = () => {
                                         name="moviePrice"
                                         label="Movie Price"
                                         fullWidth
-                                        autoComplete="moviePrice"
-                                        value={moviePrice}
-                                        onChange={handleMoviePriceChange}
+                                        value={newMovie.moviePrice}
+                                        onChange={event =>
+                                            setNewMovie(movieData => {
+                                                return {
+                                                    ...movieData,
+                                                    moviePrice:
+                                                        event.target.value
+                                                };
+                                            })
+                                        }
                                     />
                                 </Grid>
                                 <Grid item>

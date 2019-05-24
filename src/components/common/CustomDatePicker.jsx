@@ -13,8 +13,8 @@ const CustomDatePicker = props => {
                 name={props.name}
                 label={props.label}
                 onChange={date =>
-                    props.setDate(prev => {
-                        return { ...prev, [props.name]: date };
+                    props.setDate(movieData => {
+                        return { ...movieData, [props.name]: date };
                     })
                 }
                 value={props.value}
