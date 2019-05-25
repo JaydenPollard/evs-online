@@ -1,5 +1,6 @@
 import * as React from "react";
-import { TextField, Paper, Button } from "@material-ui/core";
+import { InputBase, Paper, IconButton } from "@material-ui/core";
+import Search from "@material-ui/icons/Search";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { requestSearchCatalogue } from "../../../reducers/search-catalogue/search-catalogue-actions";
@@ -8,7 +9,7 @@ const searchMoviesInputStyle = {
     width: "40%",
     margin: "auto",
     marginBottom: "16px",
-    padding: "8px"
+    padding: "4px 16px"
 };
 
 const SearchMoviesInput = props => {
@@ -28,14 +29,16 @@ const SearchMoviesInput = props => {
     return (
         <Paper style={searchMoviesInputStyle}>
             <form style={{ display: "flex" }} onSubmit={handleSearch}>
-                <TextField
+                <InputBase
                     required
                     onChange={handleSearchInput}
                     value={searchKeywords}
                     placeholder="Search for movies..."
-                    fullWidth={true}
+                    fullWidth
                 />
-                <Button type="submit">Search</Button>
+                <IconButton type="submit">
+                    <Search />
+                </IconButton>
             </form>
         </Paper>
     );

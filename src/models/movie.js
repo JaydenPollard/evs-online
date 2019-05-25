@@ -1,8 +1,9 @@
 const movie = {
     movieName: "",
-    movieRating: undefined,
+    movieRating: "",
     movieLength: undefined,
     movieGenres: "",
+    movieStockCount: undefined,
     moviePrice: undefined,
     movieReleaseDate: new Date(),
     movieImage: undefined

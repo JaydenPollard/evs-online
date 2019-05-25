@@ -1,10 +1,11 @@
 import * as React from "react";
 import { Grid, Typography, Fab } from "@material-ui/core";
-import { Link } from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
+import Add from "@material-ui/icons/Add";
 import AppBar from "../../components/AppBar/AppBar";
 import MovieManagementItemContainer from "../../components/MovieManagement/MovieManagementItem/MovieManagementItemContainer";
 import SearchMoviesInput from "./SearchMoviesInput/SearchMoviesInput";
-import Add from "@material-ui/icons/Add";
+import AddMovieSuccessDialog from "./AddMovieSuccessDialog";
 
 const fabStyle = {
     top: "auto",
@@ -14,9 +15,12 @@ const fabStyle = {
     position: "fixed"
 };
 
-const MovieManagementPage = () => {
+const MovieManagementPage = props => {
+    const addMovieSuccess = props.location.addMovieSuccess;
+
     return (
         <React.Fragment>
+            {addMovieSuccess ? <AddMovieSuccessDialog open={true} /> : null}
             <Grid
                 container
                 direction="column"
@@ -52,4 +56,4 @@ const MovieManagementPage = () => {
     );
 };
 
-export default MovieManagementPage;
+export default withRouter(MovieManagementPage);

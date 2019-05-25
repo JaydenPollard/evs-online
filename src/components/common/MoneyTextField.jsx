@@ -19,6 +19,7 @@ const MoneyTextField = props => {
             thousandSeparator
             displayType="input"
             prefix="$"
+            decimalScale={2}
         />
     );
 };
