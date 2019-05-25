@@ -1,10 +1,10 @@
 import React from "react";
 import ComponentExample from "./ComponentExample";
 
-const ComponentExampleContainer = () => {
+const ComponentExampleContainer = props => {
     // Containers will do your logic such as fetching data, calculations etc, then pass it onto the component
     // If you need the component to do an action like a button click, pass the function to the component through props
-    return <ComponentExample comment="Sample Component" />;
+    return <ComponentExample onSubmit={props.submitFunction} comment="Sample Component" />;
 };
 
 export default ComponentExampleContainer;
