@@ -8,6 +8,7 @@
     "@material-ui/icons": "3.0.2",
     "date-fns": "2.0.0-alpha.27",
     "firebase": "^6.0.2",
+    "lodash": "^4.17.11",
     "material-auto-rotating-carousel": "^3.0.1",
     "material-ui-carousel": "^1.0.0",
     "material-ui-pickers": "^2.2.4",

@@ -10,15 +10,16 @@ import {
 } from "@material-ui/core";
 import AddPhotoAlternate from "@material-ui/icons/AddPhotoAlternate";
 import NumberFormat from "react-number-format";
+import ArrowBack from "@material-ui/icons/ArrowBack";
+import { Link, withRouter, Redirect } from "react-router-dom";
 import AppBar from "../../../components/AppBar/AppBar";
 import MoneyTextField from "../../../components/common/MoneyTextField";
 import CustomDatePicker from "../../../components/common/CustomDatePicker";
 import movie from "../../../models/movie";
 import ErrorSnackbar from "../../../components/common/ErrorSnackbar";
 import addMovie from "../../../logic/addMovie.function";
-import { Link, withRouter, Redirect } from "react-router-dom";
-import ArrowBack from "@material-ui/icons/ArrowBack";
 import LoadingIndicator from "../../../components/common/LoadingIndicator";
+import MovieSelect from "./MovieSelect";
 
 const imagePreviewStyle = {
     height: "336px",
@@ -41,7 +42,9 @@ const fabStyle = {
 };
 
 const AddMoviesLayout = props => {
-    const [newMovie, setNewMovie] = React.useState(movie);
+    const [newMovie, setNewMovie] = React.useState(
+        props.movie ? props.movie : movie
+    );
     const [ratingError, setRatingError] = React.useState(false);
     const [openSnackbar, setOpenSnackbar] = React.useState(false);
     const [showSubmittingIndicator, setSubmittingIndicator] = React.useState(
@@ -258,19 +261,19 @@ const AddMoviesLayout = props => {
                                         />
                                     </Grid>
                                     <Grid item>
-                                        <TextField
+                                        <MovieSelect
                                             required
-                                            id="movieGenres"
-                                            name="movieGenres"
-                                            label="Movie Genres"
+                                            id="movieGenre"
+                                            name="movieGenre"
+                                            label="Movie Genre"
                                             fullWidth
                                             multiline
-                                            value={newMovie.movieGenres}
+                                            value={newMovie.movieGenre}
                                             onChange={event =>
                                                 setNewMovie(movieData => {
                                                     return {
                                                         ...movieData,
-                                                        movieGenres:
+                                                        movieGenre:
                                                             event.target.value
                                                     };
                                                 })
@@ -311,9 +314,9 @@ const AddMoviesLayout = props => {
                                                 setNewMovie(movieData => {
                                                     return {
                                                         ...movieData,
-                                                        moviePrice: parseFloat(
+                                                        moviePrice: Number(
                                                             event.target.value
-                                                        )
+                                                        ).toFixed(2)
                                                     };
                                                 })
                                             }
@@ -326,6 +329,26 @@ const AddMoviesLayout = props => {
                                             label="Movie Release Date"
                                             setDate={setNewMovie}
                                             value={newMovie.movieReleaseDate}
+                                        />
+                                    </Grid>
+                                    <Grid item>
+                                        <TextField
+                                            required
+                                            id="movieSummary"
+                                            name="movieSummary"
+                                            label="Movie Summary"
+                                            fullWidth
+                                            multiline
+                                            value={newMovie.movieSummary}
+                                            onChange={event => {
+                                                setNewMovie(movieData => {
+                                                    return {
+                                                        ...movieData,
+                                                        movieSummary:
+                                                            event.target.value
+                                                    };
+                                                });
+                                            }}
                                         />
                                     </Grid>
                                     <Grid

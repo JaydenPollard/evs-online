@@ -2,11 +2,13 @@ const movie = {
     movieName: "",
     movieRating: "",
     movieLength: undefined,
-    movieGenres: "",
+    movieGenre: "",
     movieStockCount: undefined,
     moviePrice: undefined,
     movieReleaseDate: new Date(),
-    movieImage: undefined
+    movieImage: undefined,
+    movieHidden: false,
+    movieSummary: ""
 };
 
 export default movie;

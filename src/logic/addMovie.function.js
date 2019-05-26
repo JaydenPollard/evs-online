@@ -1,6 +1,7 @@
 import * as firebase from "firebase/app";
 import "firebase/database";
 import "firebase/storage";
+import _ from "lodash";
 
 async function addMovie(movie) {
     const rootRef = firebase.database.ref("Movie");
@@ -12,6 +13,7 @@ async function addMovie(movie) {
             const movieImageURL = movie.movieImage.includes("base64")
                 ? await uploadMovieImage(newMovieID, movie.movieImage)
                 : movie.movieImage;
+            movie.movieName = movie.movieName.replace(/\w+/g, _.toLower);
             movie.movieImage = movieImageURL;
             movie.movieReleaseDate = movie.movieReleaseDate.toLocaleDateString(
                 "en-au"

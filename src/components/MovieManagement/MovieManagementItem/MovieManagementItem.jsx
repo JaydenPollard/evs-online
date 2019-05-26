@@ -1,23 +1,32 @@
 import * as React from "react";
 import { Paper, Typography, Grid, CardMedia, Button } from "@material-ui/core";
 import { Link } from "react-router-dom";
-import stockMovieImage from "../../../assests/stockMovieImage.jpg";
+import _ from "lodash";
 
 const imagePreviewStyle = {
     height: "200px",
     width: "140px"
 };
 
+const buttonAlignment = {
+    textAlign: "right",
+    displayInline: "block"
+};
+
 const MovieManagementItem = props => {
     const { movie } = props;
+    if (movie.movieHidden) {
+        return null;
+    }
     return (
         <Paper style={{ padding: 16 }}>
             <Grid container direction="row" spacing={16}>
                 <Grid item>
                     <CardMedia
+                        component="img"
                         style={imagePreviewStyle}
                         title={movie.movieName}
-                        image={stockMovieImage}
+                        src={movie.movieImage}
                     />
                 </Grid>
                 <Grid item style={{ width: 440 }}>
@@ -28,10 +37,10 @@ const MovieManagementItem = props => {
                         alignItems="center"
                     >
                         <Typography variant="subtitle1">
-                            {movie.movieName}
+                            {movie.movieName.replace(/\w+/g, _.capitalize)}
                         </Typography>
                         <Typography variant="subtitle1">
-                            {movie.moviePrice}
+                            ${movie.moviePrice}
                         </Typography>
                     </Grid>
                     <Grid container direction="row" spacing={8}>
@@ -41,35 +50,46 @@ const MovieManagementItem = props => {
                                 <Typography>Length:</Typography>
                                 <Typography>Genre:</Typography>
                                 <Typography>Release Date:</Typography>
+                                <Typography>Stock:</Typography>
                             </Grid>
                         </Grid>
                         <Grid item>
                             <Grid container direction="column">
                                 <Typography>{movie.movieRating}</Typography>
-                                <Typography>{movie.movieLength}</Typography>
+                                <Typography>{movie.movieLength} min</Typography>
                                 <Typography>{movie.movieGenre}</Typography>
                                 <Typography>
                                     {movie.movieReleaseDate}
                                 </Typography>
+                                <Typography>
+                                    {movie.movieStockCount} left
+                                </Typography>
                             </Grid>
                         </Grid>
                     </Grid>
-                    <Typography>
-                        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                        Donec ultrices mattis risus. Duis congue lacus vel
-                        vestibulum placerat. Cras ultricies aliquam dolor,
-                        laoreet molestie ipsum. In quis odio vel enim rhoncus
-                        egestas id eu urna. Maecenas in leo efficitur, volutpat
-                        purus vitae, malesuada erat.
-                    </Typography>
-                    <Button
-                        component={Link}
-                        to={`/management/movie/${movie.movieID}/edit`}
-                    >
-                        Edit Movie Details
-                    </Button>
-                    <Button>Remove Movie</Button>
+                    <Typography>{movie.movieSummary}</Typography>
                 </Grid>
+            </Grid>
+            <Grid style={buttonAlignment}>
+                {props.isStaff ? (
+                    <React.Fragment>
+                        <Button
+                            component={Link}
+                            to={"/management/movie/modifymovie/"}
+                        >
+                            Edit Movie Details
+                        </Button>
+                        <Button>Remove Movie</Button>
+                    </React.Fragment>
+                ) : (
+                    <React.Fragment>
+                        {movie.movieStockCount > 0 ? (
+                            <Button>Purchase Movie</Button>
+                        ) : (
+                            <Button disabled>Out of Stock</Button>
+                        )}
+                    </React.Fragment>
+                )}
             </Grid>
         </Paper>
     );

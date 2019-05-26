@@ -1,9 +1,18 @@
 import * as React from "react";
-import { InputBase, Paper, IconButton } from "@material-ui/core";
+import {
+    InputBase,
+    Paper,
+    IconButton,
+    Checkbox,
+    FormGroup,
+    FormControlLabel,
+    Divider
+} from "@material-ui/core";
 import Search from "@material-ui/icons/Search";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { requestSearchCatalogue } from "../../../reducers/search-catalogue/search-catalogue-actions";
+import MovieSelect from "../AddMoviesLayout/MovieSelect";
 
 const searchMoviesInputStyle = {
     width: "40%",
@@ -14,12 +23,11 @@ const searchMoviesInputStyle = {
 
 const SearchMoviesInput = props => {
     const [searchKeywords, setSearchKeywords] = React.useState("");
+    const [searchByGenre, setSearchByGenre] = React.useState(false);
 
     function handleSearch(event) {
         event.preventDefault();
-        if (searchKeywords) {
-            props.requestSearchCatalogue(searchKeywords);
-        }
+        props.requestSearchCatalogue(searchKeywords, searchByGenre);
     }
 
     const handleSearchInput = event => {
@@ -29,25 +37,48 @@ const SearchMoviesInput = props => {
     return (
         <Paper style={searchMoviesInputStyle}>
             <form style={{ display: "flex" }} onSubmit={handleSearch}>
-                <InputBase
-                    required
-                    onChange={handleSearchInput}
-                    value={searchKeywords}
-                    placeholder="Search for movies..."
-                    fullWidth
-                />
-                <IconButton type="submit">
+                {searchByGenre ? (
+                    <MovieSelect
+                        displayLabel={true}
+                        onChange={handleSearchInput}
+                        value={searchKeywords}
+                        placeholder="Search for movies..."
+                        fullWidth
+                    />
+                ) : (
+                    <InputBase
+                        onChange={handleSearchInput}
+                        value={searchKeywords}
+                        placeholder="Search for movies..."
+                        fullWidth
+                    />
+                )}
+                <IconButton component="button" type="submit">
                     <Search />
                 </IconButton>
             </form>
+            <Divider />
+            <FormGroup row>
+                <FormControlLabel
+                    control={
+                        <Checkbox
+                            checked={searchByGenre}
+                            onChange={event => {
+                                setSearchByGenre(event.target.checked);
+                            }}
+                        />
+                    }
+                    label="Search by Genre"
+                />
+            </FormGroup>
         </Paper>
     );
 };
 
 function mapDispatchToProps(dispatch) {
     return {
-        requestSearchResults: searchKeywords =>
-            dispatch(requestSearchCatalogue(searchKeywords))
+        requestSearchCatalogue: (searchKeywords, searchByGenre) =>
+            dispatch(requestSearchCatalogue(searchKeywords, searchByGenre))
     };
 }
 

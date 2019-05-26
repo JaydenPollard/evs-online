@@ -34,6 +34,11 @@ const App = () => (
                     exact
                     component={AddMoviesLayout}
                 />
+                <Route
+                    path="/management/modifymovie"
+                    exact
+                    component={AddMoviesLayout}
+                />
                 <Route component={HomePage} />
             </Switch>
         </BrowserRouter>
