@@ -25,8 +25,8 @@ const firebaseConfig = {
 };
 firebase.initializeApp(firebaseConfig);
 
-// function CustomerCard(props) {
-const CustomerCard = props => {
+function CustomerCard(props) {
+    // const CustomerCard = props => {
     const user = props;
     const rootRef = firebase
         .database()
@@ -76,7 +76,6 @@ const CustomerCard = props => {
     const handleSubmit = e => {
         // Stops the page from refreshing
         e.preventDefault();
-        // TODO: Add confirmation?
         updateFirebse();
     };
 
@@ -119,8 +118,8 @@ const CustomerCard = props => {
                 }
             });
         });
-    // Stops rootRef from being passed into watchlist, which stops user from editing cards
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // Stops rootRef from being passed into watchlist, which stops user from editing cards
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     return (
@@ -244,6 +243,6 @@ const CustomerCard = props => {
             </Card>
         </Grid>
     );
-};
+}
 
 export default CustomerCard;

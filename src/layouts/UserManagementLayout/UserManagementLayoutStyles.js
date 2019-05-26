@@ -1,6 +1,6 @@
-export const userInfoManagementStyles = theme => ({
+export const UserManagementStyles = theme => ({
     background: {
-        backgroundColor: "#f7fbff",
+        backgroundColor: "#ffebef",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
         backgroundSize: "cover",
