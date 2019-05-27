@@ -6,8 +6,9 @@ import {
     createMuiTheme,
     CssBaseline
 } from "@material-ui/core";
-import HomePage from "./layouts/HomePageLayout/HomePageLayout";
 import LoginPage from "./layouts/LoginPageLayout/LoginPageLayout";
+import ViewMoviesLayout from "./layouts/MovieLayout/ViewMoviesLayout/ViewMoviesLayout";
+import AddMoviesLayout from "./layouts/MovieLayout/MovieContentProcessingLayout/MovieContentProcessingLayout";
 
 const theme = createMuiTheme({
     palette: {
@@ -20,9 +21,14 @@ const App = () => (
         <CssBaseline />
         <BrowserRouter>
             <Switch>
-                <Route path="/home" exact component={HomePage} />
+                <Route path="/home" exact component={ViewMoviesLayout} />
                 <Route path="/login" exact component={LoginPage} />
-                <Route component={HomePage} />
+                <Route
+                    path="/management/movie"
+                    exact
+                    component={AddMoviesLayout}
+                />
+                <Route component={ViewMoviesLayout} />
             </Switch>
         </BrowserRouter>
     </MuiThemeProvider>
