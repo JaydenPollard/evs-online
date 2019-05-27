@@ -11,6 +11,10 @@ import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 // import firebase from "firebase";
 import React, { useEffect, useState } from "react";
+import DeleteIcon from "@material-ui/icons/Delete";
+import { confirmAlert } from "react-confirm-alert";
+import "react-confirm-alert/src/react-confirm-alert.css";
+import EditIcon from "@material-ui/icons/Edit";
 import { TextValidator, ValidatorForm } from "react-material-ui-form-validator";
 import NumberFormat from "react-number-format";
 import firebase from "firebase";
@@ -26,8 +30,8 @@ const firebaseConfig = {
 };
 firebase.initializeApp(firebaseConfig);
 
-function CustomerCard(props) {
-    // const CustomerCard = props => {
+// function CustomerCard(props) {
+const CustomerCard = props => {
     const user = props;
     const rootRef = firebase
         .database()
@@ -77,10 +81,36 @@ function CustomerCard(props) {
     const handleSubmit = e => {
         // Stops the page from refreshing
         e.preventDefault();
-        updateFirebse();
+        updateUser();
     };
 
-    function updateFirebse() {
+    const handleDelete = () => {
+        confirmAlert({
+            title: "Are you sure?",
+            message: `Deleting: ${email}`,
+            buttons: [
+                {
+                    label: "Confirm",
+                    onClick: () => {
+                        deleteUser();
+                    }
+                },
+                {
+                    label: "Cancel",
+                    onClick: () => {}
+                }
+            ]
+        });
+    };
+
+    const deleteUser = () => {
+        firebase
+            .database()
+            .ref(`Users/Customers/${user.userId}`)
+            .remove();
+    };
+
+    const updateUser = () => {
         rootRef.child("Address").set(address);
         rootRef.child("DoB").set(dob);
         rootRef.child("Email").set(email);
@@ -88,7 +118,7 @@ function CustomerCard(props) {
         rootRef.child("MemberType").set(memberType);
         rootRef.child("Name").set(name);
         rootRef.child("PhoneNum").set(phoneNum);
-    }
+    };
 
     useEffect(() => {
         rootRef.once("value").then(snapshot => {
@@ -229,13 +259,29 @@ function CustomerCard(props) {
                                     required
                                 />
                             </Grid>
-                            <Grid item xs={12} sm={12}>
+                            <Grid item xs={12} sm={6}>
                                 <Button
                                     type="submit"
                                     variant="contained"
                                     color="inherit"
                                 >
                                     Submit Changes
+                                    <EditIcon
+                                        style={{ margin: "0 0 5px 5px" }}
+                                    />
+                                </Button>
+                            </Grid>
+                            <Grid item xs={12} sm={6}>
+                                <Button
+                                    variant="contained"
+                                    color="secondary"
+                                    onClick={handleDelete}
+                                    disabled
+                                >
+                                    Delete User
+                                    <DeleteIcon
+                                        style={{ margin: "0 0 5px 5px" }}
+                                    />
                                 </Button>
                             </Grid>
                         </Grid>
@@ -244,6 +290,6 @@ function CustomerCard(props) {
             </Card>
         </Grid>
     );
-}
+};
 
 export default CustomerCard;

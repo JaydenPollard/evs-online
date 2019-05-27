@@ -9,6 +9,10 @@ import {
 import Button from "@material-ui/core/Button";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
+import DeleteIcon from "@material-ui/icons/Delete";
+import { confirmAlert } from "react-confirm-alert";
+import "react-confirm-alert/src/react-confirm-alert.css";
+import EditIcon from "@material-ui/icons/Edit";
 import firebase from "firebase";
 import React, { useEffect, useState } from "react";
 import { TextValidator, ValidatorForm } from "react-material-ui-form-validator";
@@ -67,7 +71,33 @@ function StaffCard(props) {
         updateFirebse();
     };
 
-    function updateFirebse() {
+    const handleDelete = () => {
+        confirmAlert({
+            title: "Are you sure?",
+            message: `Deleting: ${email}`,
+            buttons: [
+                {
+                    label: "Confirm",
+                    onClick: () => {
+                        deleteUser();
+                    }
+                },
+                {
+                    label: "Cancel",
+                    onClick: () => {}
+                }
+            ]
+        });
+    };
+
+    const deleteUser = () => {
+        firebase
+            .database()
+            .ref(`Users/Customers/${user.userId}`)
+            .remove();
+    };
+
+    const updateFirebse = () => {
         rootRef.child("Address").set(address);
         rootRef.child("DoB").set(dob);
         rootRef.child("Email").set(email);
@@ -75,7 +105,7 @@ function StaffCard(props) {
         rootRef.child("AccessLevel").set(accessLevel);
         rootRef.child("Name").set(name);
         rootRef.child("PhoneNum").set(phoneNum);
-    }
+    };
 
     useEffect(() => {
         rootRef.once("value").then(snapshot => {
@@ -216,13 +246,29 @@ function StaffCard(props) {
                                     required
                                 />
                             </Grid>
-                            <Grid item xs={12} sm={12}>
+                            <Grid item xs={12} sm={6}>
                                 <Button
                                     type="submit"
                                     variant="contained"
                                     color="inherit"
                                 >
                                     Submit Changes
+                                    <EditIcon
+                                        style={{ margin: "0 0 5px 5px" }}
+                                    />
+                                </Button>
+                            </Grid>
+                            <Grid item xs={12} sm={6}>
+                                <Button
+                                    variant="contained"
+                                    color="secondary"
+                                    onClick={handleDelete}
+                                    disabled
+                                >
+                                    Delete User
+                                    <DeleteIcon
+                                        style={{ margin: "0 0 5px 5px" }}
+                                    />
                                 </Button>
                             </Grid>
                         </Grid>
