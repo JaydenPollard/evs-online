@@ -3,7 +3,7 @@ import "firebase/auth";
 import "firebase/database";
 import "firebase/storage";
 
-//firebase config
+// Setup Firebase Configuration
 const firebaseConfig = {
     apiKey: process.env.REACT_APP_API_KEY,
     authDomain: process.env.REACT_APP_AUTH_DOMAIN,
@@ -13,7 +13,7 @@ const firebaseConfig = {
     messagingSenderId: process.env.REACT_APP_MESSAGING_SENDER_ID
 };
 
-//init firebase
+// Initialise Firebase
 const Firebase = () => {
     firebase.initializeApp(firebaseConfig);
 
@@ -22,5 +22,5 @@ const Firebase = () => {
     firebase.storage = firebase.storage();
 };
 
-//import this file to use firebase in your component
+// Export Firebase to be used in other components
 export default Firebase;
