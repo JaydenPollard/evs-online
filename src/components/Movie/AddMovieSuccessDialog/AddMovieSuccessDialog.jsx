@@ -5,6 +5,7 @@ import {
     DialogContentText,
     DialogContent
 } from "@material-ui/core";
+import PropTypes from "prop-types";
 
 const AddMovieSuccessDialogStyle = {
     display: "flex",
@@ -14,27 +15,33 @@ const AddMovieSuccessDialogStyle = {
 };
 
 const AddMovieSuccessDialog = props => {
-    const [open, setOpen] = React.useState(props.open);
+    const { open } = props;
+    const [isOpen, setIsOpen] = React.useState(open);
 
     function handleClose() {
-        setOpen(false);
+        setIsOpen(false);
     }
 
     return (
         <Dialog
-            open={open}
+            open={isOpen}
             onClose={handleClose}
             maxWidth="sm"
             style={AddMovieSuccessDialogStyle}
         >
-            <DialogTitle>Success!</DialogTitle>
+            <DialogTitle>Operation Success!</DialogTitle>
             <DialogContent>
                 <DialogContentText>
-                    You have successfully added the movie to the movie list!
+                    Your changes has been successfully made! Please refresh to
+                    see your changes.
                 </DialogContentText>
             </DialogContent>
         </Dialog>
     );
+};
+
+AddMovieSuccessDialog.propTypes = {
+    open: PropTypes.bool.isRequired
 };
 
 export default AddMovieSuccessDialog;

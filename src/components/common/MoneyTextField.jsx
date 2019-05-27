@@ -1,9 +1,16 @@
 import * as React from "react";
 import NumberFormat from "react-number-format";
 import { TextField } from "@material-ui/core";
+import PropType from "prop-types";
 
+/**
+ * Formats and displays the user input into a money format without altering the input values
+ * @author Joshua (Chang-You) Wu
+ */
 const MoneyTextField = props => {
+    // Destructure props
     const { inputRef, onChange, ...others } = props;
+    // Render view
     return (
         <NumberFormat
             {...others}
@@ -22,6 +29,12 @@ const MoneyTextField = props => {
             decimalScale={2}
         />
     );
+};
+
+// Declare prop types and enforce data type
+MoneyTextField.propTypes = {
+    inputRef: PropType.object,
+    onChange: PropType.func.isRequired
 };
 
 export default MoneyTextField;

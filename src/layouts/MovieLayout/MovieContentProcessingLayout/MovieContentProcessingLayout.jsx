@@ -12,14 +12,15 @@ import AddPhotoAlternate from "@material-ui/icons/AddPhotoAlternate";
 import NumberFormat from "react-number-format";
 import ArrowBack from "@material-ui/icons/ArrowBack";
 import { Link, withRouter, Redirect } from "react-router-dom";
+import PropTypes from "prop-types";
 import AppBar from "../../../components/AppBar/AppBar";
 import MoneyTextField from "../../../components/common/MoneyTextField";
 import CustomDatePicker from "../../../components/common/CustomDatePicker";
 import movie from "../../../models/movie";
 import ErrorSnackbar from "../../../components/common/ErrorSnackbar";
-import addMovie from "../../../logic/addMovie.function";
+import setMovie from "../../../logic/movie/addMovie.function";
 import LoadingIndicator from "../../../components/common/LoadingIndicator";
-import MovieSelect from "./MovieSelect";
+import MovieSelect from "../../../components/Movie/MovieSelect/MovieSelect";
 
 const imagePreviewStyle = {
     height: "336px",
@@ -41,10 +42,10 @@ const fabStyle = {
     position: "fixed"
 };
 
-const AddMoviesLayout = props => {
-    const [newMovie, setNewMovie] = React.useState(
-        props.movie ? props.movie : movie
-    );
+const MovieContentProcessingLayout = props => {
+    const { location } = props;
+    const { toEditMovie, movieID } = location;
+    const [newMovie, setNewMovie] = React.useState(toEditMovie || movie);
     const [ratingError, setRatingError] = React.useState(false);
     const [openSnackbar, setOpenSnackbar] = React.useState(false);
     const [showSubmittingIndicator, setSubmittingIndicator] = React.useState(
@@ -72,25 +73,27 @@ const AddMoviesLayout = props => {
     }
 
     if (addMovieSuccess) {
-        return (
-            <Redirect
-                to={{ pathname: "/management/movie", addMovieSuccess: true }}
-            />
-        );
+        return <Redirect to={{ pathname: "/", addMovieSuccess: true }} />;
     }
 
     return (
         <Grid container direction="column" justify="center" alignItems="center">
             <AppBar />
             <Typography variant="h2" style={{ marginTop: 16 }}>
-                Add a Movie
+                {toEditMovie ? "Modify a Movie" : "Add a Movie"}
             </Typography>
             <Typography variant="subtitle1">
                 Enter the movie details here:
             </Typography>
             <Paper style={moviesLayoutStyle}>
                 {showSubmittingIndicator ? (
-                    <LoadingIndicator message="Adding Movie..." />
+                    <LoadingIndicator
+                        message={
+                            toEditMovie
+                                ? "Updating Movie..."
+                                : "Adding Movie..."
+                        }
+                    />
                 ) : (
                     <Grid
                         container
@@ -161,8 +164,9 @@ const AddMoviesLayout = props => {
                                         } else if (!ratingError) {
                                             setSubmittingIndicator(true);
                                             // Submit movie to Firebase Database
-                                            const addMovieSuccess = await addMovie(
-                                                newMovie
+                                            const addMovieSuccess = await setMovie(
+                                                newMovie,
+                                                movieID
                                             );
                                             if (addMovieSuccess) {
                                                 setAddMovieSuccess(true);
@@ -188,6 +192,7 @@ const AddMoviesLayout = props => {
                                                     };
                                                 });
                                             }}
+                                            helperText="Only the first character of each word will be capitalized"
                                         />
                                     </Grid>
                                     <Grid item>
@@ -196,7 +201,7 @@ const AddMoviesLayout = props => {
                                             helperText={
                                                 ratingError
                                                     ? "Rating is not valid"
-                                                    : ""
+                                                    : "Enter without the age restriction (i.e. MA)"
                                             }
                                             required
                                             id="movieRating"
@@ -244,12 +249,10 @@ const AddMoviesLayout = props => {
                                             onChange={event =>
                                                 setNewMovie(movieData => {
                                                     let movieLength = parseInt(
-                                                        event.target.value
+                                                        event.target.value,
+                                                        10
                                                     );
-                                                    if (
-                                                        movieLength &&
-                                                        movieLength <= 0
-                                                    ) {
+                                                    if (movieLength <= 0) {
                                                         movieLength = 1;
                                                     }
                                                     return {
@@ -283,7 +286,7 @@ const AddMoviesLayout = props => {
                                     <Grid item>
                                         <NumberFormat
                                             customInput={TextField}
-                                            format="###"
+                                            format="#########"
                                             required
                                             id="movieStockCount"
                                             name="movieStockCount"
@@ -295,7 +298,8 @@ const AddMoviesLayout = props => {
                                                     return {
                                                         ...movieData,
                                                         movieStockCount: parseInt(
-                                                            event.target.value
+                                                            event.target.value,
+                                                            10
                                                         )
                                                     };
                                                 })
@@ -320,6 +324,7 @@ const AddMoviesLayout = props => {
                                                     };
                                                 })
                                             }
+                                            helperText="Movies with no price will be free"
                                         />
                                     </Grid>
                                     <Grid item>
@@ -362,7 +367,9 @@ const AddMoviesLayout = props => {
                                             type="submit"
                                             variant="contained"
                                         >
-                                            Add Movie
+                                            {toEditMovie
+                                                ? "Update Movie"
+                                                : "Add Movie"}
                                         </Button>
                                     </Grid>
                                 </Grid>
@@ -371,12 +378,7 @@ const AddMoviesLayout = props => {
                     </Grid>
                 )}
             </Paper>
-            <Fab
-                variant="extended"
-                style={fabStyle}
-                component={Link}
-                to="/management/movie"
-            >
+            <Fab variant="extended" style={fabStyle} component={Link} to="/">
                 <ArrowBack />
                 Back
             </Fab>
@@ -389,4 +391,8 @@ const AddMoviesLayout = props => {
     );
 };
 
-export default withRouter(AddMoviesLayout);
+MovieContentProcessingLayout.propTypes = {
+    location: PropTypes.object
+};
+
+export default withRouter(MovieContentProcessingLayout);

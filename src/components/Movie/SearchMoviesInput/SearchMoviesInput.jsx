@@ -12,7 +12,7 @@ import Search from "@material-ui/icons/Search";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { requestSearchCatalogue } from "../../../reducers/search-catalogue/search-catalogue-actions";
-import MovieSelect from "../AddMoviesLayout/MovieSelect";
+import MovieSelect from "../MovieSelect/MovieSelect";
 
 const searchMoviesInputStyle = {
     width: "40%",
@@ -39,7 +39,7 @@ const SearchMoviesInput = props => {
             <form style={{ display: "flex" }} onSubmit={handleSearch}>
                 {searchByGenre ? (
                     <MovieSelect
-                        displayLabel={true}
+                        displayLabel
                         onChange={handleSearchInput}
                         value={searchKeywords}
                         placeholder="Search for movies..."

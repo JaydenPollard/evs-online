@@ -2,13 +2,14 @@ import * as React from "react";
 import { Grid, Typography, Fab } from "@material-ui/core";
 import { Link } from "react-router-dom";
 import Add from "@material-ui/icons/Add";
-import AppBar from "../../components/AppBar/AppBar";
-import SearchMoviesInput from "./SearchMoviesInput/SearchMoviesInput";
-import AddMovieSuccessDialog from "./AddMovieSuccessDialog";
 import { connect } from "react-redux";
-import { requestSearchCatalogue } from "../../reducers/search-catalogue/search-catalogue-actions";
-import MovieManagementItem from "../../components/MovieManagement/MovieManagementItem/MovieManagementItem";
-import LoadingIndicator from "../../components/common/LoadingIndicator";
+import PropTypes from "prop-types";
+import AppBar from "../../../components/AppBar/AppBar";
+import SearchMoviesInput from "../../../components/Movie/SearchMoviesInput/SearchMoviesInput";
+import AddMovieSuccessDialog from "../../../components/Movie/AddMovieSuccessDialog/AddMovieSuccessDialog";
+import { requestSearchCatalogue } from "../../../reducers/search-catalogue/search-catalogue-actions";
+import MovieItem from "../../../components/Movie/MovieItem/MovieItem";
+import LoadingIndicator from "../../../components/common/LoadingIndicator";
 
 const fabStyle = {
     top: "auto",
@@ -18,9 +19,10 @@ const fabStyle = {
     position: "fixed"
 };
 
-const MovieManagementPage = props => {
-    const { results } = props;
-    const addMovieSuccess = props.location.addMovieSuccess;
+const ViewMoviesLayout = props => {
+    const { results, location } = props;
+    const { addMovieSuccess } = location;
+    // TODO: Set this to true until we have a way to get the user type
     const [isStaff, setIsStaff] = React.useState(true);
 
     React.useEffect(() => {
@@ -31,7 +33,7 @@ const MovieManagementPage = props => {
 
     return (
         <React.Fragment>
-            {addMovieSuccess ? <AddMovieSuccessDialog open={true} /> : null}
+            {addMovieSuccess ? <AddMovieSuccessDialog open /> : null}
             <Grid
                 container
                 direction="column"
@@ -43,14 +45,16 @@ const MovieManagementPage = props => {
                     variant="h2"
                     style={{ marginTop: 16, marginBottom: 8 }}
                 >
-                    Movie Management
+                    {isStaff ? "Movie Management" : "Movie Search"}
                 </Typography>
                 {results.isLoading ? (
                     <LoadingIndicator message="Loading..." />
                 ) : (
                     <React.Fragment>
                         <Typography variant="subtitle1">
-                            Search for movies to manage:
+                            {isStaff
+                                ? "Search for movies to manage:"
+                                : "Search for movies to purchase:"}
                         </Typography>
                         <SearchMoviesInput />
                         {results.searchResults.length > 0 ? (
@@ -61,7 +65,8 @@ const MovieManagementPage = props => {
                                         key={result[0]}
                                         style={{ margin: 8 }}
                                     >
-                                        <MovieManagementItem
+                                        <MovieItem
+                                            movieID={result[0]}
                                             isStaff={isStaff}
                                             movie={result[1]}
                                         />
@@ -81,7 +86,7 @@ const MovieManagementPage = props => {
                     variant="extended"
                     style={fabStyle}
                     component={Link}
-                    to="/management/addmovie"
+                    to="/management/movie"
                 >
                     <Add />
                     Add a Movie
@@ -102,7 +107,13 @@ function mapDispatchToProps(dispatch) {
     };
 }
 
+ViewMoviesLayout.propTypes = {
+    location: PropTypes.object,
+    results: PropTypes.object.isRequired,
+    requestSearchCatalogue: PropTypes.func.isRequired
+};
+
 export default connect(
     mapStateToProps,
     mapDispatchToProps
-)(MovieManagementPage);
+)(ViewMoviesLayout);

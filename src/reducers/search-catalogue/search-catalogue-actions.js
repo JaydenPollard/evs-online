@@ -1,4 +1,4 @@
-import searchMovies from "../../logic/searchMovies.function";
+import searchMovies from "../../logic/movie/searchMovies.function";
 
 export const REQUEST_SEARCH_CATALOGUE = "@@catalogue/REQUEST_SEARCH_CATALOGUE";
 export const REQUEST_SEARCH_CATALOGUE_FAIL =

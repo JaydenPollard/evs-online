@@ -1,5 +1,6 @@
 import * as React from "react";
 import { FormControl, InputLabel, Select, MenuItem } from "@material-ui/core";
+import PropTypes from "prop-types";
 
 const movieGenres = [
     "Action",
@@ -33,10 +34,11 @@ const movieGenres = [
 ];
 
 const MovieSelect = props => {
+    const { value, onChange } = props;
     return (
         <FormControl fullWidth required>
             <InputLabel>Genre</InputLabel>
-            <Select value={props.value} onChange={props.onChange}>
+            <Select value={value} onChange={onChange}>
                 {movieGenres.map(movieGenre => (
                     <MenuItem key={movieGenre} value={movieGenre}>
                         {movieGenre}
@@ -45,6 +47,11 @@ const MovieSelect = props => {
             </Select>
         </FormControl>
     );
+};
+
+MovieSelect.propTypes = {
+    value: PropTypes.string.isRequired,
+    onChange: PropTypes.func.isRequired
 };
 
 export default MovieSelect;

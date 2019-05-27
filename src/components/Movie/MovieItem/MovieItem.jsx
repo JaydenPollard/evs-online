@@ -1,7 +1,14 @@
 import * as React from "react";
 import { Paper, Typography, Grid, CardMedia, Button } from "@material-ui/core";
 import { Link } from "react-router-dom";
-import _ from "lodash";
+import PropTypes from "prop-types";
+import {
+    capitalizeString,
+    formatDateToString
+} from "../../../logic/common/utilities.function";
+import ConfirmRemoveMovieDialog from "../ConfirmRemoveMovieDialog/ConfirmRemoveMovieDialog";
+import removeMovie from "../../../logic/movie/removeMovie.function";
+import InfoSnackbar from "../../common/InfoSnackbar";
 
 const imagePreviewStyle = {
     height: "200px",
@@ -13,11 +20,31 @@ const buttonAlignment = {
     displayInline: "block"
 };
 
-const MovieManagementItem = props => {
-    const { movie } = props;
+const MovieItem = props => {
+    const { movie, movieID, isStaff } = props;
+
+    const [promptRemove, setPromptRemove] = React.useState(false);
+    const [displaySnackbar, setDisplaySnackbar] = React.useState(false);
+
+    function handleRemoveMovieClick(event) {
+        event.preventDefault();
+        setPromptRemove(true);
+    }
+
+    async function handleRemoveConfirmation(removeConfirm) {
+        if (removeConfirm === true) {
+            setPromptRemove(false);
+            const removeSuccess = await removeMovie(movieID);
+            if (removeSuccess) {
+                setDisplaySnackbar(removeSuccess);
+            }
+        }
+    }
+
     if (movie.movieHidden) {
         return null;
     }
+
     return (
         <Paper style={{ padding: 16 }}>
             <Grid container direction="row" spacing={16}>
@@ -37,10 +64,12 @@ const MovieManagementItem = props => {
                         alignItems="center"
                     >
                         <Typography variant="subtitle1">
-                            {movie.movieName.replace(/\w+/g, _.capitalize)}
+                            {capitalizeString(movie.movieName)}
                         </Typography>
                         <Typography variant="subtitle1">
-                            ${movie.moviePrice}
+                            {Number(movie.moviePrice) === 0
+                                ? "FREE"
+                                : `$${movie.moviePrice}`}
                         </Typography>
                     </Grid>
                     <Grid container direction="row" spacing={8}>
@@ -59,7 +88,7 @@ const MovieManagementItem = props => {
                                 <Typography>{movie.movieLength} min</Typography>
                                 <Typography>{movie.movieGenre}</Typography>
                                 <Typography>
-                                    {movie.movieReleaseDate}
+                                    {formatDateToString(movie.movieReleaseDate)}
                                 </Typography>
                                 <Typography>
                                     {movie.movieStockCount} left
@@ -67,19 +96,26 @@ const MovieManagementItem = props => {
                             </Grid>
                         </Grid>
                     </Grid>
+                    <Typography>Movie Synopsis:</Typography>
                     <Typography>{movie.movieSummary}</Typography>
                 </Grid>
             </Grid>
             <Grid style={buttonAlignment}>
-                {props.isStaff ? (
+                {isStaff ? (
                     <React.Fragment>
                         <Button
                             component={Link}
-                            to={"/management/movie/modifymovie/"}
+                            to={{
+                                pathname: "/management/movie",
+                                toEditMovie: movie,
+                                movieID
+                            }}
                         >
                             Edit Movie Details
                         </Button>
-                        <Button>Remove Movie</Button>
+                        <Button onClick={handleRemoveMovieClick}>
+                            Remove Movie
+                        </Button>
                     </React.Fragment>
                 ) : (
                     <React.Fragment>
@@ -91,8 +127,25 @@ const MovieManagementItem = props => {
                     </React.Fragment>
                 )}
             </Grid>
+            <ConfirmRemoveMovieDialog
+                open={promptRemove}
+                onClose={handleRemoveConfirmation}
+            />
+            <InfoSnackbar
+                open={displaySnackbar}
+                onClose={() => {
+                    setDisplaySnackbar(false);
+                }}
+                message="Movie removed. Refresh to see the changes."
+            />
         </Paper>
     );
 };
 
-export default MovieManagementItem;
+MovieItem.propTypes = {
+    movie: PropTypes.object.isRequired,
+    movieID: PropTypes.string.isRequired,
+    isStaff: PropTypes.bool.isRequired
+};
+
+export default MovieItem;
