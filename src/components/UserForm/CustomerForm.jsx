@@ -1,4 +1,4 @@
-import React, {Fragment} from 'react';
+import React, { useState } from "react";
 import {
     FormControl,
     Grid,
@@ -7,26 +7,30 @@ import {
     TextField,
     Typography
 } from "@material-ui/core";
-import Paper from '@material-ui/core/Paper';
-import Button from '@material-ui/core/Button';
+import Button from "@material-ui/core/Button";
+import Card from "@material-ui/core/Card";
+import CardContent from "@material-ui/core/CardContent";
+import { TextValidator, ValidatorForm } from "react-material-ui-form-validator";
 import firebase from "firebase";
 import NumberFormat from "react-number-format";
 
-function CustomerForm(props)
-{
-    const user = props;
-    const rootRef = firebase.database()
+function CustomerForm() {
+    const [user, setUser] = useState({
+        name: "",
+        dob: "",
+        email: "",
+        memberType: "Standard",
+        phoneNum: "",
+        address: ""
+    });
+    const rootRef = firebase
+        .database()
         .ref()
         .child("Users")
-        .child("Customers")
-        // .child(user.userId);
-    const [name, setName] = React.useState("");
-    const [dob, setDoB] = React.useState("");
-    const [email, setEmail] = React.useState("");
-    const [joinedDate, setJoinedDate] = React.useState("");
-    const [memberType, setMemberType] = React.useState("");
-    const [phoneNum, setPhoneNum] = React.useState("");
-    const [address, setAddress] = React.useState("");
+        .child("Customers");
+    // rootRef.once("value").then(function(data) {
+    //   console.log(data.key);
+    // })
     const memberInput = [
         {
             value: "Standard",
@@ -38,128 +42,155 @@ function CustomerForm(props)
         }
     ];
 
-  function handleName(e){
-    setName(e.target.value);
-  }
-  function handleAddress(e){
-    setAddress(e.target.value);
-  }
-  function handleDoB(e){
-      setDoB(e.target.value);
-  }
-  function handlePhoneNum(e){
-    setPhoneNum(e.target.value);
-  }
-  function handleEmail(e){
-    setEmail(e.target.value);
-  } 
-  function handleJoinedDate(e){
-    setJoinedDate(e.target.value);
-  }
-  function handleMemberType(e){
-    setMemberType(e.target.value);
-    
-  }
-  function handleSubmit()
-  {
-    //  updateFirebse();
-    console.log(name, address, phoneNum, memberType, dob, joinedDate)
-  }
+    function handleNameChange(event) {
+        const newName = event.target.value;
+        setUser(data => {
+            return { ...data, name: newName };
+        });
+    }
+    function handleDoBChange(event) {
+        setUser(data => {
+            return { ...data, dob: event.target.value };
+        });
+    }
+    function handleEmailChange(event) {
+        const newEmail = event.target.value;
+        setUser(data => {
+            return { ...data, email: newEmail };
+        });
+    }
+    function handleMemberTypeChange(event) {
+        setUser(data => {
+            return { ...data, memberType: event.target.value };
+        });
+    }
+    function handlePhoneNumChange(event) {
+        const newPhoneNum = event.target.value;
+        setUser(data => {
+            return { ...data, phoneNum: newPhoneNum };
+        });
+    }
+    function handleAddressChange(event) {
+        const newAddress = event.target.value;
+        setUser(data => {
+            return { ...data, address: newAddress };
+        });
+    }
 
+    function handleSubmit(e) {
+        e.preventDefault();
+        console.log(user);
+    }
 
-//   function updateFirebse() {
-//     rootRef.child("Address").set(address);
-//     rootRef.child("DoB").set(dob);
-//     rootRef.child("Email").set(email);
-//     rootRef.child("JoinedDate").set(joinedDate);
-//     rootRef.child("MemberType").set(memberType);
-//     rootRef.child("Name").set(name);
-//     rootRef.child("PhoneNum").set(phoneNum);
-// }
+    //   function updateFirebse() {
+    //     rootRef.child("Address").set(address);
+    //     rootRef.child("DoB").set(dob);
+    //     rootRef.child("Email").set(email);
+    //     rootRef.child("JoinedDate").set(joinedDate);
+    //     rootRef.child("MemberType").set(memberType);
+    //     rootRef.child("Name").set(name);
+    //     rootRef.child("PhoneNum").set(phoneNum);
+    // }
 
-
-return (
-<Paper>
-        <Typography variant = "h5" algin = "center"> Add Customer </Typography>
-          <FormControl margin="normal" required fullWidth>
-          <Typography >Full Name*: </Typography>
-            <TextField
-              required
-              value = {name}
-              onChange={handleName}
-            />
-          </FormControl>
-          <Typography >Date Of Birth: </Typography>
-           <FormControl margin="normal" required fullWidth >
-            <TextField
-              required
-              value = {dob}
-              onChange={handleDoB}
-              type = "date"
-            />
-           </FormControl>
-          <FormControl  margin="normal" required fullWidth>
-          <Typography >Address*:  </Typography>
-            <TextField
-              required
-              value = {address}
-              onChange={handleAddress}
-            />
-          </FormControl>
-          <FormControl margin="normal" required fullWidth >
-          <Typography >Email*:  </Typography>
-                <TextField
-              required
-              value = {email}
-              onChange={handleEmail}
-            />
-           </FormControl>
-           <FormControl margin="normal" required>
-          <Typography >Phone Number:  </Typography>
-          <NumberFormat
-                customInput={TextField}
-                format="+64 ### ### ###"
-                placeholder = "+64"
-                value={phoneNum}
-                onChange={handlePhoneNum}
-                  required
+    return (
+        <Grid item xs={12}>
+            <Card>
+                <CardContent>
+                    <ValidatorForm autoComplete="off" onSubmit={handleSubmit}>
+                        <Grid container spacing={24}>
+                            <Grid item xs={12}>
+                                <Typography>User Basic Info</Typography>
+                            </Grid>
+                            <Grid item xs={12} sm={6}>
+                                <Typography>Name:</Typography>
+                                <Input
+                                    placeholder="Name"
+                                    value={user.name}
+                                    onChange={handleNameChange}
+                                    required
                                 />
-         </FormControl>
-         <Typography>Member Type:</Typography> 
-            <FormControl margin="normal" required>
-                <TextField
-                    select
-                    value={memberType}
-                    onChange={handleMemberType}
+                            </Grid>
+                            <Grid item xs={12} sm={6}>
+                                <Typography>DoB:</Typography>
+                                <FormControl>
+                                    <TextField
+                                        type="date"
+                                        InputLabelProps={{
+                                            shrink: true
+                                        }}
+                                        value={user.dob}
+                                        onChange={handleDoBChange}
+                                        required
+                                    />
+                                </FormControl>
+                            </Grid>
+                            <Grid item xs={12} sm={6}>
+                                <Typography>Email:</Typography>
+                                <TextValidator
+                                    name="email"
+                                    placeholder="Email"
+                                    value={user.email}
+                                    onChange={handleEmailChange}
+                                    validators={["isEmail"]}
+                                    errorMessages={["Email is not valid"]}
+                                    required
+                                    helperText="This will be used as your login credentials"
+                                />
+                            </Grid>
+                            <Grid item xs={12} sm={6}>
+                                <Typography>Member Type:</Typography>
+                                <FormControl>
+                                    <TextField
+                                        select
+                                        value={user.memberType}
+                                        onChange={handleMemberTypeChange}
                                     >
-                {memberInput.map(option => (
-                    <MenuItem
-                        key={option.value}
-                        value={option.value}
+                                        {memberInput.map(option => (
+                                            <MenuItem
+                                                key={option.value}
+                                                value={option.value}
                                             >
                                                 {option.label}
                                             </MenuItem>
                                         ))}
                                     </TextField>
-          </FormControl>
-
-         
-
-           <Typography >Joined Date: </Typography>
-           <FormControl margin="normal" required fullWidth >
-            <TextField
-              required
-              value = {joinedDate}
-              onChange={handleJoinedDate}
-              type = "date"
-            />
-           </FormControl>
-           <Button type="submit"
-          fullWidth
-          variant="contained"
-          color="inherit" 
-          onClick={handleSubmit}>Add Customer</Button>
-</Paper>
-);
+                                </FormControl>
+                            </Grid>
+                            <Grid item xs={12} sm={6}>
+                                <Typography>Phone Number:</Typography>
+                                <NumberFormat
+                                    customInput={TextField}
+                                    value={user.phoneNum}
+                                    onChange={handlePhoneNumChange}
+                                    format="+64 ### ### ###"
+                                    placeholder="Phone Number"
+                                    required
+                                />
+                            </Grid>
+                            <Grid item xs={12} sm={6}>
+                                <Typography>Address:</Typography>
+                                <Input
+                                    placeholder="Address"
+                                    value={user.address}
+                                    onChange={handleAddressChange}
+                                    required
+                                />
+                            </Grid>
+                            <Grid item xs={24} sm={12}>
+                                <Button
+                                    type="submit"
+                                    variant="contained"
+                                    color="inherit"
+                                    fullWidth
+                                >
+                                    Create New User
+                                </Button>
+                            </Grid>
+                        </Grid>
+                    </ValidatorForm>
+                </CardContent>
+            </Card>
+        </Grid>
+    );
 }
-export default CustomerForm
+export default CustomerForm;

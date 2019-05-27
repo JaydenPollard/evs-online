@@ -9,10 +9,11 @@ import {
 import Button from "@material-ui/core/Button";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
-import firebase from "firebase";
+// import firebase from "firebase";
 import React, { useEffect, useState } from "react";
 import { TextValidator, ValidatorForm } from "react-material-ui-form-validator";
 import NumberFormat from "react-number-format";
+import firebase from "firebase";
 
 const firebaseConfig = {
     apiKey: "AIzaSyCTT8GvpjD5AMOMkAQZlP8Pj8P57n70jJg",

@@ -3,29 +3,14 @@ import "typeface-roboto";
 import React from "react";
 import ReactDOM from "react-dom";
 import { BrowserRouter } from "react-router-dom";
-import { createMuiTheme, MuiThemeProvider } from "@material-ui/core";
 import App from "./App";
-
-const theme = createMuiTheme({
-    palette: {
-        primary: {
-            main: "#0d47a1"
-        },
-        secondary: {
-            main: "#ff5722"
-        },
-        type: "dark",
-        typography: {
-            useNextVariants: true
-        }
-    }
-});
+import Firebase, { FirebaseContext } from "./components/Firebase";
 
 ReactDOM.render(
-    <BrowserRouter>
-        <MuiThemeProvider theme={theme}>
+    <FirebaseContext.Provider value={Firebase}>
+        <BrowserRouter>
             <App />
-        </MuiThemeProvider>
-    </BrowserRouter>,
+        </BrowserRouter>
+    </FirebaseContext.Provider>,
     document.getElementById("root")
 );

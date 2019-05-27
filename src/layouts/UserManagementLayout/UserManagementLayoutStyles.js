@@ -8,6 +8,7 @@ export const UserManagementStyles = theme => ({
     },
     main: {
         width: "80vw",
+        minHeight: "89vh",
         display: "block", // Fix IE 11 issue.
         marginLeft: "auto",
         marginRight: "auto",
