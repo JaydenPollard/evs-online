@@ -18,7 +18,7 @@ const NewOrder = props => {
     const { location } = props;
     const { movie, movieID } = location;
     const [newOrder, setNewOrder] = useState(order);
-    const [addOrderSuccess, setAddOrderSuccess] = useState(false);
+    const [orderMovieSuccess, setOrderMovieSuccess] = useState(false);
 
     function handleDelivery() {
         setNewOrder(orderData => {
@@ -56,16 +56,13 @@ const NewOrder = props => {
         const success = await createOrder(changeOrder);
         if (success) {
             movie.movieStockCount--;
-            movie.movieReleaseDate = movie.movieReleaseDate.toLocaleDateString(
-                "en-AU"
-            );
             const removeStockSuccess = await setMovie(movie, movieID);
-            setAddOrderSuccess(true);
+            setOrderMovieSuccess(true);
         }
     }
 
-    if (addOrderSuccess) {
-        return <Redirect to="/" />;
+    if (orderMovieSuccess) {
+        return <Redirect to={{ pathname: "/", orderMovieSuccess: true }} />;
     } else if (!movie) {
         return (
             <React.Fragment>

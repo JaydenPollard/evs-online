@@ -7,6 +7,7 @@ import PropTypes from "prop-types";
 import AppBar from "../../../components/AppBar/AppBar";
 import SearchMoviesInput from "../../../components/Movie/SearchMoviesInput/SearchMoviesInput";
 import AddMovieSuccessDialog from "../../../components/Movie/AddMovieSuccessDialog/AddMovieSuccessDialog";
+import OrderMovieSuccessDialog from "../../OrderPageLayout/OrderMovieSuccessDialog";
 import { requestSearchCatalogue } from "../../../reducers/search-catalogue/search-catalogue-actions";
 import MovieItem from "../../../components/Movie/MovieItem/MovieItem";
 import LoadingIndicator from "../../../components/common/LoadingIndicator";
@@ -21,9 +22,9 @@ const fabStyle = {
 
 const ViewMoviesLayout = props => {
     const { results, location } = props;
-    const { addMovieSuccess } = location;
+    const { addMovieSuccess, orderMovieSuccess } = location;
     // TODO: Set this to true until we have a way to get the user type
-    const [isStaff, setIsStaff] = React.useState(false);
+    const [isStaff, setIsStaff] = React.useState(true);
 
     React.useEffect(() => {
         if (results.searchResults.length === 0) {
@@ -34,6 +35,7 @@ const ViewMoviesLayout = props => {
     return (
         <React.Fragment>
             {addMovieSuccess ? <AddMovieSuccessDialog open /> : null}
+            {orderMovieSuccess ? <OrderMovieSuccessDialog open /> : null}
             <Grid
                 container
                 direction="column"

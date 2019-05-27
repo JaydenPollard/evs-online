@@ -8,6 +8,7 @@ import { requestAllOrdersRetrieval } from "../../reducers/order-retrieval/order-
 import OrderList from "./OrderList";
 
 const SearchOrders = props => {
+    // TODO: Search orders based on userID if logged in, else search all orders
     props.requestAllOrdersRetrieval();
     return (
         <React.Fragment>

@@ -4,6 +4,7 @@ import "firebase/storage";
 import { toLowerCaseString } from "../common/utilities.function";
 
 async function setMovie(movie, currentMovieID) {
+    console.log(movie.movieReleaseDate);
     const rootRef = firebase.database.ref("Movie");
     return currentMovieID
         ? updateMovie(rootRef, movie, currentMovieID)
