@@ -12,6 +12,7 @@ module.exports = {
         "react/require-default-props": "off",
         "react/jsx-wrap-multilines": ["error", {"declaration": false, "assignment": false}],
         "func-names": "off",
+        "no-else-return": "off",
         "no-param-reassign": "off"
     }
 };

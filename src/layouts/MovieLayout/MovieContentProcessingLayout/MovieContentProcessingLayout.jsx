@@ -52,6 +52,7 @@ const MovieContentProcessingLayout = props => {
         false
     );
     const [addMovieSuccess, setAddMovieSuccess] = React.useState(false);
+    const [isStaff, setIsStaff] = React.useState(true);
 
     function handleImageSelect(event) {
         event.preventDefault();
@@ -74,6 +75,8 @@ const MovieContentProcessingLayout = props => {
 
     if (addMovieSuccess) {
         return <Redirect to={{ pathname: "/", addMovieSuccess: true }} />;
+    } else if (!isStaff) {
+        return <Redirect to="/" />;
     }
 
     return (
