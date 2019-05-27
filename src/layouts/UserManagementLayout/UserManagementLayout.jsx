@@ -7,7 +7,8 @@ import Tabs from "@material-ui/core/Tabs";
 import { UserManagementStyles } from "./UserManagementLayoutStyles";
 import CustomerGrid from "../../components/UserGrid/CustomerGrid";
 import StaffGrid from "../../components/UserGrid/StaffGrid";
-
+import CustomerForm from "../../components/UserForm/CustomerForm";
+import StaffForm from "../../components/UserForm/StaffForm";
 function UserManagementLayout(props) {
     const { classes } = props;
     const [tabValue, setTabValue] = useState(0);
@@ -27,6 +28,7 @@ function UserManagementLayout(props) {
                     <Tab label="Customer" />
                     <Tab label="Staff" />
                     <Tab label="User Form" />
+                    <Tab label="Staff Form" />
                 </Tabs>
             </AppBar>
             <div className={classes.main}>
@@ -40,7 +42,17 @@ function UserManagementLayout(props) {
                         <StaffGrid />
                     </TabContainer>
                 )}
-                {/* {value === 2 && <TabContainer>Item Three</TabContainer>} */}
+                {tabValue === 2 && (
+                  <TabContainer>
+                    <CustomerForm/>
+                  </TabContainer>
+                )}
+                {tabValue === 3 && (
+                  <TabContainer>
+                    <StaffForm/>
+                  </TabContainer>
+                )}
+                
             </div>
         </div>
     );
