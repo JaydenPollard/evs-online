@@ -1,4 +1,7 @@
-import Firebase from "firebase";
+import * as firebase from "firebase/app";
+import "firebase/auth";
+import "firebase/database";
+import "firebase/storage";
 
 //firebase config
 const firebaseConfig = {
@@ -11,11 +14,13 @@ const firebaseConfig = {
 };
 
 //init firebase
-Firebase.initializeApp(firebaseConfig);
+const Firebase = () => {
+    firebase.initializeApp(firebaseConfig);
 
-const databaseRef = Firebase.database().ref();
-
-export const orderRef = databaseRef.child("Order");
+    firebase.auth = firebase.auth();
+    firebase.database = firebase.database();
+    firebase.storage = firebase.storage();
+};
 
 //import this file to use firebase in your component
 export default Firebase;

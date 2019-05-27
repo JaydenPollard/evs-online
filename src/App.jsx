@@ -1,4 +1,5 @@
 import React from "react";
+import firebase from "firebase";
 import { Route, BrowserRouter } from "react-router-dom";
 import { Switch } from "react-router";
 import {
@@ -8,7 +9,9 @@ import {
 } from "@material-ui/core";
 import HomePage from "./layouts/HomePageLayout/HomePageLayout";
 import LoginPage from "./layouts/LoginPageLayout/LoginPageLayout";
-import OrderPage from "./layouts/OrderPageLayout/OrderPageLayout";
+import SearchOrders from "./layouts/OrderPageLayout/SearchOrders";
+import NewOrder from "./layouts/OrderPageLayout/NewOrder";
+import OrderManagementPage from "./layouts/OrderPageLayout/OrderManagementPage";
 
 const theme = createMuiTheme({
     palette: {
@@ -23,7 +26,13 @@ const App = () => (
             <Switch>
                 <Route path="/home" exact component={HomePage} />
                 <Route path="/login" exact component={LoginPage} />
-                <Route path="/order" exactc component={OrderPage} />
+                <Route path="/order/search" exact component={SearchOrders} />
+                <Route path="/order/new" exact component={NewOrder} />
+                <Route
+                    path="/management/order"
+                    exact
+                    component={OrderManagementPage}
+                />
                 <Route component={HomePage} />
             </Switch>
         </BrowserRouter>

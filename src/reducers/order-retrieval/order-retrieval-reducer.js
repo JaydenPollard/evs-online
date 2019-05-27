@@ -1,19 +1,27 @@
 import {
     REQUEST_ORDER_RETRIEVAL_SUCCESS,
+    REQUEST_ORDERS_RETRIEVAL_SUCCESS,
     REQUEST_ORDER_RETRIEVAL_FAIL
 } from "./order-retrieval-actions";
 
 const initialState = {
     order: {},
+    orders: {},
+    movie: {},
     isLoading: true,
     errorMessage: ""
 };
 
-function searchCatalogueResults(state = initialState, action) {
+function orderRetrievalResult(state = initialState, action) {
     switch (action.type) {
         case REQUEST_ORDER_RETRIEVAL_SUCCESS:
             return Object.assign({}, state, {
                 order: action.order,
+                isLoading: false
+            });
+        case REQUEST_ORDERS_RETRIEVAL_SUCCESS:
+            return Object.assign({}, state, {
+                orders: action.orders,
                 isLoading: false
             });
         case REQUEST_ORDER_RETRIEVAL_FAIL:
@@ -26,4 +34,4 @@ function searchCatalogueResults(state = initialState, action) {
     }
 }
 
-export default searchCatalogueResults;
+export default orderRetrievalResult;
