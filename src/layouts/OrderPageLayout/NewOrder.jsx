@@ -7,16 +7,18 @@ import {
     Divider,
     Card
 } from "@material-ui/core";
-import { Redirect } from "react-router-dom";
+import { Link, withRouter, Redirect } from "react-router-dom";
+import PropTypes from "prop-types";
 import AppBar from "../../components/AppBar/AppBar";
 import order from "../../models/order";
 import createOrder from "../../logic/order/createOrder.function";
+import setMovie from "../../logic/movie/addMovie.function";
 
 const NewOrder = props => {
+    const { location } = props;
+    const { movie, movieID } = location;
     const [newOrder, setNewOrder] = useState(order);
     const [addOrderSuccess, setAddOrderSuccess] = useState(false);
-
-    const movie = props.location.state;
 
     function handleDelivery() {
         setNewOrder(orderData => {
@@ -47,12 +49,17 @@ const NewOrder = props => {
         const changeOrder = newOrder;
 
         changeOrder.CustomerID = "anon";
-        changeOrder.MovieID = movie.movieId;
+        changeOrder.MovieID = movieID;
         changeOrder.OrderStatus = status;
         changeOrder.OrderPrice = movie.moviePrice;
 
         const success = await createOrder(changeOrder);
         if (success) {
+            movie.movieStockCount--;
+            movie.movieReleaseDate = movie.movieReleaseDate.toLocaleDateString(
+                "en-AU"
+            );
+            const removeStockSuccess = await setMovie(movie, movieID);
             setAddOrderSuccess(true);
         }
     }
@@ -268,7 +275,7 @@ const NewOrder = props => {
                                         gutterBottom
                                         variant="subtitle1"
                                     >
-                                        Length: {movie.movieLength}
+                                        Length: {movie.movieLength} min
                                     </Typography>
                                 </Grid>
                                 <Grid item>
@@ -289,7 +296,7 @@ const NewOrder = props => {
                                 style={{ padding: "15px" }}
                             >
                                 <Typography gutterBottom variant="h5">
-                                    Order Total: {movie.moviePrice}
+                                    Order Total: ${movie.moviePrice}
                                 </Typography>
                                 <Button
                                     variant="contained"
@@ -307,4 +314,8 @@ const NewOrder = props => {
     }
 };
 
-export default NewOrder;
+NewOrder.propTypes = {
+    location: PropTypes.object
+};
+
+export default withRouter(NewOrder);

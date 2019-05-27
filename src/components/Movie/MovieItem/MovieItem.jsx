@@ -120,7 +120,16 @@ const MovieItem = props => {
                 ) : (
                     <React.Fragment>
                         {movie.movieStockCount > 0 ? (
-                            <Button>Purchase Movie</Button>
+                            <Button
+                                component={Link}
+                                to={{
+                                    pathname: "/order/new",
+                                    movie,
+                                    movieID
+                                }}
+                            >
+                                Purchase Movie
+                            </Button>
                         ) : (
                             <Button disabled>Out of Stock</Button>
                         )}

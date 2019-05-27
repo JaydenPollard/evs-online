@@ -26,6 +26,13 @@ const App = () => (
         <BrowserRouter>
             <Switch>
                 <Route path="/home" exact component={ViewMoviesLayout} />
+                <Route path="/order/search" exact component={SearchOrders} />
+                <Route path="/order/new" exact component={NewOrder} />
+                <Route
+                    path="/test/order"
+                    exact
+                    component={OrderManagementPage}
+                />
                 <Route path="/login" exact component={LoginPage} />
                 <Route
                     path="/management/movie"
@@ -33,13 +40,6 @@ const App = () => (
                     component={AddMoviesLayout}
                 />
                 <Route component={ViewMoviesLayout} />
-                <Route path="/order/search" exact component={SearchOrders} />
-                <Route path="/order/new" exact component={NewOrder} />
-                <Route
-                    path="/management/order"
-                    exact
-                    component={OrderManagementPage}
-                />
             </Switch>
         </BrowserRouter>
     </MuiThemeProvider>
