@@ -3,19 +3,21 @@ import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import FormControl from "@material-ui/core/FormControl";
-import Input from "@material-ui/core/Input";
-import InputLabel from "@material-ui/core/InputLabel";
+import FormField from "./formFields";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Paper from "@material-ui/core/Paper";
-import React, { Component } from "react";
+import React from "react";
 import Typography from "@material-ui/core/Typography";
 import withStyles from "@material-ui/core/styles/withStyles";
-import { validate } from "./validate";
+import { withFirebase } from "../../components/Firebase";
+import { validate, validateRepeatPassword } from "./validate";
+import { compose } from "recompose";
 import { Link } from "react-router-dom";
 import { registrationPageLayoutStyles } from "./RegistrationPageLayoutStyles";
-import { withFirebase } from "../../components/Firebase";
+import createUserWithEmailAndPassword from "./auth";
 
-const INITIAL_STATE = {
+const INITIAL_FORM_STATE = {
+    formValid: false,
     formError: false,
     formSuccess: "",
     formdata: {
@@ -24,15 +26,16 @@ const INITIAL_STATE = {
             value: "",
             config: {
                 name: "email_input",
-                label: "Email address",
+                label: "Enter your email address *",
                 type: "email",
-                placeholder: "Enter your email address: *"
+                placeholder: "",
+                showlabel: true
             },
             validation: {
                 required: true,
                 email: true
             },
-            valid: false,
+            valid: true,
             validationMessage: "",
             showlabel: true
         },
@@ -42,179 +45,321 @@ const INITIAL_STATE = {
             config: {
                 name: "password_input",
                 type: "password",
-                label: "Password",
-                placeholder: "Enter your password: *"
+                label: "Enter a password *",
+                placeholder: ""
             },
             validation: {
-                required: true
+                required: true,
+                password: true
             },
-            valid: false,
+            valid: true,
+            validationMessage: "",
+            showlabel: true
+        },
+        repeatpassword: {
+            element: "input",
+            value: "",
+            config: {
+                name: "repeatpassword_input",
+                type: "password",
+                label: "Re-enter password *",
+                placeholder: ""
+            },
+            validation: {
+                required: true,
+                repeatpassword: true
+            },
+            valid: true,
+            validationMessage: "",
+            showlabel: true
+        },
+        firstname: {
+            element: "input",
+            value: "",
+            config: {
+                name: "firstname_input",
+                label: "Enter your first name *",
+                type: "text",
+                placeholder: "",
+                showlabel: true
+            },
+            validation: {
+                required: true,
+                text: true
+            },
+            valid: true,
+            validationMessage: "",
+            showlabel: true
+        },
+        lastname: {
+            element: "input",
+            value: "",
+            config: {
+                name: "lastname_input",
+                label: "Enter your last name *",
+                type: "text",
+                placeholder: "",
+                showlabel: true
+            },
+            validation: {
+                required: true,
+                text: true
+            },
+            valid: true,
+            validationMessage: "",
+            showlabel: true
+        },
+        dob: {
+            element: "date",
+            value: "",
+            config: {
+                name: "date_input",
+                label:
+                    "Enter your date of birth (used for movie age restrictions) *",
+                type: "date",
+                placeholder: "",
+                showlabel: true
+            },
+            validation: {
+                required: true,
+                date: true
+            },
+            valid: true,
+            validationMessage: "",
+            showlabel: true
+        },
+        address: {
+            element: "input",
+            value: "",
+            config: {
+                name: "address_input",
+                label: "Enter your address *",
+                type: "text",
+                placeholder: "",
+                showlabel: true
+            },
+            validation: {
+                required: true,
+                text: true
+            },
+            valid: true,
+            validationMessage: "",
+            showlabel: true
+        },
+        phonenumber: {
+            element: "input",
+            value: "",
+            config: {
+                name: "phonenumber_input",
+                label: "Enter your phone number (8-10 digits) *",
+                type: "text",
+                placeholder: "",
+                showlabel: true
+            },
+            validation: {
+                required: true,
+                text: true
+            },
+            valid: true,
             validationMessage: "",
             showlabel: true
         }
     }
 };
 
-const RegistrationPage = () => {
-    <div>
-        <FirebaseContext.Consumer>
-            {firebase => <RegistrationPageLayout firebase={firebase} />}
-        </FirebaseContext.Consumer>
-    </div>;
-};
+const RegistrationPage = props => {
+    const [formState, setFormState] = React.useState(INITIAL_FORM_STATE);
 
-class RegistrationPageLayout extends Component {
-    constructor(props) {
-        super(props);
-        this.state = { INITIAL_STATE };
-    }
-    handleChange = element => {
-        const newFormdata = { ...this.state.formdata };
+    function handleUpdate(element) {
+        const newFormdata = { ...formState.formdata };
+        const pwElement = { ...newFormdata["password"] };
         const newElement = { ...newFormdata[element.id] };
         newElement.value = element.event.target.value;
+
+        if (element.id == "repeatpassword") {
+            var validData = validateRepeatPassword(newElement, pwElement.value);
+        } else {
+            var validData = validate(newElement);
+        }
+        newElement.valid = validData[0];
+        newElement.validationMessage = validData[1];
+
+        if (
+            formState.formdata.email.valid == false ||
+            formState.formdata.password.valid == false ||
+            formState.formdata.repeatpassword.valid == false ||
+            formState.formdata.firstname.valid == false ||
+            formState.formdata.lastname.valid == false ||
+            formState.formdata.dob.valid == false
+        ) {
+            setFormState({ formValid: false });
+        } else {
+            setFormState({ formValid: true });
+        }
+
         newFormdata[element.id] = newElement;
 
-        this.setState({
+        setFormState({
             formError: false,
             formdata: newFormdata
         });
-    };
-    handleSubmit = event => {
-        console.log("handling submit click");
+    }
+
+    function handleSubmit(event) {
+        let email = formState.formdata.email.value;
+        let password = formState.formdata.password.value;
+
+        createUserWithEmailAndPassword(email, password)
+            .then(authUser => {
+                alert("success!!! " + authUser.user);
+                setFormState({ ...INITIAL_FORM_STATE });
+            })
+            .catch(reason => {
+                alert("reason: " + reason);
+                alert("err code: " + reason.errorCode);
+                alert("err msg: " + reason.errorMessage);
+            });
+
         event.preventDefault();
+    }
 
-        let dataToSubmit = {};
-        let formIsValid = true;
+    return (
+        <div className={props.classes.background}>
+            <main className={props.classes.main}>
+                <CssBaseline />
+                <Paper className={props.classes.paper}>
+                    <Button className={props.classes.button} color="default">
+                        <Link to="/home" style={{ textDecoration: "none" }}>
+                            <ArrowBackIcon
+                                style={{ transform: "translateY(7px)" }}
+                            />
+                            Return
+                        </Link>
+                    </Button>
 
-        let email = this.state.formdata.email.value;
-        let password = this.state.formdata.password.value;
-
-        Firebase.doCcreateUserWithEmailAndPassword(email, password).catch(
-            function(error) {
-                var errorCode = error.code;
-                var errorMessage = error.message;
-                if (errorCode == "auth/weak-password") {
-                    alert("The password is too weak.");
-                } else {
-                    alert(errorMessage);
-                }
-                console.log(error);
-            }
-        );
-
-        for (let key in this.state.formdata) {
-            dataToSubmit[key] = this.state.formdata[key].value;
-            formIsValid = this.state.formdata[key].valid && formIsValid;
-        }
-    };
-    render() {
-        const isValid = newElement => {
-            validate(newElement);
-        };
-        return (
-            <div className={this.props.classes.background}>
-                <main className={this.props.classes.main}>
-                    <CssBaseline />
-                    <Paper className={this.props.classes.paper}>
-                        <Button
-                            className={this.props.classes.button}
-                            color="default"
+                    <Avatar className={props.classes.avatar}>
+                        <LockOutlinedIcon />
+                    </Avatar>
+                    <Typography component="h1" variant="h5">
+                        Registration Form
+                    </Typography>
+                    <form className={props.classes.form}>
+                        <FormControl
+                            margin="normal"
+                            required
+                            fullWidth
+                            error={formState.formdata.email.valid}
                         >
-                            <Link to="/home" style={{ textDecoration: "none" }}>
-                                <ArrowBackIcon
-                                    style={{ transform: "translateY(7px)" }}
-                                />
-                                Return
-                            </Link>
-                        </Button>
-
-                        <Avatar className={this.props.classes.avatar}>
-                            <LockOutlinedIcon />
-                        </Avatar>
-                        <Typography component="h1" variant="h5">
-                            Registration Form
-                        </Typography>
-                        <form className={this.props.classes.form}>
-                            <FormControl margin="normal" required fullWidth>
-                                <InputLabel htmlFor="email">
-                                    Email Address
-                                </InputLabel>
-                                <Input
-                                    id="email"
-                                    name="email"
-                                    autoComplete="email"
-                                    autoFocus
-                                />
-                            </FormControl>
-                            <FormControl margin="normal" required fullWidth>
-                                <InputLabel htmlFor="password">
-                                    Enter a password
-                                </InputLabel>
-                                <Input
-                                    name="password"
-                                    type="password"
-                                    id="password"
-                                />
-                            </FormControl>
-                            <FormControl margin="normal" required fullWidth>
-                                <InputLabel htmlFor="repeat-password">
-                                    Re-enter password
-                                </InputLabel>
-                                <Input
-                                    name="repeat-password"
-                                    type="password"
-                                    id="repeat-password"
-                                />
-                            </FormControl>
-                            <FormControl margin="normal" required fullWidth>
-                                <InputLabel htmlFor="first-name">
-                                    First Name
-                                </InputLabel>
-                                <Input
-                                    name="first-name"
-                                    type="text"
-                                    id="first-name"
-                                />
-                            </FormControl>
-                            <FormControl margin="normal" required fullWidth>
-                                <InputLabel htmlFor="last-name">
-                                    Last Name
-                                </InputLabel>
-                                <Input
-                                    name="last-name"
-                                    type="text"
-                                    id="last-name"
-                                />
-                            </FormControl>
-                            <FormControl margin="normal" required fullWidth>
-                                <InputLabel htmlFor="date-of-birth">
-                                    Date of Birth
-                                </InputLabel>
-                                <Input
-                                    name="date-of-birth"
-                                    type="dob"
-                                    id="dob"
-                                />
-                            </FormControl>
+                            <FormField
+                                id={"email"}
+                                formdata={formState.formdata.email}
+                                change={element => handleUpdate(element)}
+                            />
+                        </FormControl>
+                        <FormControl
+                            margin="normal"
+                            required
+                            fullWidth
+                            error={formState.formdata.password.valid}
+                        >
+                            <FormField
+                                id={"password"}
+                                formdata={formState.formdata.password}
+                                change={element => handleUpdate(element)}
+                            />
+                        </FormControl>
+                        <FormControl
+                            margin="normal"
+                            required
+                            fullWidth
+                            error={formState.formdata.repeatpassword.valid}
+                        >
+                            <FormField
+                                id={"repeatpassword"}
+                                formdata={formState.formdata.repeatpassword}
+                                change={element => handleUpdate(element)}
+                            />
+                        </FormControl>
+                        <FormControl
+                            margin="normal"
+                            required
+                            fullWidth
+                            error={formState.formdata.firstname.valid}
+                        >
+                            <FormField
+                                id={"firstname"}
+                                formdata={formState.formdata.firstname}
+                                change={element => handleUpdate(element)}
+                            />
+                        </FormControl>
+                        <FormControl
+                            margin="normal"
+                            required
+                            fullWidth
+                            error={formState.formdata.lastname.valid}
+                        >
+                            <FormField
+                                id={"lastname"}
+                                formdata={formState.formdata.lastname}
+                                change={element => handleUpdate(element)}
+                            />
+                        </FormControl>
+                        <FormControl
+                            margin="normal"
+                            required
+                            fullWidth
+                            error={formState.formdata.dob.valid}
+                        >
+                            <FormField
+                                id={"dob"}
+                                formdata={formState.formdata.dob}
+                                change={element => handleUpdate(element)}
+                            />
+                        </FormControl>
+                        <FormControl
+                            margin="normal"
+                            required
+                            fullWidth
+                            error={formState.formdata.address.valid}
+                        >
+                            <FormField
+                                id={"address"}
+                                formdata={formState.formdata.address}
+                                change={element => handleUpdate(element)}
+                            />
+                        </FormControl>
+                        <FormControl
+                            margin="normal"
+                            required
+                            fullWidth
+                            error={formState.formdata.phonenumber.valid}
+                        >
+                            <FormField
+                                id={"phonenumber"}
+                                formdata={formState.formdata.phonenumber}
+                                change={element => handleUpdate(element)}
+                            />
+                        </FormControl>
+                        <FormControl margin="normal" justify="center">
                             <Button
                                 type="submit"
-                                fullWidth
                                 variant="contained"
                                 color="inherit"
-                                onClick={this.handleSubmit}
-                                disabled={isValid(this)}
+                                size="large"
+                                onClick={event => handleSubmit(event)}
+                                disabled={formState.formValid}
                             >
                                 Register
                             </Button>
-                        </form>
-                        {/* <div className={this.props.classes.divider} /> */}
-                    </Paper>
-                </main>
-            </div>
-        );
-    }
-}
+                        </FormControl>
+                    </form>
+                    {/* <div className={this.props.classes.divider} /> */}
+                </Paper>
+            </main>
+        </div>
+    );
+};
 
-const RegistrationBase = withFirebase(RegistrationPage);
+const RegistrationComposed = compose(withFirebase)(RegistrationPage);
 
-export default withStyles(registrationPageLayoutStyles)(RegistrationBase);
+export default withStyles(registrationPageLayoutStyles)(RegistrationComposed);

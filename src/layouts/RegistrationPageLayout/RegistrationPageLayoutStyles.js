@@ -5,10 +5,11 @@ export const registrationPageLayoutStyles = theme => ({
         width: "100%",
         height: "100%",
         backgroundImage: `url(${Image})`,
+        backgroundAttachment: "fixed",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
         backgroundSize: "cover",
-        position: "relative"
+        position: "absolute"
     },
     main: {
         width: "80vw",
@@ -18,7 +19,7 @@ export const registrationPageLayoutStyles = theme => ({
         paddingTop: "10vh",
         paddingBottom: "10vh",
         [theme.breakpoints.up("md")]: {
-            width: 700
+            width: "40%"
         }
     },
     paper: {
