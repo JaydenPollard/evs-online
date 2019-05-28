@@ -1,16 +1,6 @@
-import React, { useState } from "react";
-import firebase from "firebase/app";
-import "firebase/database";
+import React from "react";
 import { connect } from "react-redux";
-import {
-    Grid,
-    Typography,
-    Table,
-    TableHead,
-    TableRow,
-    TableCell,
-    Button
-} from "@material-ui/core";
+import { Grid, Typography } from "@material-ui/core";
 import OrderItem from "./OrderItem";
 
 const OrderList = ({ result }) => {
@@ -25,9 +15,15 @@ const OrderList = ({ result }) => {
                 alignItems="center"
                 spacing={8}
             >
-                {Object.entries(result.orders).map(order => (
-                    <OrderItem orderId={order[0]} order={order[1]} />
-                ))}
+                {result.orders.length > 0 ? (
+                    result.orders.map(order => (
+                        <OrderItem orderId={order[0]} order={order[1]} />
+                    ))
+                ) : (
+                    <Typography gutterBottom variant="subtitle1">
+                        No orders found!
+                    </Typography>
+                )}
             </Grid>
         );
     }

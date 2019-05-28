@@ -24,7 +24,7 @@ const ViewMoviesLayout = props => {
     const { results, location } = props;
     const { addMovieSuccess, orderMovieSuccess } = location;
     // TODO: Set this to true until we have a way to get the user type
-    const [isStaff, setIsStaff] = React.useState(true);
+    const [isStaff, setIsStaff] = React.useState(false);
 
     React.useEffect(() => {
         if (results.searchResults.length === 0) {

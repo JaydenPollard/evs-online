@@ -1,11 +1,9 @@
 import {
-    REQUEST_ORDER_RETRIEVAL_SUCCESS,
     REQUEST_ORDERS_RETRIEVAL_SUCCESS,
-    REQUEST_ORDER_RETRIEVAL_FAIL
+    REQUEST_ORDERS_RETRIEVAL_FAIL
 } from "./order-retrieval-actions";
 
 const initialState = {
-    order: {},
     orders: {},
     movie: {},
     isLoading: true,
@@ -14,17 +12,12 @@ const initialState = {
 
 function orderRetrievalResult(state = initialState, action) {
     switch (action.type) {
-        case REQUEST_ORDER_RETRIEVAL_SUCCESS:
-            return Object.assign({}, state, {
-                order: action.order,
-                isLoading: false
-            });
         case REQUEST_ORDERS_RETRIEVAL_SUCCESS:
             return Object.assign({}, state, {
                 orders: action.orders,
                 isLoading: false
             });
-        case REQUEST_ORDER_RETRIEVAL_FAIL:
+        case REQUEST_ORDERS_RETRIEVAL_FAIL:
             return Object.assign({}, state, {
                 isLoading: false,
                 errorMessage: action.errorMessage

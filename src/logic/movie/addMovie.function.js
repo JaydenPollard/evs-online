@@ -4,7 +4,6 @@ import "firebase/storage";
 import { toLowerCaseString } from "../common/utilities.function";
 
 async function setMovie(movie, currentMovieID) {
-    console.log(movie.movieReleaseDate);
     const rootRef = firebase.database.ref("Movie");
     return currentMovieID
         ? updateMovie(rootRef, movie, currentMovieID)
@@ -41,9 +40,9 @@ async function updateMovie(rootRef, movie, currentMovieID) {
             : movie.movieImage;
         movie.movieName = toLowerCaseString(movie.movieName);
         movie.movieImage = movieImageURL;
-        movie.movieReleaseDate = movie.movieReleaseDate.toLocaleDateString(
-            "en-AU"
-        );
+        movie.movieReleaseDate = new Date(
+            movie.movieReleaseDate
+        ).toLocaleDateString("en-AU");
         return rootRef
             .child(movieID)
             .set(movie)

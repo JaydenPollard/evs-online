@@ -1,41 +1,20 @@
-import * as firebase from "firebase/app";
-import Firebase from "../../components/Firebase";
-import {
-    getSingleOrder,
-    getSingleMovie,
-    getAllOrders,
-    getAllOrdersForUser
-} from "../../logic/OrderManagement/order-logic";
+import searchOrders from "../../logic/order/searchOrder.function";
 
-export const REQUEST_ORDER_RETRIEVAL = "@@catalogue/REQUEST_ORDER_RETRIEVAL";
-export const REQUEST_ORDER_RETRIEVAL_FAIL =
+export const REQUEST_ORDERS_RETRIEVAL = "@@catalogue/REQUEST_ORDER_RETRIEVAL";
+export const REQUEST_ORDERS_RETRIEVAL_FAIL =
     "@@catalogue/REQUEST_ORDER_RETRIEVAL_FAIL";
-export const REQUEST_ORDER_RETRIEVAL_SUCCESS =
-    "@@catalogue/REQUEST_ORDER_RETRIEVAL_SUCCESS";
 export const REQUEST_ORDERS_RETRIEVAL_SUCCESS =
     "@@catalogue/REQUEST_ORDERS_RETRIEVAL_SUCCESS";
 
-export function requestOrderRetrieval(orderId) {
+export function requestOrdersRetrieval(searchDate) {
     return dispatch => {
-        getSingleOrder(orderId).then(function(snapshot) {
-            dispatch(orderRetrievalSuccess(snapshot.val()));
-        });
-    };
-}
-
-export function requestAllOrdersRetrieval() {
-    return dispatch => {
-        getAllOrders().then(function(snapshot) {
-            dispatch(ordersRetrievalSuccess(snapshot.val()));
-        });
-    };
-}
-
-export function requestUserOrdersRetrieval(userId) {
-    return dispatch => {
-        getAllOrdersForUser(userId).then(function(snapshot) {
-            dispatch(ordersRetrievalSuccess(snapshot.val()));
-        });
+        searchOrders(searchDate)
+            .then(orderResults => {
+                dispatch(ordersRetrievalSuccess(orderResults));
+            })
+            .catch(errorMessage => {
+                dispatch(ordersRetrievalFail(errorMessage));
+            });
     };
 }
 
@@ -46,16 +25,9 @@ export function ordersRetrievalSuccess(orders) {
     };
 }
 
-export function orderRetrievalSuccess(order) {
+export function ordersRetrievalFail(errorMessage) {
     return {
-        type: REQUEST_ORDER_RETRIEVAL_SUCCESS,
-        order
-    };
-}
-
-export function orderRetrievalFail(errorMessage) {
-    return {
-        type: REQUEST_ORDER_RETRIEVAL_FAIL,
+        type: REQUEST_ORDERS_RETRIEVAL_FAIL,
         errorMessage
     };
 }

@@ -1,7 +1,7 @@
 const order = {
     CustomerID: "",
     MovieID: "",
-    OrderDate: new Date().getTime(),
+    OrderDate: new Date(),
     OrderStatus: "",
     OrderPaid: false,
     OrderDeliver: false,

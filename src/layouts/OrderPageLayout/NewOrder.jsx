@@ -7,7 +7,7 @@ import {
     Divider,
     Card
 } from "@material-ui/core";
-import { Link, withRouter, Redirect } from "react-router-dom";
+import { withRouter, Redirect } from "react-router-dom";
 import PropTypes from "prop-types";
 import AppBar from "../../components/AppBar/AppBar";
 import order from "../../models/order";
@@ -57,7 +57,9 @@ const NewOrder = props => {
         if (success) {
             movie.movieStockCount--;
             const removeStockSuccess = await setMovie(movie, movieID);
-            setOrderMovieSuccess(true);
+            if (removeStockSuccess) {
+                setOrderMovieSuccess(true);
+            }
         }
     }
 

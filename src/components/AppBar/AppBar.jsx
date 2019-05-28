@@ -33,6 +33,7 @@ function SearchAppBar(props) {
                     >
                         Epic Video Store
                     </Typography>
+                    <div className={classes.grow} />
                     <div>
                         <Button variant="contained" color="inherit">
                             <Link
@@ -43,7 +44,6 @@ function SearchAppBar(props) {
                             </Link>
                         </Button>
                     </div>
-                    <div className={classes.grow} />
                     <div className={classes.search}>
                         <div className={classes.searchIcon}>
                             <SearchIcon />

@@ -1,5 +1,4 @@
 import React from "react";
-import firebase from "firebase";
 import { Route, BrowserRouter } from "react-router-dom";
 import { Switch } from "react-router";
 import {
@@ -10,7 +9,6 @@ import {
 import LoginPage from "./layouts/LoginPageLayout/LoginPageLayout";
 import SearchOrders from "./layouts/OrderPageLayout/SearchOrders";
 import NewOrder from "./layouts/OrderPageLayout/NewOrder";
-import OrderManagementPage from "./layouts/OrderPageLayout/OrderManagementPage";
 import ViewMoviesLayout from "./layouts/MovieLayout/ViewMoviesLayout/ViewMoviesLayout";
 import AddMoviesLayout from "./layouts/MovieLayout/MovieContentProcessingLayout/MovieContentProcessingLayout";
 
@@ -28,11 +26,6 @@ const App = () => (
                 <Route path="/home" exact component={ViewMoviesLayout} />
                 <Route path="/order/search" exact component={SearchOrders} />
                 <Route path="/order/new" exact component={NewOrder} />
-                <Route
-                    path="/test/order"
-                    exact
-                    component={OrderManagementPage}
-                />
                 <Route path="/login" exact component={LoginPage} />
                 <Route
                     path="/management/movie"
