@@ -105,7 +105,7 @@ function StaffForm() {
     }
     function passwordConfirm(event) {
         const newValidPassword = event.target.value;
-        if (newValidPassword != user.password)
+        if (newValidPassword !== user.password)
         {
             setError(true);
         }
@@ -196,7 +196,7 @@ function StaffForm() {
                                 <FormControl>
                                     <TextField
                                         select
-                                        value={user.memberType}
+                                        value={user.accessLevel}
                                         onChange={handleMemberTypeChange}
                                     >
                                         {accessLevel.map(option => (

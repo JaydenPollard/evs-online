@@ -53,35 +53,35 @@ function CustomerForm() {
         }
     ];
 
-    function handleNameChange(event) {
+    const handleNameChange = event => {
         const newName = event.target.value;
         setUser(data => {
             return { ...data, name: newName };
         });
-    }
-    function handleDoBChange(event) {
+    };
+    const handleDoBChange = event => {
         setUser(data => {
             return { ...data, dob: event.target.value};
         });
-    }
-    function handleEmailChange(event) {
+    };
+    const handleEmailChange = event => {
         const newEmail = event.target.value;
         setUser(data => {
             return { ...data, email: newEmail };
         });
-    }
-    function handleMemberTypeChange(event) {
+    };
+    const handleMemberTypeChange = event => {
         setUser(data => {
             return { ...data, memberType: event.target.value };
         });
-    }
-    function handlePhoneNumChange(event) {
+    };
+    const handlePhoneNumChange = event => {
         const newPhoneNum = event.target.value;
         setUser(data => {
             return { ...data, phoneNum: newPhoneNum };
         });
-    }
-    function handleAddressChange(event) {
+    };
+    const handleAddressChange = event => {
         const newAddress = event.target.value;
         setUser(data => {
             return { ...data, address: newAddress };
@@ -105,7 +105,7 @@ function CustomerForm() {
     }
     function passwordConfirm(event) {
         const newValidPassword = event.target.value;
-        if (newValidPassword != user.password)
+        if (newValidPassword !== user.password)
         {
             setError(true);
         }
@@ -273,5 +273,5 @@ function CustomerForm() {
             </Card>
         </Grid>
     );
-}
+};
 export default CustomerForm;
