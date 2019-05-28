@@ -13,24 +13,35 @@ import CardContent from "@material-ui/core/CardContent";
 import { TextValidator, ValidatorForm } from "react-material-ui-form-validator";
 import firebase from "firebase";
 import NumberFormat from "react-number-format";
-
+import PasswordValidator from "password-validator";
 function CustomerForm() {
+    var schema  = new PasswordValidator();  
+    schema
+    .is().min(7)
+    .is().max(100)                                  
+    .has().uppercase()                              
+    .has().lowercase()                              
+    .has().digits()                                 
+    .has().not().spaces()                          
+    .is().not().oneOf(['Passw0rd', 'Password123']); 
+
     const [user, setUser] = useState({
         name: "",
         dob: "",
         email: "",
         memberType: "Standard",
         phoneNum: "",
-        address: ""
+        address: "",
+        password: "",
+        validPassword:"",
+        joinedDate: ""
     });
+    const [error, setError] = useState(false);
     const rootRef = firebase
         .database()
         .ref()
         .child("Users")
         .child("Customers");
-    // rootRef.once("value").then(function(data) {
-    //   console.log(data.key);
-    // })
     const memberInput = [
         {
             value: "Standard",
@@ -50,7 +61,7 @@ function CustomerForm() {
     }
     function handleDoBChange(event) {
         setUser(data => {
-            return { ...data, dob: event.target.value };
+            return { ...data, dob: event.target.value};
         });
     }
     function handleEmailChange(event) {
@@ -76,22 +87,65 @@ function CustomerForm() {
             return { ...data, address: newAddress };
         });
     }
-
+    function handlePasswordChange(event) {
+        passwordValidation();
+        const newPassword = event.target.value;
+        setUser(data => {
+            return { ...data, password: newPassword };
+        });
+    }
+    function passwordValidation(){
+        if (schema.validate(user.password)){
+            setError(false);
+        }
+        else 
+        {
+            setError(true);
+        }
+    }
+    function passwordConfirm(event) {
+        const newValidPassword = event.target.value;
+        if (newValidPassword != user.password)
+        {
+            setError(true);
+        }
+        else
+        {
+        setError(false);
+        }      
+        setUser(data => {
+            return { ...data, validPassword: newValidPassword };
+        });
+     
+    }
     function handleSubmit(e) {
         e.preventDefault();
-        console.log(user);
+        updateFirebse();
     }
 
-    //   function updateFirebse() {
-    //     rootRef.child("Address").set(address);
-    //     rootRef.child("DoB").set(dob);
-    //     rootRef.child("Email").set(email);
-    //     rootRef.child("JoinedDate").set(joinedDate);
-    //     rootRef.child("MemberType").set(memberType);
-    //     rootRef.child("Name").set(name);
-    //     rootRef.child("PhoneNum").set(phoneNum);
-    // }
+    function setJoinedDate() {
+        var placeHolderDate = new Date();
+        var formattedDate =
+            placeHolderDate.getFullYear() +
+            "-" +
+            ('0' + (placeHolderDate.getMonth()+1)).slice(-2) +
+            "-" +
+            ('0' + placeHolderDate.getDate()).slice(-2)
+        return formattedDate;
+    }
 
+    function updateFirebse() {
+        rootRef.push().set({
+            Name: user.name,
+            Address: user.address,
+            MemberType: user.memberType,
+            DoB: user.dob,
+            Email: user.email,
+            JoinedDate: setJoinedDate(),
+            Password: user.password,
+            PhoneNum: user.phoneNum
+        });
+    }
     return (
         <Grid item xs={12}>
             <Card>
@@ -99,7 +153,7 @@ function CustomerForm() {
                     <ValidatorForm autoComplete="off" onSubmit={handleSubmit}>
                         <Grid container spacing={24}>
                             <Grid item xs={12}>
-                                <Typography>User Basic Info</Typography>
+                                <Typography>Customer Basic Info</Typography>
                             </Grid>
                             <Grid item xs={12} sm={6}>
                                 <Typography>Name:</Typography>
@@ -134,7 +188,7 @@ function CustomerForm() {
                                     validators={["isEmail"]}
                                     errorMessages={["Email is not valid"]}
                                     required
-                                    helperText="This will be used as your login credentials"
+                                    helperText="This will be used as customer login credentials"
                                 />
                             </Grid>
                             <Grid item xs={12} sm={6}>
@@ -174,16 +228,43 @@ function CustomerForm() {
                                     value={user.address}
                                     onChange={handleAddressChange}
                                     required
+                                    
                                 />
                             </Grid>
-                            <Grid item xs={24} sm={12}>
-                                <Button
+                            <Grid item xs={12} sm={6}>
+                                <Typography>Password:</Typography>
+                                <TextValidator
+                                    type="password"
+                                    placeholder="Password"
+                                    value={user.password}
+                                    onChange={handlePasswordChange}
+                                    error={error}
+                                    helperText="At least 8 characters, uppercase, lowercase, digits"
+                                    required
+                                />
+                            </Grid>
+                            <Grid item xs={12} sm={6}>
+                                <Typography>Validate Password:</Typography>
+                                <TextValidator
+                                    type="password"
+                                    placeholder="Validate Password"
+                                    value={user.validPassword}
+                                    onChange={passwordConfirm}
+                                    errorMessages={["Password must be the same"]}
+                                    helperText="Confirm password"
+                                    error={error}
+                                    required
+                                />
+                            </Grid>
+                            <Grid item xs={12} sm={12}>
+                                <Button disabled = {error}
                                     type="submit"
                                     variant="contained"
                                     color="inherit"
                                     fullWidth
+
                                 >
-                                    Create New User
+                                    Create New Customer
                                 </Button>
                             </Grid>
                         </Grid>

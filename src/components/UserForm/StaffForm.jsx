@@ -1,32 +1,48 @@
-import React from 'react';
+import React, { useState } from "react";
 import {
     FormControl,
-    
+    Grid,
+    Input,
     MenuItem,
     TextField,
     Typography
 } from "@material-ui/core";
-import Paper from '@material-ui/core/Paper';
-import Button from '@material-ui/core/Button';
-// import firebase from "firebase";
+import Button from "@material-ui/core/Button";
+import Card from "@material-ui/core/Card";
+import CardContent from "@material-ui/core/CardContent";
+import { TextValidator, ValidatorForm } from "react-material-ui-form-validator";
+import firebase from "firebase";
 import NumberFormat from "react-number-format";
+import PasswordValidator from "password-validator";
+function StaffForm() {
+    var schema  = new PasswordValidator();  
+    schema
+    .is().min(7)
+    .is().max(100)                                  
+    .has().uppercase()                              
+    .has().lowercase()                              
+    .has().digits()                                 
+    .has().not().spaces()                          
+    .is().not().oneOf(['Passw0rd', 'Password123']); 
 
-function StaffForm(props)
-{
-    const user = props;
-    // const rootRef = firebase.database()
-    //     .ref()
-    //     .child("Users")
-    //     .child("Customers")
-    //     .child(user.userId);
-    const [name, setName] = React.useState("");
-    const [dob, setDoB] = React.useState("");
-    const [email, setEmail] = React.useState("");
-    const [joinedDate, setJoinedDate] = React.useState("");
-    const [accessLevel, setAccessLevel] = React.useState("");
-    const [phoneNum, setPhoneNum] = React.useState("");
-    const [address, setAddress] = React.useState("");
-    const accessInput = [
+    const [user, setUser] = useState({
+        name: "",
+        dob: "",
+        email: "",
+        accessLevel: "Staff",
+        phoneNum: "",
+        address: "",
+        password: "",
+        validPassword:"",
+        joinedDate: ""
+    });
+    const [error, setError] = useState(false);
+    const rootRef = firebase
+        .database()
+        .ref()
+        .child("Users")
+        .child("Staffs");
+    const accessLevel = [
         {
             value: "Admin",
             label: "Admin"
@@ -37,128 +53,225 @@ function StaffForm(props)
         }
     ];
 
-  function handleName(e){
-    setName(e.target.value);
-  }
-  function handleAddress(e){
-    setAddress(e.target.value);
-  }
-  function handleDoB(e){
-      setDoB(e.target.value);
-  }
-  function handlePhoneNum(e){
-    setPhoneNum(e.target.value);
-  }
-  function handleEmail(e){
-    setEmail(e.target.value);
-  } 
-  function handleJoinedDate(e){
-    setJoinedDate(e.target.value);
-  }
-  function handleAccessLevel(e){
-    setAccessLevel(e.target.value);
-    
-  }
-  function handleSubmit()
-  {
-    //  updateFirebse();
-    console.log(name, address, phoneNum, accessLevel, dob, joinedDate)
-  }
+    function handleNameChange(event) {
+        const newName = event.target.value;
+        setUser(data => {
+            return { ...data, name: newName };
+        });
+    }
+    function handleDoBChange(event) {
+        setUser(data => {
+            return { ...data, dob: event.target.value};
+        });
+    }
+    function handleEmailChange(event) {
+        const newEmail = event.target.value;
+        setUser(data => {
+            return { ...data, email: newEmail };
+        });
+    }
+    function handleMemberTypeChange(event) {
+        setUser(data => {
+            return { ...data, memberType: event.target.value };
+        });
+    }
+    function handlePhoneNumChange(event) {
+        const newPhoneNum = event.target.value;
+        setUser(data => {
+            return { ...data, phoneNum: newPhoneNum };
+        });
+    }
+    function handleAddressChange(event) {
+        const newAddress = event.target.value;
+        setUser(data => {
+            return { ...data, address: newAddress };
+        });
+    }
+    function handlePasswordChange(event) {
+        passwordValidation();
+        const newPassword = event.target.value;
+        setUser(data => {
+            return { ...data, password: newPassword };
+        });
+    }
+    function passwordValidation(){
+        if (schema.validate(user.password)){
+            setError(false);
+        }
+        else 
+        {
+            setError(true);
+        }
+    }
+    function passwordConfirm(event) {
+        const newValidPassword = event.target.value;
+        if (newValidPassword != user.password)
+        {
+            setError(true);
+        }
+        else
+        {
+        setError(false);
+        }      
+        setUser(data => {
+            return { ...data, validPassword: newValidPassword };
+        });
+     
+    }
+    function handleSubmit(e) {
+        e.preventDefault();
+        updateFirebse();
+    }
 
+    function setJoinedDate() {
+        var placeHolderDate = new Date();
+        var formattedDate =
+            placeHolderDate.getFullYear() +
+            "-" +
+            ('0' + (placeHolderDate.getMonth()+1)).slice(-2) +
+            "-" +
+            ('0' + (placeHolderDate.getDate()+1)).slice(-2)
+        return formattedDate;
+    }
 
-//   function updateFirebse() {
-//     rootRef.child("Address").set(address);
-//     rootRef.child("DoB").set(dob);
-//     rootRef.child("Email").set(email);
-//     rootRef.child("JoinedDate").set(joinedDate);
-//     rootRef.child("MemberType").set(memberType);
-//     rootRef.child("Name").set(name);
-//     rootRef.child("PhoneNum").set(phoneNum);
-// }
-
-
-return (
-<Paper>
-        <Typography variant = "h5" algin = "center"> Add Staff </Typography>
-          <FormControl margin="normal" required fullWidth>
-          <Typography >Full Name*: </Typography>
-            <TextField
-              required
-              value = {name}
-              onChange={handleName}
-            />
-          </FormControl>
-          <Typography >Date Of Birth: </Typography>
-           <FormControl margin="normal" required fullWidth >
-            <TextField
-              required
-              value = {dob}
-              onChange={handleDoB}
-              type = "date"
-            />
-           </FormControl>
-          <FormControl  margin="normal" required fullWidth>
-          <Typography >Address*:  </Typography>
-            <TextField
-              required
-              value = {address}
-              onChange={handleAddress}
-            />
-          </FormControl>
-          <FormControl margin="normal" required fullWidth >
-          <Typography >Email*:  </Typography>
-                <TextField
-              required
-              value = {email}
-              onChange={handleEmail}
-            />
-           </FormControl>
-           <FormControl margin="normal" required>
-          <Typography >Phone Number:  </Typography>
-          <NumberFormat
-                customInput={TextField}
-                format="+64 ### ### ###"
-                placeholder = "+64"
-                value={phoneNum}
-                onChange={handlePhoneNum}
-                  required
+    function updateFirebse() {
+        rootRef.push().set({
+            Name: user.name,
+            Address: user.address,
+            AccessLevel: user.accessLevel,
+            DoB: user.dob,
+            Email: user.email,
+            JoinedDate: setJoinedDate(),
+            Password: user.password,
+            PhoneNum: user.phoneNum
+        });
+    }
+    return (
+        <Grid item xs={12}>
+            <Card>
+                <CardContent>
+                    <ValidatorForm autoComplete="off" onSubmit={handleSubmit}>
+                        <Grid container spacing={24}>
+                            <Grid item xs={12}>
+                                <Typography>Staff Basic Info</Typography>
+                            </Grid>
+                            <Grid item xs={12} sm={6}>
+                                <Typography>Name:</Typography>
+                                <Input
+                                    placeholder="Name"
+                                    value={user.name}
+                                    onChange={handleNameChange}
+                                    required
                                 />
-         </FormControl>
-         <Typography>Access Level:</Typography> 
-            <FormControl margin="normal" required>
-                <TextField
-                    select
-                    value={accessLevel}
-                    onChange={handleAccessLevel}
+                            </Grid>
+                            <Grid item xs={12} sm={6}>
+                                <Typography>DoB:</Typography>
+                                <FormControl>
+                                    <TextField
+                                        type="date"
+                                        InputLabelProps={{
+                                            shrink: true
+                                        }}
+                                        value={user.dob}
+                                        onChange={handleDoBChange}
+                                        required
+                                    />
+                                </FormControl>
+                            </Grid>
+                            <Grid item xs={12} sm={6}>
+                                <Typography>Email:</Typography>
+                                <TextValidator
+                                    name="email"
+                                    placeholder="Email"
+                                    value={user.email}
+                                    onChange={handleEmailChange}
+                                    validators={["isEmail"]}
+                                    errorMessages={["Email is not valid"]}
+                                    required
+                                    helperText="This will be used as staff login credentials"
+                                />
+                            </Grid>
+                            <Grid item xs={12} sm={6}>
+                                <Typography>Access Level:</Typography>
+                                <FormControl>
+                                    <TextField
+                                        select
+                                        value={user.memberType}
+                                        onChange={handleMemberTypeChange}
                                     >
-                {accessInput.map(option => (
-                    <MenuItem
-                        key={option.value}
-                        value={option.value}
+                                        {accessLevel.map(option => (
+                                            <MenuItem
+                                                key={option.value}
+                                                value={option.value}
                                             >
                                                 {option.label}
                                             </MenuItem>
                                         ))}
                                     </TextField>
-          </FormControl>
+                                </FormControl>
+                            </Grid>
+                            <Grid item xs={12} sm={6}>
+                                <Typography>Phone Number:</Typography>
+                                <NumberFormat
+                                    customInput={TextField}
+                                    value={user.phoneNum}
+                                    onChange={handlePhoneNumChange}
+                                    format="+64 ### ### ###"
+                                    placeholder="Phone Number"
+                                    required
+                                />
+                            </Grid>
+                            <Grid item xs={12} sm={6}>
+                                <Typography>Address:</Typography>
+                                <Input
+                                    placeholder="Address"
+                                    value={user.address}
+                                    onChange={handleAddressChange}
+                                    required
+                                    
+                                />
+                            </Grid>
+                            <Grid item xs={12} sm={6}>
+                                <Typography>Password:</Typography>
+                                <TextValidator
+                                    type="password"
+                                    placeholder="Password"
+                                    value={user.password}
+                                    onChange={handlePasswordChange}
+                                    error={error}
+                                    helperText="At least 8 characters, uppercase, lowercase, digits"
+                                    required
+                                />
+                            </Grid>
+                            <Grid item xs={12} sm={6}>
+                                <Typography>Validate Password:</Typography>
+                                <TextValidator
+                                    type="password"
+                                    placeholder="Validate Password"
+                                    value={user.validPassword}
+                                    onChange={passwordConfirm}
+                                    errorMessages={["Password must be the same"]}
+                                    helperText="Confirm password"
+                                    error={error}
+                                    required
+                                />
+                            </Grid>
+                            <Grid item xs={12} sm={12}>
+                                <Button disabled = {error}
+                                    type="submit"
+                                    variant="contained"
+                                    color="inherit"
+                                    fullWidth
 
-         
-
-           <Typography >Joined Date: </Typography>
-           <FormControl margin="normal" required fullWidth >
-            <TextField
-              required
-              value = {joinedDate}
-              onChange={handleJoinedDate}
-              type = "date"
-            />
-           </FormControl>
-           <Button type="submit"
-          fullWidth
-          variant="contained"
-          color="inherit" 
-          onClick={handleSubmit}>Add Staff</Button>
-</Paper>
-);
+                                >
+                                    Create New Staff
+                                </Button>
+                            </Grid>
+                        </Grid>
+                    </ValidatorForm>
+                </CardContent>
+            </Card>
+        </Grid>
+    );
 }
-export default StaffForm
+export default StaffForm;
