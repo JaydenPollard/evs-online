@@ -11,29 +11,51 @@ import StaffGrid from "../../components/UserGrid/StaffGrid";
 import CustomerForm from "../../components/UserForm/CustomerForm";
 import StaffForm from "../../components/UserForm/StaffForm";
 
-function UserManagementLayout(props) {
+const UserManagementLayout = props => {
     const { classes } = props;
     const [tabValue, setTabValue] = useState(0);
+    // TODO: Use auth to recognise user
+    const [isAdmin, setIsAdmin] = useState(true);
 
-    function TabContainer(tabProps) {
+    const TabContainer = tabProps => {
         return <div>{tabProps.children}</div>;
-    }
+    };
 
-    function handleChange(event, newValue) {
+    const handleChange = (event, newValue) => {
         setTabValue(newValue);
-    }
+    };
+
+    const getTabs = () => {
+        if (isAdmin) {
+            return (
+                <>
+                    <ManagementBar position="static">
+                        <Tabs value={tabValue} onChange={handleChange} centered>
+                            <Tab label="All Customers" />
+                            <Tab label="Customer Form" />
+                            <Tab label="All Staffs" />
+                            <Tab label="Staff Form" />
+                        </Tabs>
+                    </ManagementBar>
+                </>
+            );
+        }
+        return (
+            <>
+                <ManagementBar position="static">
+                    <Tabs value={tabValue} onChange={handleChange} centered>
+                        <Tab label="All Customers" />
+                        <Tab label="Customer Form" />
+                    </Tabs>
+                </ManagementBar>
+            </>
+        );
+    };
 
     return (
         <div className={classes.background}>
             <AppBar />
-            <ManagementBar position="static">
-                <Tabs value={tabValue} onChange={handleChange} centered>
-                    <Tab label="Customer" />
-                    <Tab label="Staff" />
-                    <Tab label="User Form" />
-                    <Tab label="Staff Form" />
-                </Tabs>
-            </ManagementBar>
+            {getTabs()}
             <div className={classes.main}>
                 {tabValue === 0 && (
                     <TabContainer>
@@ -42,12 +64,12 @@ function UserManagementLayout(props) {
                 )}
                 {tabValue === 1 && (
                     <TabContainer>
-                        <StaffGrid />
+                        <CustomerForm />
                     </TabContainer>
                 )}
                 {tabValue === 2 && (
                     <TabContainer>
-                        <CustomerForm />
+                        <StaffGrid />
                     </TabContainer>
                 )}
                 {tabValue === 3 && (
@@ -58,7 +80,7 @@ function UserManagementLayout(props) {
             </div>
         </div>
     );
-}
+};
 
 UserManagementLayout.propTypes = {
     classes: PropTypes.object.isRequired

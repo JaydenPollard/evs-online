@@ -9,7 +9,6 @@ import {
 import Button from "@material-ui/core/Button";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
-// import firebase from "firebase";
 import React, { useEffect, useState } from "react";
 import DeleteIcon from "@material-ui/icons/Delete";
 import { confirmAlert } from "react-confirm-alert";
@@ -30,7 +29,6 @@ const firebaseConfig = {
 };
 firebase.initializeApp(firebaseConfig);
 
-// function CustomerCard(props) {
 const CustomerCard = props => {
     const user = props;
     const rootRef = firebase
@@ -69,9 +67,6 @@ const CustomerCard = props => {
     const handleEmailChange = e => {
         setEmail(e.target.value);
     };
-    const handleJoinedDateChange = e => {
-        setJoinedDate(e.target.value);
-    };
     const handleMemberTypeChange = e => {
         setMemberType(e.target.value);
     };
@@ -79,7 +74,6 @@ const CustomerCard = props => {
         setPhoneNum(e.target.value);
     };
     const handleSubmit = e => {
-        // Stops the page from refreshing
         e.preventDefault();
         updateUser();
     };
@@ -212,11 +206,7 @@ const CustomerCard = props => {
                                     <TextField
                                         type="date"
                                         value={joinedDate}
-                                        onChange={handleJoinedDateChange}
-                                        InputLabelProps={{
-                                            shrink: true
-                                        }}
-                                        required
+                                        disabled
                                     />
                                 </FormControl>
                             </Grid>
@@ -276,7 +266,6 @@ const CustomerCard = props => {
                                     variant="contained"
                                     color="secondary"
                                     onClick={handleDelete}
-                                    disabled
                                 >
                                     Delete User
                                     <DeleteIcon

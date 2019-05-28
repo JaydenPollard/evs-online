@@ -18,7 +18,7 @@ import React, { useEffect, useState } from "react";
 import { TextValidator, ValidatorForm } from "react-material-ui-form-validator";
 import NumberFormat from "react-number-format";
 
-function StaffCard(props) {
+const StaffCard = props => {
     const user = props;
     const rootRef = firebase
         .database()
@@ -56,9 +56,6 @@ function StaffCard(props) {
     const handleEmailChange = e => {
         setEmail(e.target.value);
     };
-    const handleJoinedDateChange = e => {
-        setJoinedDate(e.target.value);
-    };
     const handleMemberTypeChange = e => {
         setAccessLevel(e.target.value);
     };
@@ -66,7 +63,6 @@ function StaffCard(props) {
         setPhoneNum(e.target.value);
     };
     const handleSubmit = e => {
-        // Stops the page from refreshing
         e.preventDefault();
         updateFirebse();
     };
@@ -93,7 +89,7 @@ function StaffCard(props) {
     const deleteUser = () => {
         firebase
             .database()
-            .ref(`Users/Customers/${user.userId}`)
+            .ref(`Users/Staffs/${user.userId}`)
             .remove();
     };
 
@@ -199,11 +195,7 @@ function StaffCard(props) {
                                     <TextField
                                         type="date"
                                         value={joinedDate}
-                                        onChange={handleJoinedDateChange}
-                                        InputLabelProps={{
-                                            shrink: true
-                                        }}
-                                        required
+                                        disabled
                                     />
                                 </FormControl>
                             </Grid>
@@ -263,7 +255,6 @@ function StaffCard(props) {
                                     variant="contained"
                                     color="secondary"
                                     onClick={handleDelete}
-                                    disabled
                                 >
                                     Delete User
                                     <DeleteIcon
@@ -277,6 +268,6 @@ function StaffCard(props) {
             </Card>
         </Grid>
     );
-}
+};
 
 export default StaffCard;

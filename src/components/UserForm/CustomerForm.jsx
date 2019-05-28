@@ -14,7 +14,7 @@ import { TextValidator, ValidatorForm } from "react-material-ui-form-validator";
 import firebase from "firebase";
 import NumberFormat from "react-number-format";
 
-function CustomerForm() {
+const CustomerForm = () => {
     const [user, setUser] = useState({
         name: "",
         dob: "",
@@ -42,45 +42,45 @@ function CustomerForm() {
         }
     ];
 
-    function handleNameChange(event) {
+    const handleNameChange = event => {
         const newName = event.target.value;
         setUser(data => {
             return { ...data, name: newName };
         });
-    }
-    function handleDoBChange(event) {
+    };
+    const handleDoBChange = event => {
         setUser(data => {
             return { ...data, dob: event.target.value };
         });
-    }
-    function handleEmailChange(event) {
+    };
+    const handleEmailChange = event => {
         const newEmail = event.target.value;
         setUser(data => {
             return { ...data, email: newEmail };
         });
-    }
-    function handleMemberTypeChange(event) {
+    };
+    const handleMemberTypeChange = event => {
         setUser(data => {
             return { ...data, memberType: event.target.value };
         });
-    }
-    function handlePhoneNumChange(event) {
+    };
+    const handlePhoneNumChange = event => {
         const newPhoneNum = event.target.value;
         setUser(data => {
             return { ...data, phoneNum: newPhoneNum };
         });
-    }
-    function handleAddressChange(event) {
+    };
+    const handleAddressChange = event => {
         const newAddress = event.target.value;
         setUser(data => {
             return { ...data, address: newAddress };
         });
-    }
+    };
 
-    function handleSubmit(e) {
-        e.preventDefault();
+    const handleSubmit = event => {
+        event.preventDefault();
         console.log(user);
-    }
+    };
 
     //   function updateFirebse() {
     //     rootRef.child("Address").set(address);
@@ -176,7 +176,7 @@ function CustomerForm() {
                                     required
                                 />
                             </Grid>
-                            <Grid item xs={24} sm={12}>
+                            <Grid item xs={12} sm={12}>
                                 <Button
                                     type="submit"
                                     variant="contained"
@@ -192,5 +192,5 @@ function CustomerForm() {
             </Card>
         </Grid>
     );
-}
+};
 export default CustomerForm;
