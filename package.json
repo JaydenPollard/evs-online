@@ -8,12 +8,14 @@
     "firebase": "^6.0.2",
     "material-auto-rotating-carousel": "^3.0.1",
     "material-ui-carousel": "^1.0.0",
+    "notistack": "^0.8.5",
     "react": "^16.8.6",
     "react-dom": "^16.8.6",
     "react-router": "^5.0.0",
     "react-router-dom": "^5.0.0",
     "react-scripts": "^3.0.1",
     "react-swipeable-views": "^0.13.1",
+    "recompose": "^0.30.0",
     "typeface-roboto": "0.0.54"
   },
   "devDependencies": {
