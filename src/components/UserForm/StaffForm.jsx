@@ -11,7 +11,8 @@ import Button from "@material-ui/core/Button";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import { TextValidator, ValidatorForm } from "react-material-ui-form-validator";
-import firebase from "firebase";
+import * as firebase from "firebase/app";
+import "firebase/database";
 import NumberFormat from "react-number-format";
 import PasswordValidator from "password-validator";
 
@@ -47,8 +48,7 @@ const StaffForm = () => {
         joinedDate: ""
     });
     const [error, setError] = useState(false);
-    const rootRef = firebase
-        .database()
+    const rootRef = firebase.database
         .ref()
         .child("Users")
         .child("Staffs");
@@ -122,14 +122,15 @@ const StaffForm = () => {
         setUser(data => {
             return { ...data, validPassword: newValidPassword };
         });
-     
-    }
-    const handleSubmit = event  => {
-        firebase.auth().createUserWithEmailAndPassword(user.email, user.password)
-        firebase.auth().onAuthStateChanged(authUser => {
-            const uid = authUser.uid;
-            const email = authUser.email;
-            const newUserRef = rootRef.child(uid)
+    };
+    const handleSubmit = event => {
+        firebase
+            .auth
+            .createUserWithEmailAndPassword(user.email, user.password);
+        firebase.auth.onAuthStateChanged(authUser => {
+            const { uid } = authUser;
+            const { email } = authUser;
+            const newUserRef = rootRef.child(uid);
             return newUserRef.set({
                 Name: user.name,
                 Address: user.address,
@@ -139,19 +140,18 @@ const StaffForm = () => {
                 JoinedDate: setJoinedDate(),
                 Password: user.password,
                 PhoneNum: user.phoneNum
-               })
-          });
+            });
+        });
         event.preventDefault();
-      
-    }
+    };
 
     const setJoinedDate = () => {
         const placeHolderDate = new Date();
         const formattedDate = `${placeHolderDate.getFullYear()}-${`0${placeHolderDate.getMonth() +
             1}`.slice(-2)}-${`0${placeHolderDate.getDate() + 1}`.slice(-2)}`;
         return formattedDate;
-    }
-    
+    };
+
     return (
         <Grid item xs={12}>
             <Card>

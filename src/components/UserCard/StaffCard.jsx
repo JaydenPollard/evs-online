@@ -21,7 +21,7 @@ import NumberFormat from "react-number-format";
 const StaffCard = props => {
     const user = props;
     const rootRef = firebase
-        .database()
+        .database
         .ref()
         .child("Users")
         .child("Staffs")
@@ -88,9 +88,10 @@ const StaffCard = props => {
 
     const deleteUser = () => {
         firebase
-            .database()
+            .database
             .ref(`Users/Staffs/${user.userId}`)
             .remove();
+        // TODO: Delete authenticated user
     };
 
     const updateFirebse = () => {

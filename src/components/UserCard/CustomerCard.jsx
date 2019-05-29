@@ -16,23 +16,13 @@ import "react-confirm-alert/src/react-confirm-alert.css";
 import EditIcon from "@material-ui/icons/Edit";
 import { TextValidator, ValidatorForm } from "react-material-ui-form-validator";
 import NumberFormat from "react-number-format";
-import firebase from "firebase";
-
-const firebaseConfig = {
-    apiKey: "AIzaSyCTT8GvpjD5AMOMkAQZlP8Pj8P57n70jJg",
-    authDomain: "tba-evs.firebaseapp.com",
-    databaseURL: "https://tba-evs.firebaseio.com",
-    projectId: "tba-evs",
-    storageBucket: "tba-evs.appspot.com",
-    messagingSenderId: "747412141354",
-    appId: "1:747412141354:web:59d4cf6f365fc635"
-};
-firebase.initializeApp(firebaseConfig);
+import * as firebase from "firebase/app";
+import "firebase/database";
 
 const CustomerCard = props => {
     const user = props;
     const rootRef = firebase
-        .database()
+        .database
         .ref()
         .child("Users")
         .child("Customers")
@@ -99,7 +89,7 @@ const CustomerCard = props => {
 
     const deleteUser = () => {
         firebase
-            .database()
+            .database
             .ref(`Users/Customers/${user.userId}`)
             .remove();
     };

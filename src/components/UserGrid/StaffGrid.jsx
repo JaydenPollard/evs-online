@@ -8,7 +8,7 @@ function StaffGrid() {
     const [userKey, setUserKey] = useState([1, 2, 3]);
     const placeHolder = [];
     const rootRef = firebase
-        .database()
+        .database
         .ref()
         .child("Users")
         .child("Staffs");

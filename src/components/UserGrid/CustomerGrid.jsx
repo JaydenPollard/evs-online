@@ -8,7 +8,7 @@ function CustomerGrid() {
     const [userKey, setUserKey] = useState([]);
     const placeHolder = [];
     const rootRef = firebase
-        .database()
+        .database
         .ref()
         .child("Users")
         .child("Customers");

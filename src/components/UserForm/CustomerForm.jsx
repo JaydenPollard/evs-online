@@ -11,7 +11,8 @@ import Button from "@material-ui/core/Button";
 import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import { TextValidator, ValidatorForm } from "react-material-ui-form-validator";
-import firebase from "firebase";
+import * as firebase from "firebase/app";
+import "firebase/database";
 import NumberFormat from "react-number-format";
 import PasswordValidator from "password-validator";
 
@@ -47,8 +48,7 @@ function CustomerForm() {
         joinedDate: ""
     });
     const [error, setError] = useState(false);
-    const rootRef = firebase
-        .database()
+    const rootRef = firebase.database
         .ref()
         .child("Users")
         .child("Customers");
@@ -122,16 +122,16 @@ function CustomerForm() {
         setUser(data => {
             return { ...data, validPassword: newValidPassword };
         });
-     
-    }
+    };
     const handleSubmit = event => {
-        firebase.auth().createUserWithEmailAndPassword(user.email, user.password)
-        firebase.auth().onAuthStateChanged(authUser => {
-            const uid = authUser.uid;
-            const email = authUser.email;
-            const newUserRef = rootRef
+        firebase
+            .auth
+            .createUserWithEmailAndPassword(user.email, user.password);
+        firebase.auth.onAuthStateChanged(authUser => {
+            const { uid } = authUser;
+            const { email } = authUser;
+            const newUserRef = rootRef.child(uid);
             return newUserRef.set({
-                [uid]:{
                 Name: user.name,
                 Address: user.address,
                 Email: email,
@@ -140,17 +140,17 @@ function CustomerForm() {
                 JoinedDate: setJoinedDate(),
                 Password: user.password,
                 PhoneNum: user.phoneNum
-              }  })
-          });
+            });
+        });
         event.preventDefault();
-    }
+    };
 
     const setJoinedDate = () => {
         const placeHolderDate = new Date();
         const formattedDate = `${placeHolderDate.getFullYear()}-${`0${placeHolderDate.getMonth() +
             1}`.slice(-2)}-${`0${placeHolderDate.getDate()}`.slice(-2)}`;
         return formattedDate;
-    }
+    };
     return (
         <Grid item xs={12}>
             <Card>
