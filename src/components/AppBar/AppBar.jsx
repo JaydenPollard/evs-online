@@ -11,9 +11,40 @@ import Typography from "@material-ui/core/Typography";
 import { Link } from "react-router-dom";
 import { withStyles } from "@material-ui/core/styles";
 import { appBarStyles } from "./AppBarStyles";
+import { firebase } from "../../layouts/firebase";
 
 function SearchAppBar(props) {
     const { classes } = props;
+    const user = firebase.auth().currentUser;
+    // Check login status to modify app bar
+    function loginStatus() {
+        if (user == null)
+            return (
+                <div>
+                    <Button variant="contained" color="inherit">
+                        <Link to="/login" style={{ textDecoration: "none" }}>
+                            Login
+                        </Link>
+                    </Button>
+                </div>
+            );
+
+        return (
+            <div>
+                <Button variant="contained" color="inherit">
+                    <Link
+                        style={{ textDecoration: "none" }}
+                        onClick={e => {
+                            firebase.auth().signOut();
+                        }}
+                        to="/home"
+                    >
+                        Logout
+                    </Link>
+                </Button>
+            </div>
+        );
+    }
     return (
         <div className={classes.root}>
             <AppBar position="static" color="primary">
@@ -46,16 +77,7 @@ function SearchAppBar(props) {
                             }}
                         />
                     </div>
-                    <div>
-                        <Button variant="contained" color="inherit">
-                            <Link
-                                to="/login"
-                                style={{ textDecoration: "none" }}
-                            >
-                                Login
-                            </Link>
-                        </Button>
-                    </div>
+                    {loginStatus()}
                 </Toolbar>
             </AppBar>
         </div>

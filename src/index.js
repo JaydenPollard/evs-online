@@ -5,9 +5,17 @@ import ReactDOM from "react-dom";
 import { BrowserRouter } from "react-router-dom";
 import App from "./App";
 
-ReactDOM.render(
-    <BrowserRouter>
-        <App />
-    </BrowserRouter>,
-    document.getElementById("root")
-);
+import { firebase } from "../src/layouts/firebase";
+const AppUI = props => {
+    return (
+        <BrowserRouter>
+            <App {...props} />
+        </BrowserRouter>
+    );
+};
+
+firebase.auth().onAuthStateChanged(user => {
+    console.log(user);
+
+    ReactDOM.render(<App user={user} />, document.getElementById("root"));
+});
