@@ -14,16 +14,26 @@ import { TextValidator, ValidatorForm } from "react-material-ui-form-validator";
 import firebase from "firebase";
 import NumberFormat from "react-number-format";
 import PasswordValidator from "password-validator";
+
 function CustomerForm() {
-    var schema  = new PasswordValidator();  
+    const schema = new PasswordValidator();
     schema
-    .is().min(7)
-    .is().max(100)                                  
-    .has().uppercase()                              
-    .has().lowercase()                              
-    .has().digits()                                 
-    .has().not().spaces()                          
-    .is().not().oneOf(['Passw0rd', 'Password123']); 
+        .is()
+        .min(7)
+        .is()
+        .max(100)
+        .has()
+        .uppercase()
+        .has()
+        .lowercase()
+        .has()
+        .digits()
+        .has()
+        .not()
+        .spaces()
+        .is()
+        .not()
+        .oneOf(["Passw0rd", "Password123"]);
 
     const [user, setUser] = useState({
         name: "",
@@ -33,7 +43,7 @@ function CustomerForm() {
         phoneNum: "",
         address: "",
         password: "",
-        validPassword:"",
+        validPassword: "",
         joinedDate: ""
     });
     const [error, setError] = useState(false);
@@ -60,8 +70,9 @@ function CustomerForm() {
         });
     };
     const handleDoBChange = event => {
+        const newDob = event.target.value;
         setUser(data => {
-            return { ...data, dob: event.target.value};
+            return { ...data, dob: newDob };
         });
     };
     const handleEmailChange = event => {
@@ -86,55 +97,45 @@ function CustomerForm() {
         setUser(data => {
             return { ...data, address: newAddress };
         });
-    }
-    function handlePasswordChange(event) {
+    };
+    const handlePasswordChange = event => {
         passwordValidation();
         const newPassword = event.target.value;
         setUser(data => {
             return { ...data, password: newPassword };
         });
-    }
-    function passwordValidation(){
-        if (schema.validate(user.password)){
+    };
+    const passwordValidation = () => {
+        if (schema.validate(user.password)) {
+            setError(false);
+        } else {
+            setError(true);
+        }
+    };
+    const passwordConfirm = event => {
+        const newValidPassword = event.target.value;
+        if (newValidPassword !== user.password) {
+            setError(true);
+        } else {
             setError(false);
         }
-        else 
-        {
-            setError(true);
-        }
-    }
-    function passwordConfirm(event) {
-        const newValidPassword = event.target.value;
-        if (newValidPassword !== user.password)
-        {
-            setError(true);
-        }
-        else
-        {
-        setError(false);
-        }      
         setUser(data => {
             return { ...data, validPassword: newValidPassword };
         });
-     
-    }
-    function handleSubmit(e) {
-        e.preventDefault();
+    };
+    const handleSubmit = event => {
+        event.preventDefault();
         updateFirebse();
-    }
+    };
 
-    function setJoinedDate() {
-        var placeHolderDate = new Date();
-        var formattedDate =
-            placeHolderDate.getFullYear() +
-            "-" +
-            ('0' + (placeHolderDate.getMonth()+1)).slice(-2) +
-            "-" +
-            ('0' + placeHolderDate.getDate()).slice(-2)
+    const setJoinedDate = () => {
+        const placeHolderDate = new Date();
+        const formattedDate = `${placeHolderDate.getFullYear()}-${`0${placeHolderDate.getMonth() +
+            1}`.slice(-2)}-${`0${placeHolderDate.getDate()}`.slice(-2)}`;
         return formattedDate;
-    }
+    };
 
-    function updateFirebse() {
+    const updateFirebse = () => {
         rootRef.push().set({
             Name: user.name,
             Address: user.address,
@@ -145,7 +146,10 @@ function CustomerForm() {
             Password: user.password,
             PhoneNum: user.phoneNum
         });
-    }
+    };
+    const wipeForm = () => {
+        setUser(user);
+    };
     return (
         <Grid item xs={12}>
             <Card>
@@ -228,7 +232,6 @@ function CustomerForm() {
                                     value={user.address}
                                     onChange={handleAddressChange}
                                     required
-                                    
                                 />
                             </Grid>
                             <Grid item xs={12} sm={6}>
@@ -250,19 +253,20 @@ function CustomerForm() {
                                     placeholder="Validate Password"
                                     value={user.validPassword}
                                     onChange={passwordConfirm}
-                                    errorMessages={["Password must be the same"]}
+                                    errorMessages={[
+                                        "Password must be the same"
+                                    ]}
                                     helperText="Confirm password"
                                     error={error}
                                     required
                                 />
                             </Grid>
                             <Grid item xs={12} sm={12}>
-                                <Button disabled = {error}
+                                <Button
                                     type="submit"
                                     variant="contained"
                                     color="inherit"
                                     fullWidth
-
                                 >
                                     Create New Customer
                                 </Button>
@@ -273,5 +277,5 @@ function CustomerForm() {
             </Card>
         </Grid>
     );
-};
+}
 export default CustomerForm;
