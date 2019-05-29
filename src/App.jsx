@@ -7,8 +7,8 @@ import {
     CssBaseline
 } from "@material-ui/core";
 import LoginPage from "./layouts/LoginPageLayout/LoginPageLayout";
-import SearchOrders from "./layouts/OrderPageLayout/SearchOrders";
-import NewOrder from "./layouts/OrderPageLayout/NewOrder";
+import SearchOrders from "./layouts/OrderLayout/SearchOrders";
+import NewOrder from "./layouts/OrderLayout/NewOrder";
 import ViewMoviesLayout from "./layouts/MovieLayout/ViewMoviesLayout/ViewMoviesLayout";
 import AddMoviesLayout from "./layouts/MovieLayout/MovieContentProcessingLayout/MovieContentProcessingLayout";
 

@@ -5,14 +5,24 @@ import {
     Typography,
     Button,
     Divider,
-    Card
+    Card,
+    Fab
 } from "@material-ui/core";
-import { withRouter, Redirect } from "react-router-dom";
+import { Link, withRouter, Redirect } from "react-router-dom";
+import ArrowBack from "@material-ui/icons/ArrowBack";
 import PropTypes from "prop-types";
 import AppBar from "../../components/AppBar/AppBar";
 import order from "../../models/order";
 import createOrder from "../../logic/order/createOrder.function";
 import setMovie from "../../logic/movie/addMovie.function";
+
+const fabStyle = {
+    top: "auto",
+    right: "auto",
+    bottom: 10,
+    left: 10,
+    position: "fixed"
+};
 
 const NewOrder = props => {
     const { location } = props;
@@ -307,6 +317,15 @@ const NewOrder = props => {
                             </Grid>
                         </Paper>
                     </Grid>
+                    <Fab
+                        variant="extended"
+                        style={fabStyle}
+                        component={Link}
+                        to="/"
+                    >
+                        <ArrowBack />
+                        Back
+                    </Fab>
                 </Grid>
             </React.Fragment>
         );

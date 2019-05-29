@@ -2,7 +2,6 @@ import * as firebase from "firebase/app";
 import "firebase/database";
 
 async function createOrder(order) {
-    console.log(order);
     const orderRef = firebase.database.ref("Order");
     const newOrderID = await orderRef.push().getKey();
     order.OrderDate = new Date(order.OrderDate).getTime();

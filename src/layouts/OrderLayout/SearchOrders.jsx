@@ -1,8 +1,18 @@
 import React from "react";
-import { Grid, Typography } from "@material-ui/core";
+import { Grid, Typography, Fab } from "@material-ui/core";
+import { Link } from "react-router-dom";
+import ArrowBack from "@material-ui/icons/ArrowBack";
 import AppBar from "../../components/AppBar/AppBar";
 import OrderList from "./OrderList";
-import SearchOrderInput from "./SearchOrderInput";
+import SearchOrderInput from "../../components/Order/SearchOrderInput/SearchOrderInput";
+
+const fabStyle = {
+    top: "auto",
+    right: "auto",
+    bottom: 10,
+    left: 10,
+    position: "fixed"
+};
 
 const SearchOrders = props => {
     return (
@@ -23,6 +33,15 @@ const SearchOrders = props => {
                 </Typography>
                 <SearchOrderInput />
                 <OrderList />
+                <Fab
+                    variant="extended"
+                    style={fabStyle}
+                    component={Link}
+                    to="/"
+                >
+                    <ArrowBack />
+                    Back
+                </Fab>
             </Grid>
         </React.Fragment>
     );

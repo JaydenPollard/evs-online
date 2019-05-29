@@ -3,7 +3,7 @@ import * as firebase from "firebase/app";
 import "firebase/database";
 import { connect } from "react-redux";
 import { Grid, Typography } from "@material-ui/core";
-import OrderItem from "./OrderItem";
+import OrderItem from "../../components/Order/OrderItem/OrderItem";
 
 async function getMovie(movieId) {
     let movie = {};
@@ -20,7 +20,7 @@ async function getMovie(movieId) {
 
 const OrderList = ({ result }) => {
     if (result.isLoading) {
-        return <Typography>Loading...</Typography>;
+        return "";
     } else {
         return (
             <Grid

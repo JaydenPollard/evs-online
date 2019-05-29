@@ -7,7 +7,7 @@ import PropTypes from "prop-types";
 import AppBar from "../../../components/AppBar/AppBar";
 import SearchMoviesInput from "../../../components/Movie/SearchMoviesInput/SearchMoviesInput";
 import AddMovieSuccessDialog from "../../../components/Movie/AddMovieSuccessDialog/AddMovieSuccessDialog";
-import OrderMovieSuccessDialog from "../../OrderPageLayout/OrderMovieSuccessDialog";
+import OrderMovieSuccessDialog from "../../../components/Order/OrderMovieSuccessDialog/OrderMovieSuccessDialog";
 import { requestSearchCatalogue } from "../../../reducers/search-catalogue/search-catalogue-actions";
 import MovieItem from "../../../components/Movie/MovieItem/MovieItem";
 import LoadingIndicator from "../../../components/common/LoadingIndicator";

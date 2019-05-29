@@ -3,13 +3,15 @@ import "firebase/database";
 
 async function searchOrders(searchDate) {
     const orderRef = firebase.database.ref("Order");
-    const startDate = new Date(searchDate).getTime();
-    const endDate = startDate + 86400000;
+    const startDate = new Date(searchDate);
+    const endDate = new Date(searchDate);
+    endDate.setHours(23, 59, 59, 999);
+    startDate.setHours(0, 0, 0, 0);
     let searchResult = [];
     const orderQuery = orderRef
         .orderByChild("OrderDate")
-        .startAt(startDate)
-        .endAt(endDate);
+        .startAt(startDate.getTime())
+        .endAt(endDate.getTime());
 
     await orderQuery.once("value", function(snapshot) {
         if (snapshot.val()) {
