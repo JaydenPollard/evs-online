@@ -44,7 +44,7 @@ const fabStyle = {
 
 const MovieContentProcessingLayout = props => {
     const { location } = props;
-    const { toEditMovie, movieID } = location;
+    const { toEditMovie, movieID, isStaff } = location;
     const [newMovie, setNewMovie] = React.useState(toEditMovie || movie);
     const [ratingError, setRatingError] = React.useState(false);
     const [openSnackbar, setOpenSnackbar] = React.useState(false);
@@ -52,7 +52,6 @@ const MovieContentProcessingLayout = props => {
         false
     );
     const [addMovieSuccess, setAddMovieSuccess] = React.useState(false);
-    const [isStaff, setIsStaff] = React.useState(true);
 
     function handleImageSelect(event) {
         event.preventDefault();

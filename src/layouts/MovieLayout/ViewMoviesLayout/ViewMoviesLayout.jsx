@@ -10,6 +10,7 @@ import AddMovieSuccessDialog from "../../../components/Movie/AddMovieSuccessDial
 import { requestSearchCatalogue } from "../../../reducers/search-catalogue/search-catalogue-actions";
 import MovieItem from "../../../components/Movie/MovieItem/MovieItem";
 import LoadingIndicator from "../../../components/common/LoadingIndicator";
+import isMemberStaff from "../../../logic/common/firebaseauth.function";
 
 const fabStyle = {
     top: "auto",
@@ -22,10 +23,15 @@ const fabStyle = {
 const ViewMoviesLayout = props => {
     const { results, location } = props;
     const { addMovieSuccess } = location;
-    // TODO: Set this to true until we have a way to get the user type
     const [isStaff, setIsStaff] = React.useState(true);
 
     React.useEffect(() => {
+        async function isUserStaff() {
+            setIsStaff(await isMemberStaff());
+        }
+        isUserStaff().catch(() => {
+            setIsStaff(false);
+        });
         if (results.searchResults.length === 0) {
             props.requestSearchCatalogue();
         }
@@ -86,7 +92,7 @@ const ViewMoviesLayout = props => {
                     variant="extended"
                     style={fabStyle}
                     component={Link}
-                    to="/management/movie"
+                    to={{ pathname: "/management/movie", isStaff }}
                 >
                     <Add />
                     Add a Movie
