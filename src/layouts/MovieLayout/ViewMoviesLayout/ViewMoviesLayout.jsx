@@ -20,7 +20,7 @@ import { fabStyle } from "./ViewMoviesLayoutStyles";
  */
 const ViewMoviesLayout = props => {
     const { results, location } = props;
-    const { addMovieSuccess: setMovieSuccess } = location;
+    const { setMovieSuccess } = location;
     const [isStaff, setIsStaff] = React.useState(true);
 
     // Run this function only once when the view first renders

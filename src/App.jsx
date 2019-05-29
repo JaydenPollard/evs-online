@@ -8,7 +8,7 @@ import {
 } from "@material-ui/core";
 import LoginPage from "./layouts/LoginPageLayout/LoginPageLayout";
 import ViewMoviesLayout from "./layouts/MovieLayout/ViewMoviesLayout/ViewMoviesLayout";
-import AddMoviesLayout from "./layouts/MovieLayout/MovieContentProcessingLayout/MovieContentProcessingLayout";
+import MovieContentProcessingLayout from "./layouts/MovieLayout/MovieContentProcessingLayout/MovieContentProcessingLayout";
 
 const theme = createMuiTheme({
     palette: {
@@ -26,7 +26,7 @@ const App = () => (
                 <Route
                     path="/management/movie"
                     exact
-                    component={AddMoviesLayout}
+                    component={MovieContentProcessingLayout}
                 />
                 <Route component={ViewMoviesLayout} />
             </Switch>

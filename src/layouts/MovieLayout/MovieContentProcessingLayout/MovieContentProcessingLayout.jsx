@@ -18,7 +18,7 @@ import MoneyTextField from "../../../components/common/MoneyTextField";
 import CustomDatePicker from "../../../components/common/CustomDatePicker";
 import movie from "../../../models/movie";
 import ErrorSnackbar from "../../../components/common/ErrorSnackbar";
-import setMovie from "../../../logic/movie/addMovie.function";
+import setMovie from "../../../logic/movie/setMovie.function";
 import LoadingIndicator from "../../../components/common/LoadingIndicator";
 import MovieSelect from "../../../components/Movie/MovieSelect/MovieSelect";
 import {
@@ -82,7 +82,7 @@ const MovieContentProcessingLayout = props => {
 
     // Redirect if movies are successfully added or the if user isn't a staff
     if (setMovieSuccess) {
-        return <Redirect to={{ pathname: "/", addMovieSuccess: true }} />;
+        return <Redirect to={{ pathname: "/", setMovieSuccess: true }} />;
     } else if (!isStaff) {
         return <Redirect to="/" />;
     }
