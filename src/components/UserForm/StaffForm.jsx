@@ -15,17 +15,26 @@ import firebase from "firebase";
 import NumberFormat from "react-number-format";
 import PasswordValidator from "password-validator";
 
-function StaffForm() {
-    var schema  = new PasswordValidator();  
+const StaffForm = () => {
+    const schema = new PasswordValidator();
     schema
-    .is().min(7)
-    .is().max(100)                                  
-    .has().uppercase()                              
-    .has().lowercase()                              
-    .has().digits()                                 
-    .has().not().spaces()                          
-    .is().not().oneOf(['Passw0rd', 'Password123']); 
-    
+        .is()
+        .min(7)
+        .is()
+        .max(100)
+        .has()
+        .uppercase()
+        .has()
+        .lowercase()
+        .has()
+        .digits()
+        .has()
+        .not()
+        .spaces()
+        .is()
+        .not()
+        .oneOf(["Passw0rd", "Password123"]);
+
     const [user, setUser] = useState({
         name: "",
         dob: "",
@@ -34,7 +43,7 @@ function StaffForm() {
         phoneNum: "",
         address: "",
         password: "",
-        validPassword:"",
+        validPassword: "",
         joinedDate: ""
     });
     const [error, setError] = useState(false);
@@ -54,79 +63,74 @@ function StaffForm() {
         }
     ];
 
-    function handleNameChange(event) {
+    const handleNameChange = event => {
         const newName = event.target.value;
         setUser(data => {
             return { ...data, name: newName };
         });
-    }
-    function handleDoBChange(event) {
+    };
+    const handleDoBChange = event => {
+        const newDoB = event.target.value;
         setUser(data => {
-            return { ...data, dob: event.target.value};
+            return { ...data, dob: newDoB };
         });
-    }
-    function handleEmailChange(event) {
+    };
+    const handleEmailChange = event => {
         const newEmail = event.target.value;
         setUser(data => {
             return { ...data, email: newEmail };
         });
-    }
-    function handleMemberTypeChange(event) {
+    };
+    const handleMemberTypeChange = event => {
         setUser(data => {
             return { ...data, memberType: event.target.value };
         });
-    }
-    function handlePhoneNumChange(event) {
+    };
+    const handlePhoneNumChange = event => {
         const newPhoneNum = event.target.value;
         setUser(data => {
             return { ...data, phoneNum: newPhoneNum };
         });
-    }
-    function handleAddressChange(event) {
+    };
+    const handleAddressChange = event => {
         const newAddress = event.target.value;
         setUser(data => {
             return { ...data, address: newAddress };
         });
-    }
-    function handlePasswordChange(event) {
+    };
+    const handlePasswordChange = event => {
         passwordValidation();
         const newPassword = event.target.value;
         setUser(data => {
             return { ...data, password: newPassword };
         });
-    }
-    function passwordValidation(){
-        if (schema.validate(user.password)){
+    };
+    const passwordValidation = () => {
+        if (schema.validate(user.password)) {
+            setError(false);
+        } else {
+            setError(true);
+        }
+    };
+    const passwordConfirm = event => {
+        const newValidPassword = event.target.value;
+        if (newValidPassword !== user.password) {
+            setError(true);
+        } else {
             setError(false);
         }
-        else 
-        {
-            setError(true);
-        }
-    }
-    function passwordConfirm(event) {
-        const newValidPassword = event.target.value;
-        if (newValidPassword !== user.password)
-        {
-            setError(true);
-        }
-        else
-        {
-        setError(false);
-        }      
         setUser(data => {
             return { ...data, validPassword: newValidPassword };
         });
      
     }
-    function handleSubmit(e) {
+    const handleSubmit = event  => {
         firebase.auth().createUserWithEmailAndPassword(user.email, user.password)
         firebase.auth().onAuthStateChanged(authUser => {
             const uid = authUser.uid;
             const email = authUser.email;
-            const newUserRef = rootRef
+            const newUserRef = rootRef.child(uid)
             return newUserRef.set({
-                [uid]:{
                 Name: user.name,
                 Address: user.address,
                 Email: email,
@@ -135,20 +139,16 @@ function StaffForm() {
                 JoinedDate: setJoinedDate(),
                 Password: user.password,
                 PhoneNum: user.phoneNum
-              }  })
+               })
           });
-        e.preventDefault();
+        event.preventDefault();
       
     }
 
-    function setJoinedDate() {
-        var placeHolderDate = new Date();
-        var formattedDate =
-            placeHolderDate.getFullYear() +
-            "-" +
-            ('0' + (placeHolderDate.getMonth()+1)).slice(-2) +
-            "-" +
-            ('0' + (placeHolderDate.getDate()+1)).slice(-2)
+    const setJoinedDate = () => {
+        const placeHolderDate = new Date();
+        const formattedDate = `${placeHolderDate.getFullYear()}-${`0${placeHolderDate.getMonth() +
+            1}`.slice(-2)}-${`0${placeHolderDate.getDate() + 1}`.slice(-2)}`;
         return formattedDate;
     }
     
@@ -234,7 +234,6 @@ function StaffForm() {
                                     value={user.address}
                                     onChange={handleAddressChange}
                                     required
-                                    
                                 />
                             </Grid>
                             <Grid item xs={12} sm={6}>
@@ -256,19 +255,21 @@ function StaffForm() {
                                     placeholder="Validate Password"
                                     value={user.validPassword}
                                     onChange={passwordConfirm}
-                                    errorMessages={["Password must be the same"]}
+                                    errorMessages={[
+                                        "Password must be the same"
+                                    ]}
                                     helperText="Confirm password"
                                     error={error}
                                     required
                                 />
                             </Grid>
                             <Grid item xs={12} sm={12}>
-                                <Button disabled = {error}
+                                <Button
+                                    disabled={error}
                                     type="submit"
                                     variant="contained"
                                     color="inherit"
                                     fullWidth
-
                                 >
                                     Create New Staff
                                 </Button>
@@ -279,5 +280,5 @@ function StaffForm() {
             </Card>
         </Grid>
     );
-}
+};
 export default StaffForm;
