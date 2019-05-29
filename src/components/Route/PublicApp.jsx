@@ -1,9 +1,10 @@
 import React from 'react';
 import PropTypes from 'prop-types'
 import { Route, Redirect } from 'react-router-dom';
-import {firebase} from '../../layouts/firebase'
+import * as firebase from "firebase/app";
+import "firebase/auth"
 const PublicRoutes = ({ component: Comp, ...rest }) => {
-  const user =firebase.auth().currentUser; 
+  const user =firebase.auth.currentUser; 
   return (
       <Route
           {...rest}

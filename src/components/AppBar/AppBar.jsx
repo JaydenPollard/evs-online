@@ -10,12 +10,13 @@ import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import { Link } from "react-router-dom";
 import { withStyles } from "@material-ui/core/styles";
+import * as firebase from "firebase/app";
 import { appBarStyles } from "./AppBarStyles";
-import { firebase } from "../../layouts/firebase";
+import "firebase/auth"
 
 function SearchAppBar(props) {
     const { classes } = props;
-    const user = firebase.auth().currentUser;
+    const user = firebase.auth.currentUser;
     // Check login status to modify app bar
     function loginStatus() {
         if (user == null)
@@ -35,7 +36,7 @@ function SearchAppBar(props) {
                     <Link
                         style={{ textDecoration: "none" }}
                         onClick={e => {
-                            firebase.auth().signOut();
+                            firebase.auth.signOut();
                         }}
                         to="/home"
                     >

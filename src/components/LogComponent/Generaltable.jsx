@@ -7,6 +7,7 @@ import TableBody from "@material-ui/core/TableBody";
 import TableRow from "@material-ui/core/TableRow";
 import { Checkbox } from "@material-ui/core";
 import * as firebase from "firebase/app";
+import "firebase/auth"
 import {delEntry} from "../LogFunction/SharedFunction";
 // import { firebase } from "../../layouts/firebase";
 import EnhanceTableHead from "./HeadTable/Header";
@@ -14,7 +15,7 @@ import EnhanceTableHead from "./HeadTable/Header";
 export const getTime = (headKey, date, time, idKey) => {
     const saving = [];
     const dateToSearch = [];
-    const user = firebase.auth().currentUser;
+    const user = firebase.auth.currentUser;
 
     for (let i = 0; i < headKey.length; i+=1)
         if (idKey[i] !== undefined && idKey[i] === user.uid) {

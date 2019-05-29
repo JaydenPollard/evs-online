@@ -18,7 +18,8 @@ import { TextValidator, ValidatorForm } from "react-material-ui-form-validator";
 import * as firebase from "firebase/app";
 import { loginPageLayoutStyles } from "./LoginPageLayoutStyles";
 // import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
-import "firebase/auth";
+import "firebase/auth";// not sure why these do not work
+import  "firebase/database"
 
 function LoginPage(props) {
     const { classes } = props;
@@ -30,12 +31,11 @@ function LoginPage(props) {
         setEmail(e.target.value);
     };
     function login() {
-        firebase
-            .auth()
-            .signInWithEmailAndPassword(email, password)
-            .then(() => {
+        firebase.
+        auth.
+        signInWithEmailAndPassword(email, password).then(() => {
                 props.history.push("/home");
-                const dbref = firebase.database().ref("AccessLog/");
+                const dbref = firebase.database.ref("AccessLog/");
                 const newDbRef = dbref.push();
                 newDbRef.set({
                     date: moment(Date()).format("DD/MM/YYYY"),
@@ -73,7 +73,7 @@ function LoginPage(props) {
                                 validators={["isEmail"]}
                                 errorMessages={["Invalid Email"]}
                                 required
-                                />
+                            />
                         </FormControl>
                         <FormControl margin="normal" required fullWidth>
                             <InputLabel htmlFor="password">Password</InputLabel>
