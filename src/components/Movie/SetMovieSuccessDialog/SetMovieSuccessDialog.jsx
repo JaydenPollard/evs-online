@@ -6,28 +6,30 @@ import {
     DialogContent
 } from "@material-ui/core";
 import PropTypes from "prop-types";
+import { SetMovieSuccessDialogStyle } from "./SetMovieSuccessDialogStyles";
 
-const AddMovieSuccessDialogStyle = {
-    display: "flex",
-    flexDirection: "column",
-    margin: "auto",
-    width: "fit-content"
-};
-
-const AddMovieSuccessDialog = props => {
+/**
+ * Displays an add movie success dialog to the user
+ * @param props The props being passed into the component
+ * @returns The React view
+ */
+const SetMovieSuccessDialog = props => {
+    // Destructure props
     const { open } = props;
     const [isOpen, setIsOpen] = React.useState(open);
 
+    // Handle closing the dialog
     function handleClose() {
         setIsOpen(false);
     }
 
+    // Render the view
     return (
         <Dialog
             open={isOpen}
             onClose={handleClose}
             maxWidth="sm"
-            style={AddMovieSuccessDialogStyle}
+            style={SetMovieSuccessDialogStyle}
         >
             <DialogTitle>Operation Success!</DialogTitle>
             <DialogContent>
@@ -40,8 +42,9 @@ const AddMovieSuccessDialog = props => {
     );
 };
 
-AddMovieSuccessDialog.propTypes = {
+// Declare proptypes types
+SetMovieSuccessDialog.propTypes = {
     open: PropTypes.bool.isRequired
 };
 
-export default AddMovieSuccessDialog;
+export default SetMovieSuccessDialog;

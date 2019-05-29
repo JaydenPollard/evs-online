@@ -7,10 +7,17 @@ import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import PropTypes from "prop-types";
 
+/**
+ * Creates a dialog for the user to confirm the removal of a selected movie
+ * @param props The props being passed through in the component
+ * @returns The view
+ */
 const ConfirmRemoveMovieDialog = props => {
-    const { open, onClose } = props;
+    // Destructure props
+    const { open, removeMovie } = props;
+    // Render the view
     return (
-        <Dialog open={open} onClose={onClose}>
+        <Dialog open={open} onClose={removeMovie}>
             <DialogTitle>Remove this Movie?</DialogTitle>
             <DialogContent>
                 <DialogContentText>
@@ -21,7 +28,7 @@ const ConfirmRemoveMovieDialog = props => {
                 <Button
                     variant="contained"
                     onClick={() => {
-                        onClose(false);
+                        removeMovie(false);
                     }}
                 >
                     No
@@ -29,7 +36,7 @@ const ConfirmRemoveMovieDialog = props => {
                 <Button
                     variant="contained"
                     onClick={() => {
-                        onClose(true);
+                        removeMovie(true);
                     }}
                     autoFocus
                 >
@@ -40,9 +47,10 @@ const ConfirmRemoveMovieDialog = props => {
     );
 };
 
+// Declare proptypes
 ConfirmRemoveMovieDialog.propTypes = {
     open: PropTypes.bool.isRequired,
-    onClose: PropTypes.func.isRequired
+    removeMovie: PropTypes.func.isRequired
 };
 
 export default ConfirmRemoveMovieDialog;
