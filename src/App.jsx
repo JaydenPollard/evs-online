@@ -9,6 +9,7 @@ import {
 import LoginPage from "./layouts/LoginPageLayout/LoginPageLayout";
 import ViewMoviesLayout from "./layouts/MovieLayout/ViewMoviesLayout/ViewMoviesLayout";
 import AddMoviesLayout from "./layouts/MovieLayout/MovieContentProcessingLayout/MovieContentProcessingLayout";
+import RegistrationPage from "./layouts/RegistrationPageLayout/RegistrationPageLayout";
 
 const theme = createMuiTheme({
     palette: {
@@ -29,6 +30,8 @@ const App = () => (
                     component={AddMoviesLayout}
                 />
                 <Route component={ViewMoviesLayout} />
+                <Route path="/register" exact component={RegistrationPage} />
+                <Route component={HomePage} />
             </Switch>
         </BrowserRouter>
     </MuiThemeProvider>
