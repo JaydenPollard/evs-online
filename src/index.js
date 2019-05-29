@@ -4,18 +4,16 @@ import React from "react";
 import ReactDOM from "react-dom";
 import { BrowserRouter } from "react-router-dom";
 import App from "./App";
+import { firebase } from "./layouts/firebase";
 
-import { firebase } from "../src/layouts/firebase";
 const AppUI = props => {
     return (
         <BrowserRouter>
-            <App {...props} />
+            <App  />
         </BrowserRouter>
     );
 };
 
 firebase.auth().onAuthStateChanged(user => {
-    console.log(user);
-
     ReactDOM.render(<App user={user} />, document.getElementById("root"));
 });

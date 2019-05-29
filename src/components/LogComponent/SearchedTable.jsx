@@ -1,36 +1,38 @@
-import React, {useState} from 'react';
+import React from 'react';
 import moment from 'moment';
 import Table from '@material-ui/core/Table';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableBody from '@material-ui/core/TableBody';
 import TableRow from '@material-ui/core/TableRow';
-import {firebase} from "../../layouts/firebase"
+import {delEntry} from "../LogFunction/SharedFunction";
+import {firebase} from "../../layouts/firebase";
 
 // method for deleting data based on logID
-export function delEntry(deletedArray)
+// export function delEntry(deletedArray)
 
-{ const abc ="1"
-  const uIdRef = firebase.database().ref("AccessLog/");
-  for (let i = 0; i < deletedArray.length; i++)
-    uIdRef.child(deletedArray[i]).remove();
+// { const abc ="1"
+//   const uIdRef = firebase.database().ref("AccessLog/");
+//   for (let i = 0; i < deletedArray.length; i+=1)
+//     uIdRef.child(deletedArray[i]).remove();
   
-   return abc;
-}
+//    return abc;
+// }
 
 
 // export Data of search criteria for render
 export const getSearchResult = (headKey,date,time,idKey,searchedDate) => { 
-  const result = new Array();
-  const idSearched = new Array(); 
+  const result = [];
+  
   const dateToCompare = moment(searchedDate).format("DD/MM/YYYY")
-  for (let i =0; i < 7; i++)
-  if (idKey[i] !== undefined && idKey[i] == "C001" && date[i] == dateToCompare )  
+  const user = firebase.auth().currentUser;
+  for (let i =0; i < headKey.length; i+=1)
+  if (idKey[i] !== undefined && idKey[i] === user.uid  && date[i] === dateToCompare )  
       {  result.push({
         date: date[i],
         time: time[i], 
-        id: headKey[i],
-        userInfo: "C001" })
+        usID: headKey[i],
+        userInfo: user.uid })
         
       }
   
@@ -38,36 +40,39 @@ export const getSearchResult = (headKey,date,time,idKey,searchedDate) => {
     }
 // data render 
 export default function SearchedBlo (props)  {
-  let accLog = props;
-  let result = getSearchResult(accLog.headKey,accLog.date,accLog.time,accLog.idKey,accLog.searchedDate);
-  const [toBeDeleted,setToBeDeleted]= useState();
+  const accLog = props;
+  const result = getSearchResult(accLog.headKey,accLog.date,accLog.time,accLog.idKey,accLog.searchedDate);
+  
+  const checkVal = [];
   // handle changes made in check box
   function handleCheckBox(event,key) {
     const {target} = event;
-    let checkVal = new Array();
+    
     if (target.checked)  
           checkVal.push(key); 
     else 
        checkVal.splice(checkVal.indexOf(key),1); 
-    setToBeDeleted(checkVal)
+    
     
 } 
 // return null message when search found nothing
 function checkResultView(){
   if (result.length !== 0) 
     return (
-      <Table >
-            <TableHead> <TableRow> <TableCell> Date </TableCell> <TableCell> Time </TableCell> <TableCell> Log ID</TableCell> <TableCell> </TableCell> </TableRow>
+        <Table>
+            <TableHead> <TableRow> <TableCell> Date </TableCell> <TableCell> Time </TableCell> <TableCell> Log ID</TableCell> <TableCell /> </TableRow>
             </TableHead>
             <TableBody>
-                {result.map((t,i) => ( 
-                    <TableRow key ={i}> 
+                {result.map((t) => ( 
+                    <TableRow key={t.id}> 
                         <TableCell> {t.date} </TableCell> 
                         <TableCell> {t.time} </TableCell> 
-                        <TableCell>{t.id} </TableCell>  
+                        <TableCell>{t.usID} </TableCell>  
                         <TableCell> <input
                             type="checkbox" 
-                            onChange={e=>handleCheckBox(e,t.id)} /> </TableCell>   
+                            onChange={e=>handleCheckBox(e,t.usID)} 
+                        /> 
+                        </TableCell>   
 
                     </TableRow>
                ))    }        
@@ -88,8 +93,8 @@ function checkResultView(){
               
               <button 
                   type="submit" 
-                  onClick={e => {delEntry(toBeDeleted);
-                                 setTimeout(function(){window.location.reload();},5); }}
+                  onClick={e => {delEntry(checkVal);
+                                 setTimeout(()=> {window.location.reload();},5); }}
               > Delete  
               </button> 
      

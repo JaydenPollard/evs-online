@@ -14,8 +14,7 @@ import {
 import moment from "moment";
 import CssBaseline from "@material-ui/core/CssBaseline";
 // import Image from "../../assests/popcorn-login-background.jpg";
-
-import { validate } from "./validate";
+import { TextValidator, ValidatorForm } from "react-material-ui-form-validator";
 import { loginPageLayoutStyles } from "./LoginPageLayoutStyles";
 // import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import { firebase } from "../firebase";
@@ -35,8 +34,8 @@ function LoginPage(props) {
             .signInWithEmailAndPassword(email, password)
             .then(() => {
                 props.history.push("/home");
-                let dbref = firebase.database().ref("AccessLog/");
-                var newDbRef = dbref.push();
+                const dbref = firebase.database().ref("AccessLog/");
+                const newDbRef = dbref.push();
                 newDbRef.set({
                     date: moment(Date()).format("DD/MM/YYYY"),
                     time: moment(Date()).format("hh:mm A"),
@@ -58,22 +57,22 @@ function LoginPage(props) {
                     <Typography component="h1" variant="h5">
                         Log in
                     </Typography>
-                    <form
+                    {/* <form
                         className={classes.form}
                         onSubmit={e => e.preventDefault() && false}
-                    >
+                    > */}
+                    <ValidatorForm>
                         <FormControl margin="normal" required fullWidth>
-                            <InputLabel htmlFor="email">
-                                Email Address
-                            </InputLabel>
-                            <Input
-                                id="email"
+                            <Typography> Enter your email </Typography>
+                            <TextValidator
                                 name="email"
-                                autoComplete="off"
-                                autoFocus
+                                placeholder="Email"
                                 value={email}
-                                onChange={e => handleEmail(e)}
-                            />
+                                onChange={handleEmail}
+                                validators={["isEmail"]}
+                                errorMessages={["Invalid Email"]}
+                                required
+                                />
                         </FormControl>
                         <FormControl margin="normal" required fullWidth>
                             <InputLabel htmlFor="password">Password</InputLabel>
@@ -99,7 +98,8 @@ function LoginPage(props) {
                         </Button>
 
                         <div> {err} </div>
-                    </form>
+                    </ValidatorForm>
+                    {/* </form> */}
                 </Paper>
             </main>
         </div>

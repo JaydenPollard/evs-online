@@ -6,25 +6,25 @@ import PublicRoute from "./components/Route/PublicApp";
 import HomePage from "./layouts/HomePageLayout/HomePageLayout";
 import LoginPage from "./layouts/LoginPageLayout/LoginPageLayout";
 import AccessMan from "./layouts/AccessManLayout/accessManLayout";
-const App = props => {
+
+const App = () => {
     return (
         <BrowserRouter>
             <Switch>
                 <PublicRoute
-                    {...props}
-                    restricted={true}
+                    restricted
+                    
                     path="/login"
                     exact
                     component={LoginPage}
                 />
                 <PrivateRoute
-                    {...props}
+                    
                     path="/accesslog"
                     exact
                     component={AccessMan}
                 />
                 <PublicRoute
-                    {...props}
                     restricted={false}
                     path="/home"
                     exact
