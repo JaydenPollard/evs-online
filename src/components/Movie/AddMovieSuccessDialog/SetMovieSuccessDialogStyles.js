@@ -1,5 +1,5 @@
 // CSS Styling
-export const AddMovieSuccessDialogStyle = {
+export const SetMovieSuccessDialogStyle = {
     display: "flex",
     flexDirection: "column",
     margin: "auto",

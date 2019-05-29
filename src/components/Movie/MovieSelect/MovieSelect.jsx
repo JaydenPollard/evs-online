@@ -2,6 +2,7 @@ import * as React from "react";
 import { FormControl, InputLabel, Select, MenuItem } from "@material-ui/core";
 import PropTypes from "prop-types";
 
+// Declare the movie genres
 const movieGenres = [
     "Action",
     "Adventure",
@@ -33,12 +34,19 @@ const movieGenres = [
     "Western"
 ];
 
+/**
+ * Displays a movie selection dropdown for the user to use
+ * @param props Props being passed in from another component
+ * @returns the view
+ */
 const MovieSelect = props => {
     const { value, onChange } = props;
+    // Render the view
     return (
         <FormControl fullWidth required>
             <InputLabel>Genre</InputLabel>
             <Select value={value} onChange={onChange}>
+                {/* Map each individual genre inside the array as a menu item */}
                 {movieGenres.map(movieGenre => (
                     <MenuItem key={movieGenre} value={movieGenre}>
                         {movieGenre}
@@ -49,6 +57,7 @@ const MovieSelect = props => {
     );
 };
 
+// Declare prop types
 MovieSelect.propTypes = {
     value: PropTypes.string.isRequired,
     onChange: PropTypes.func.isRequired
