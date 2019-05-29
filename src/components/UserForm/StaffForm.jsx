@@ -14,6 +14,7 @@ import { TextValidator, ValidatorForm } from "react-material-ui-form-validator";
 import firebase from "firebase";
 import NumberFormat from "react-number-format";
 import PasswordValidator from "password-validator";
+
 function StaffForm() {
     var schema  = new PasswordValidator();  
     schema
@@ -24,7 +25,7 @@ function StaffForm() {
     .has().digits()                                 
     .has().not().spaces()                          
     .is().not().oneOf(['Passw0rd', 'Password123']); 
-
+    
     const [user, setUser] = useState({
         name: "",
         dob: "",
@@ -119,8 +120,25 @@ function StaffForm() {
      
     }
     function handleSubmit(e) {
+        firebase.auth().createUserWithEmailAndPassword(user.email, user.password)
+        firebase.auth().onAuthStateChanged(authUser => {
+            const uid = authUser.uid;
+            const email = authUser.email;
+            const newUserRef = rootRef
+            return newUserRef.set({
+                [uid]:{
+                Name: user.name,
+                Address: user.address,
+                Email: email,
+                AccessLevel: user.accessLevel,
+                DoB: user.dob,
+                JoinedDate: setJoinedDate(),
+                Password: user.password,
+                PhoneNum: user.phoneNum
+              }  })
+          });
         e.preventDefault();
-        updateFirebse();
+      
     }
 
     function setJoinedDate() {
@@ -133,19 +151,7 @@ function StaffForm() {
             ('0' + (placeHolderDate.getDate()+1)).slice(-2)
         return formattedDate;
     }
-
-    function updateFirebse() {
-        rootRef.push().set({
-            Name: user.name,
-            Address: user.address,
-            AccessLevel: user.accessLevel,
-            DoB: user.dob,
-            Email: user.email,
-            JoinedDate: setJoinedDate(),
-            Password: user.password,
-            PhoneNum: user.phoneNum
-        });
-    }
+    
     return (
         <Grid item xs={12}>
             <Card>

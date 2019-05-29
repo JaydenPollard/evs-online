@@ -24,7 +24,7 @@ function CustomerForm() {
     .has().digits()                                 
     .has().not().spaces()                          
     .is().not().oneOf(['Passw0rd', 'Password123']); 
-
+    
     const [user, setUser] = useState({
         name: "",
         dob: "",
@@ -119,8 +119,24 @@ function CustomerForm() {
      
     }
     function handleSubmit(e) {
+        firebase.auth().createUserWithEmailAndPassword(user.email, user.password)
+        firebase.auth().onAuthStateChanged(authUser => {
+            const uid = authUser.uid;
+            const email = authUser.email;
+            const newUserRef = rootRef
+            return newUserRef.set({
+                [uid]:{
+                Name: user.name,
+                Address: user.address,
+                Email: email,
+                MemberType: user.memberType,
+                DoB: user.dob,
+                JoinedDate: setJoinedDate(),
+                Password: user.password,
+                PhoneNum: user.phoneNum
+              }  })
+          });
         e.preventDefault();
-        updateFirebse();
     }
 
     function setJoinedDate() {
@@ -132,19 +148,6 @@ function CustomerForm() {
             "-" +
             ('0' + placeHolderDate.getDate()).slice(-2)
         return formattedDate;
-    }
-
-    function updateFirebse() {
-        rootRef.push().set({
-            Name: user.name,
-            Address: user.address,
-            MemberType: user.memberType,
-            DoB: user.dob,
-            Email: user.email,
-            JoinedDate: setJoinedDate(),
-            Password: user.password,
-            PhoneNum: user.phoneNum
-        });
     }
     return (
         <Grid item xs={12}>
