@@ -8,8 +8,8 @@ import DateFnsUtils from "@date-io/date-fns";
 import {
     MuiPickersUtilsProvider,
     } from "@material-ui/pickers";
-
-import { firebase } from "../firebase";
+    import * as firebase from "firebase/app";
+// import { firebase } from "../firebase";
 // import {
 //     getTime
     

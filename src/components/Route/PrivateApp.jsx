@@ -1,7 +1,8 @@
 import React from 'react';
 import { Route, Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import {firebase} from '../../layouts/firebase'
+import * as firebase from "firebase/app";
+// import {firebase} from '../../layouts/firebase'
 
 const PrivateRoutes = ({component: Comp, ...rest }) => {
   const user =firebase.auth().currentUser; 

@@ -3,8 +3,8 @@ import "typeface-roboto";
 import React from "react";
 import ReactDOM from "react-dom";
 import { BrowserRouter } from "react-router-dom";
+import * as firebase from "firebase/app";
 import App from "./App";
-import { firebase } from "./layouts/firebase";
 
 const AppUI = props => {
     return (

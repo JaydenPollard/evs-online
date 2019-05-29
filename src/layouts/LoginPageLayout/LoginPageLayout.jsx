@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-
+import PropTypes from 'prop-types'
 import withStyles from "@material-ui/core/styles/withStyles";
 import {
     Typography,
@@ -15,9 +15,10 @@ import moment from "moment";
 import CssBaseline from "@material-ui/core/CssBaseline";
 // import Image from "../../assests/popcorn-login-background.jpg";
 import { TextValidator, ValidatorForm } from "react-material-ui-form-validator";
+import * as firebase from "firebase/app";
 import { loginPageLayoutStyles } from "./LoginPageLayoutStyles";
 // import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
-import { firebase } from "../firebase";
+import "firebase/auth";
 
 function LoginPage(props) {
     const { classes } = props;
@@ -105,5 +106,9 @@ function LoginPage(props) {
         </div>
     );
 }
+LoginPage.propTypes ={
+    history: PropTypes.func.isRequired,
+    classes: PropTypes.object.isRequired
 
+}
 export default withStyles(loginPageLayoutStyles)(LoginPage);

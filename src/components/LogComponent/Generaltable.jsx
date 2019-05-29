@@ -6,8 +6,9 @@ import TableCell from "@material-ui/core/TableCell";
 import TableBody from "@material-ui/core/TableBody";
 import TableRow from "@material-ui/core/TableRow";
 import { Checkbox } from "@material-ui/core";
+import * as firebase from "firebase/app";
 import {delEntry} from "../LogFunction/SharedFunction";
-import { firebase } from "../../layouts/firebase";
+// import { firebase } from "../../layouts/firebase";
 import EnhanceTableHead from "./HeadTable/Header";
 // Extracting whole data for the current user
 export const getTime = (headKey, date, time, idKey) => {
