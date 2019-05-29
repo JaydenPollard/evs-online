@@ -6,7 +6,7 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import AppBar from "../../../components/AppBar/AppBar";
 import SearchMoviesInput from "../../../components/Movie/SearchMoviesInput/SearchMoviesInput";
-import SetMovieSuccessDialog from "../../../components/Movie/AddMovieSuccessDialog/SetMovieSuccessDialog";
+import SetMovieSuccessDialog from "../../../components/Movie/SetMovieSuccessDialog/SetMovieSuccessDialog";
 import { requestSearchCatalogue } from "../../../reducers/search-catalogue/search-catalogue-actions";
 import MovieItem from "../../../components/Movie/MovieItem/MovieItem";
 import LoadingIndicator from "../../../components/common/LoadingIndicator";
