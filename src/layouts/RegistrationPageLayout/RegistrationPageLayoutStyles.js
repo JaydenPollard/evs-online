@@ -9,7 +9,7 @@ export const registrationPageLayoutStyles = theme => ({
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
         backgroundSize: "cover",
-        position: "absolute"
+        position: "relative"
     },
     main: {
         width: "80vw",

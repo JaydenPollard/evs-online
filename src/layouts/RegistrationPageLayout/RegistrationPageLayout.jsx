@@ -3,7 +3,7 @@ import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import FormControl from "@material-ui/core/FormControl";
-import FormField from "./formFields";
+import FormField from "./FormFields";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Paper from "@material-ui/core/Paper";
 import React from "react";
@@ -14,7 +14,7 @@ import { validate, validateRepeatPassword } from "./validate";
 import { compose } from "recompose";
 import { Link } from "react-router-dom";
 import { registrationPageLayoutStyles } from "./RegistrationPageLayoutStyles";
-import createUserWithEmailAndPassword from "./auth";
+import { createUserWithAuth, createUserInDatabase } from "./auth";
 
 const INITIAL_FORM_STATE = {
     formValid: false,
@@ -209,13 +209,31 @@ const RegistrationPage = props => {
         let email = formState.formdata.email.value;
         let password = formState.formdata.password.value;
 
-        createUserWithEmailAndPassword(email, password)
+        let userData = {
+            email: email,
+            firstname: formState.formdata.firstname.value,
+            lastname: formState.formdata.lastname.value,
+            dob: formState.formdata.dob.value,
+            address: formState.formdata.address.value,
+            phonenumber: formState.formdata.phonenumber.value
+        };
+
+        createUserWithAuth(email, password)
             .then(authUser => {
-                alert("success!!! " + authUser.user);
                 setFormState({ ...INITIAL_FORM_STATE });
+                createUserInDatabase(authUser, userData)
+                    .then(createdUser => {
+                        alert(
+                            "Successfully registered user with email " +
+                                createdUser.email
+                        );
+                    })
+                    .catch(reason => {
+                        alert("DATABASE_ERROR reason: " + reason);
+                    });
             })
             .catch(reason => {
-                alert("reason: " + reason);
+                alert("AUTH_ERROR reason: " + reason);
                 alert("err code: " + reason.errorCode);
                 alert("err msg: " + reason.errorMessage);
             });
