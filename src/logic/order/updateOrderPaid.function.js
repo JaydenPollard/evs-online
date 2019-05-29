@@ -1,11 +1,11 @@
 import * as firebase from "firebase/app";
 import "firebase/database";
 
-async function updateOrderStatus(orderId, status) {
+async function updateOrderPaid(orderId) {
     const orderRef = firebase.database.ref("Order");
-    const updateQuery = orderRef.child(orderId).child("OrderStatus");
+    const updateQuery = orderRef.child(orderId).child("OrderPaid");
     return updateQuery
-        .set(status)
+        .set(true)
         .then(function() {
             return true;
         })
@@ -14,4 +14,4 @@ async function updateOrderStatus(orderId, status) {
         });
 }
 
-export default updateOrderStatus;
+export default updateOrderPaid;
