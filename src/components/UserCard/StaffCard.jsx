@@ -238,7 +238,7 @@ const StaffCard = props => {
                                         <Typography>Phone Number:</Typography>
                                         <NumberFormat
                                             customInput={TextField}
-                                            format="+64 ### ### ###"
+                                            format="+614## ### ###"
                                             placeholder="Phone Number"
                                             value={phoneNum}
                                             onChange={handlePhoneNumChange}

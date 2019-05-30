@@ -191,7 +191,7 @@ const StaffForm = () => {
                                     customInput={TextField}
                                     value={user.phoneNum}
                                     onChange={handlePhoneNumChange}
-                                    format="+64 ### ### ###"
+                                    format="+614## ### ###"
                                     placeholder="Phone Number"
                                     required
                                 />
