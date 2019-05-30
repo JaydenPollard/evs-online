@@ -17,6 +17,7 @@ import createOrder from "../../logic/order/createOrder.function";
 import setMovie from "../../logic/movie/setMovie.function";
 import getCurrentUser from "../../logic/common/firebaseauth.function";
 
+//Styling to be used for Fab component
 const fabStyle = {
     top: "auto",
     right: "auto",
@@ -25,43 +26,54 @@ const fabStyle = {
     position: "fixed"
 };
 
+/**
+ * Display the new order page, allow user to create order
+ * @param props props passed to component
+ * @returns the new order view
+ */
 const NewOrder = props => {
     const { location } = props;
     const { movie, movieID } = location;
     const [newOrder, setNewOrder] = useState(order);
     const [orderMovieSuccess, setOrderMovieSuccess] = useState(false);
 
+    //Function that handles when delivery option selected
     function handleDelivery() {
         setNewOrder(orderData => {
             return { ...orderData, OrderDeliver: true };
         });
     }
 
+    //Function that handles when pickup option selected
     function handlePickup() {
         setNewOrder(orderData => {
             return { ...orderData, OrderDeliver: false };
         });
     }
 
+    //Function that handles when pay now option selected
     function handlePayNow() {
         setNewOrder(orderData => {
             return { ...orderData, OrderPaid: true };
         });
     }
 
+    //Function that handles when pay later option selected
     function handlePayLater() {
         setNewOrder(orderData => {
             return { ...orderData, OrderPaid: false };
         });
     }
 
+    //Function that handles when the confirm purchase button is clicked
     async function handlePurchase() {
         const status = newOrder.OrderPaid ? "Order Pending" : "Pending Payment";
         const changeOrder = newOrder;
 
+        //Get the current user, if not logged in set customerId to anon
         const currentUser = await getCurrentUser();
         if (currentUser) {
-            changeOrder.CustomerID = currentUser;
+            changeOrder.CustomerID = currentUser.uid;
         } else {
             changeOrder.CustomerID = "anon";
         }
@@ -70,6 +82,7 @@ const NewOrder = props => {
         changeOrder.OrderStatus = status;
         changeOrder.OrderPrice = movie.moviePrice;
 
+        //Create new order in firebase and set success
         const success = await createOrder(changeOrder);
         if (success) {
             movie.movieStockCount--;
@@ -80,6 +93,7 @@ const NewOrder = props => {
         }
     }
 
+    //Rendering conditions, redirect to home if success or movie not found
     if (orderMovieSuccess) {
         return <Redirect to={{ pathname: "/", orderMovieSuccess: true }} />;
     } else if (!movie) {

@@ -7,6 +7,11 @@ import OrderItem from "../../components/Order/OrderItem/OrderItem";
 import isMemberStaff from "../../logic/common/firebaseauth.function";
 import getCurrentUser from "../../logic/common/firebaseauth.function";
 
+/**
+ * Gets a movie object from the database based on a movieId
+ * @param movieId the id of a movie
+ * @returns movie object
+ */
 async function getMovie(movieId) {
     let movie = {};
     const movieRef = firebase.database.ref("Movie");
@@ -20,8 +25,13 @@ async function getMovie(movieId) {
     return movie;
 }
 
+/**
+ * Display the order list, which maps each order from results to an item
+ * @param result the results from a completed search
+ * @returns the view
+ */
 const OrderList = ({ result }) => {
-    const [isStaff, setIsStaff] = React.useState(true);
+    const [isStaff, setIsStaff] = React.useState(false);
 
     useEffect(() => {
         async function isUserStaff() {
@@ -44,6 +54,7 @@ const OrderList = ({ result }) => {
                 alignItems="center"
                 spacing={8}
             >
+                {/*Checks if results are empty, otherwise render and order item for each order result*/}
                 {result.orders.length > 0 ? (
                     result.orders.map(order => (
                         <OrderItem
@@ -64,8 +75,14 @@ const OrderList = ({ result }) => {
     }
 };
 
-const mapStateToProps = state => {
+/**
+ * Map the state to redux
+ * @param state the state in Redux
+ * @returns {result} object containing data from search
+ */
+function mapStateToProps(state) {
     return { result: state.orderRetrievalResult };
-};
+}
 
+//Connects with redux
 export default connect(mapStateToProps)(OrderList);

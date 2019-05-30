@@ -1,6 +1,12 @@
 import * as firebase from "firebase/app";
 import "firebase/database";
 
+/**
+ * This function searches the orders in the firebase database by date
+ * It will return orders with order dates that fall between two millisecond numbers created from param
+ * @param searchDate The day that will be searched
+ * @returns searchResult - an array of objects containing all the results found
+ */
 async function searchOrders(searchDate) {
     const orderRef = firebase.database.ref("Order");
     const startDate = new Date(searchDate);

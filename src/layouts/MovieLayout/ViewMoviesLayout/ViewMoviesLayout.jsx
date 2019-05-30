@@ -22,7 +22,7 @@ import { fabStyle } from "./ViewMoviesLayoutStyles";
 const ViewMoviesLayout = props => {
     const { results, location } = props;
     const { setMovieSuccess, orderMovieSuccess } = location;
-    const [isStaff, setIsStaff] = React.useState(true);
+    const [isStaff, setIsStaff] = React.useState(false);
 
     // Run this function only once when the view first renders
     React.useEffect(() => {

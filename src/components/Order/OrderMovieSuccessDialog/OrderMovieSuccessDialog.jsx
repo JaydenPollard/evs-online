@@ -14,14 +14,21 @@ const OrderMovieSuccessDialogStyle = {
     width: "fit-content"
 };
 
+/**
+ * Renders a success dialog that displays order success message
+ * @param props The props being passed into the component
+ * @returns a view
+ */
 const OrderMovieSuccessDialog = props => {
     const { open } = props;
     const [isOpen, setIsOpen] = React.useState(open);
 
+    //Function that handles when dialog is clicked outside of
     function handleClose() {
         setIsOpen(false);
     }
 
+    //Render the dialog view
     return (
         <Dialog
             open={isOpen}

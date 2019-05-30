@@ -6,14 +6,21 @@ import CustomDatePicker from "../../common/CustomDatePicker";
 import { requestOrdersRetrieval } from "../../../reducers/order-retrieval/order-retrieval-actions";
 import order from "../../../models/movie";
 
+/**
+ * Renders the search options for an order search
+ * @param props The props being passed into the component
+ * @returns a view
+ */
 const SearchOrderInput = props => {
     const [searchOrder, setSearchOrder] = useState(order);
 
+    //Function that handles when search button is selected
     function handleSearch(e) {
         e.preventDefault();
         props.requestOrdersRetrieval(searchOrder.OrderDate);
     }
 
+    //Renders the search input item
     return (
         <Grid
             container
@@ -44,6 +51,11 @@ const SearchOrderInput = props => {
     );
 };
 
+/**
+ * Maps dispatch to redux
+ * @param dispatch dispatch redux action
+ * @returns an action to be dispatched
+ */
 function mapDispatchToProps(dispatch) {
     return {
         requestOrdersRetrieval: searchDate =>
@@ -59,6 +71,7 @@ SearchOrderInput.defaultProps = {
     requestOrdersRetrieval: () => {}
 };
 
+//Connects searchinput to redux
 export default connect(
     null,
     mapDispatchToProps

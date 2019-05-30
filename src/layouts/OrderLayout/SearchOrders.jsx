@@ -6,6 +6,7 @@ import AppBar from "../../components/AppBar/AppBar";
 import OrderList from "./OrderList";
 import SearchOrderInput from "../../components/Order/SearchOrderInput/SearchOrderInput";
 
+//Styling for fab component
 const fabStyle = {
     top: "auto",
     right: "auto",
@@ -14,6 +15,11 @@ const fabStyle = {
     position: "fixed"
 };
 
+/**
+ * Displays the base search order page
+ * @param props props passed to component
+ * @returns search order view
+ */
 const SearchOrders = props => {
     return (
         <React.Fragment>

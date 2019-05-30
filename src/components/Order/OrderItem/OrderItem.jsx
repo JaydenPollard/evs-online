@@ -1,10 +1,16 @@
 import React, { useState, useEffect } from "react";
 import "firebase/database";
+import PropTypes from "prop-types";
 import { Grid, Paper, Typography, Button, TextField } from "@material-ui/core";
 import InfoSnackbar from "../../common/InfoSnackbar";
 import updateOrderStatus from "../../../logic/order/updateOrderStatus.function";
 import updatePaidStatus from "../../../logic/order/updateOrderPaid.function";
 
+/**
+ * Renders an order item that the user can see
+ * @param props The props being passed into the component
+ * @returns a view
+ */
 const OrderItem = props => {
     const { isStaff, currentUser, orderId, order, movie } = props;
     const [movieName, setMovieName] = useState("");
@@ -14,6 +20,7 @@ const OrderItem = props => {
     const [statusUpdateSuccess, setStatusUpdateSuccess] = useState(false);
     const [orderStatus, setOrderStatus] = useState(order.OrderStatus);
 
+    //Function for handling cancel button click
     async function handleCancel(e) {
         e.preventDefault();
         const cancelSuccess = await updateOrderStatus(orderId, "Cancelled");
@@ -22,6 +29,7 @@ const OrderItem = props => {
         }
     }
 
+    //Function for handling paid button click
     async function handlePaid(e) {
         e.preventDefault();
         const paidSuccess = await updatePaidStatus(orderId);
@@ -30,6 +38,7 @@ const OrderItem = props => {
         }
     }
 
+    //Function for handling update status button click
     async function handleStatusUpdate(e) {
         e.preventDefault();
         const statusUpdateSuccess = await updateOrderStatus(
@@ -41,11 +50,13 @@ const OrderItem = props => {
         }
     }
 
+    //Function that only runs when movie or currentUser props update
     useEffect(() => {
         movie.then(function(snapshot) {
             setMovieName(snapshot.movieName);
         });
 
+        //Checks if currentUser exists or not, otherwise set user to anon
         currentUser.then(function(snapshot) {
             if (snapshot) {
                 setCurrentUserId(snapshot.uid);
@@ -55,11 +66,10 @@ const OrderItem = props => {
         });
     }, [movie, currentUser]);
 
+    //Logic to check if order should be rendered, dont render if cancelled or order isnt for that user
     if (order.OrderStatus === "Cancelled") {
         return null;
-    }
-
-    if (order.CustomerID !== currentUserId) {
+    } else if (order.CustomerID !== currentUserId && !isStaff) {
         return null;
     } else {
         return (
@@ -79,6 +89,7 @@ const OrderItem = props => {
                             </Grid>
                         </Grid>
                         <Grid container spacing={8}>
+                            {/* Render button different if paid or not at all if staff*/}
                             {!isStaff ? (
                                 order.OrderPaid ? (
                                     <Grid item>
@@ -124,6 +135,7 @@ const OrderItem = props => {
                                     Ordered by: {order.CustomerID}
                                 </Typography>
                             </Grid>
+                            {/* Render status as editable if staff, with button to update*/}
                             {isStaff ? (
                                 <Grid container direction="column" spacing={8}>
                                     <Grid item>
@@ -185,6 +197,13 @@ const OrderItem = props => {
             </Grid>
         );
     }
+};
+
+OrderItem.propTypes = {
+    isStaff: PropTypes.bool.isRequired,
+    orderId: PropTypes.string.isRequired,
+    order: PropTypes.object.isRequired,
+    movie: PropTypes.object.isRequired
 };
 
 export default OrderItem;
