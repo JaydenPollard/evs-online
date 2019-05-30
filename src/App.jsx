@@ -9,6 +9,7 @@ import {
 import LoginPage from "./layouts/LoginPageLayout/LoginPageLayout";
 import ViewMoviesLayout from "./layouts/MovieLayout/ViewMoviesLayout/ViewMoviesLayout";
 import MovieContentProcessingLayout from "./layouts/MovieLayout/MovieContentProcessingLayout/MovieContentProcessingLayout";
+import AccessMan from "./layouts/AccessManLayout/accessManLayout";
 
 const theme = createMuiTheme({
     palette: {
@@ -23,6 +24,7 @@ const App = () => (
             <Switch>
                 <Route path="/home" exact component={ViewMoviesLayout} />
                 <Route path="/login" exact component={LoginPage} />
+                <Route path="/accesslog" exact component={AccessMan} />
                 <Route
                     path="/management/movie"
                     exact
