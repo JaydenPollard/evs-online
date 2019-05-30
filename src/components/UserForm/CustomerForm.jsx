@@ -15,6 +15,7 @@ import * as firebase from "firebase/app";
 import "firebase/database";
 import NumberFormat from "react-number-format";
 import PasswordValidator from "password-validator";
+import { customer } from "../../models/user";
 
 function CustomerForm() {
     const schema = new PasswordValidator();
@@ -36,17 +37,7 @@ function CustomerForm() {
         .not()
         .oneOf(["Passw0rd", "Password123"]);
 
-    const [user, setUser] = useState({
-        name: "",
-        dob: "",
-        email: "",
-        memberType: "Standard",
-        phoneNum: "",
-        address: "",
-        password: "",
-        validPassword: "",
-        joinedDate: ""
-    });
+    const [user, setUser] = useState(customer);
     const [error, setError] = useState(false);
     const rootRef = firebase.database
         .ref()
@@ -124,9 +115,8 @@ function CustomerForm() {
         });
     };
     const handleSubmit = event => {
-        firebase
-            .auth
-            .createUserWithEmailAndPassword(user.email, user.password);
+        event.preventDefault();
+        firebase.auth.createUserWithEmailAndPassword(user.email, user.password);
         firebase.auth.onAuthStateChanged(authUser => {
             const { uid } = authUser;
             const { email } = authUser;
@@ -139,10 +129,11 @@ function CustomerForm() {
                 DoB: user.dob,
                 JoinedDate: setJoinedDate(),
                 Password: user.password,
-                PhoneNum: user.phoneNum
+                PhoneNum: user.phoneNum,
+                IsActive: user.isActive
             });
         });
-        event.preventDefault();
+        setUser(customer);
     };
 
     const setJoinedDate = () => {

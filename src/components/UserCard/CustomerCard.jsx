@@ -21,8 +21,7 @@ import "firebase/database";
 
 const CustomerCard = props => {
     const user = props;
-    const rootRef = firebase
-        .database
+    const rootRef = firebase.database
         .ref()
         .child("Users")
         .child("Customers")
@@ -34,6 +33,7 @@ const CustomerCard = props => {
     const [memberType, setMemberType] = useState("");
     const [phoneNum, setPhoneNum] = useState("");
     const [address, setAddress] = useState("");
+    const [isActive, setIsActive] = useState();
     const memberInput = [
         {
             value: "Standard",
@@ -76,7 +76,7 @@ const CustomerCard = props => {
                 {
                     label: "Confirm",
                     onClick: () => {
-                        deleteUser();
+                        disableUser();
                     }
                 },
                 {
@@ -87,11 +87,11 @@ const CustomerCard = props => {
         });
     };
 
-    const deleteUser = () => {
-        firebase
-            .database
+    const disableUser = () => {
+        // TODO: Disable auth user
+        firebase.database
             .ref(`Users/Customers/${user.userId}`)
-            .remove();
+            .update({ IsActive: false });
     };
 
     const updateUser = () => {
@@ -102,6 +102,7 @@ const CustomerCard = props => {
         rootRef.child("MemberType").set(memberType);
         rootRef.child("Name").set(name);
         rootRef.child("PhoneNum").set(phoneNum);
+        rootRef.child("IsActive").set(isActive);
     };
 
     useEffect(() => {
@@ -129,6 +130,9 @@ const CustomerCard = props => {
                     case "PhoneNum":
                         setPhoneNum(attributes.val());
                         break;
+                    case "IsActive":
+                        setIsActive(attributes.val());
+                        break;
                     default:
                 }
             });
@@ -137,138 +141,144 @@ const CustomerCard = props => {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    return (
-        <Grid item xs={12}>
-            <Card>
-                <CardContent>
-                    <ValidatorForm autoComplete="off" onSubmit={handleSubmit}>
-                        <Grid container spacing={24}>
-                            <Grid item xs={12}>
-                                <Typography>User Basic Info</Typography>
-                            </Grid>
-                            <Grid item xs={12} sm={6}>
-                                <Typography>Name:</Typography>
-                                <Input
-                                    placeholder="Name"
-                                    value={name}
-                                    onChange={handleNameChange}
-                                    required
-                                />
-                            </Grid>
-                            <Grid item xs={12} sm={6}>
-                                <Typography>ID:</Typography>
-                                <Input
-                                    placeholder="Name"
-                                    value={user.userId}
-                                    disabled
-                                    required
-                                />
-                            </Grid>
-                            <Grid item xs={12} sm={6}>
-                                <Typography>DoB:</Typography>
-                                <FormControl>
-                                    <TextField
-                                        type="date"
-                                        value={dob}
-                                        onChange={handleDoBChange}
-                                        InputLabelProps={{
-                                            shrink: true
-                                        }}
+    if (isActive === true) {
+        return (
+            <Grid item xs={12}>
+                <Card>
+                    <CardContent>
+                        <ValidatorForm
+                            autoComplete="off"
+                            onSubmit={handleSubmit}
+                        >
+                            <Grid container spacing={24}>
+                                <Grid item xs={12}>
+                                    <Typography>User Basic Info</Typography>
+                                    <div>{isActive}</div>
+                                </Grid>
+                                <Grid item xs={12} sm={6}>
+                                    <Typography>Name:</Typography>
+                                    <Input
+                                        placeholder="Name"
+                                        value={name}
+                                        onChange={handleNameChange}
                                         required
                                     />
-                                </FormControl>
-                            </Grid>
-                            <Grid item xs={12} sm={6}>
-                                <Typography>Email:</Typography>
-                                <TextValidator
-                                    name="email"
-                                    placeholder="Email"
-                                    value={email}
-                                    onChange={handleEmailChange}
-                                    validators={["isEmail"]}
-                                    errorMessages={["Email is not valid"]}
-                                    required
-                                />
-                            </Grid>
-                            <Grid item xs={12} sm={6}>
-                                <Typography>Joined Date:</Typography>
-                                <FormControl>
-                                    <TextField
-                                        type="date"
-                                        value={joinedDate}
+                                </Grid>
+                                <Grid item xs={12} sm={6}>
+                                    <Typography>ID:</Typography>
+                                    <Input
+                                        placeholder="Name"
+                                        value={user.userId}
                                         disabled
+                                        required
                                     />
-                                </FormControl>
-                            </Grid>
-                            <Grid item xs={12} sm={6}>
-                                <Typography>Memeber Type:</Typography>
-                                <FormControl>
-                                    <TextField
-                                        select
-                                        value={memberType}
-                                        onChange={handleMemberTypeChange}
+                                </Grid>
+                                <Grid item xs={12} sm={6}>
+                                    <Typography>DoB:</Typography>
+                                    <FormControl>
+                                        <TextField
+                                            type="date"
+                                            value={dob}
+                                            onChange={handleDoBChange}
+                                            InputLabelProps={{
+                                                shrink: true
+                                            }}
+                                            required
+                                        />
+                                    </FormControl>
+                                </Grid>
+                                <Grid item xs={12} sm={6}>
+                                    <Typography>Email:</Typography>
+                                    <TextValidator
+                                        name="email"
+                                        placeholder="Email"
+                                        value={email}
+                                        onChange={handleEmailChange}
+                                        validators={["isEmail"]}
+                                        errorMessages={["Email is not valid"]}
+                                        required
+                                    />
+                                </Grid>
+                                <Grid item xs={12} sm={6}>
+                                    <Typography>Joined Date:</Typography>
+                                    <FormControl>
+                                        <TextField
+                                            type="date"
+                                            value={joinedDate}
+                                            disabled
+                                        />
+                                    </FormControl>
+                                </Grid>
+                                <Grid item xs={12} sm={6}>
+                                    <Typography>Memeber Type:</Typography>
+                                    <FormControl>
+                                        <TextField
+                                            select
+                                            value={memberType}
+                                            onChange={handleMemberTypeChange}
+                                        >
+                                            {memberInput.map(option => (
+                                                <MenuItem
+                                                    key={option.value}
+                                                    value={option.value}
+                                                >
+                                                    {option.label}
+                                                </MenuItem>
+                                            ))}
+                                        </TextField>
+                                    </FormControl>
+                                </Grid>
+                                <Grid item xs={12} sm={6}>
+                                    <Typography>Phone Number:</Typography>
+                                    <NumberFormat
+                                        customInput={TextField}
+                                        format="+64 ### ### ###"
+                                        placeholder="Phone Number"
+                                        value={phoneNum}
+                                        onChange={handlePhoneNumChange}
+                                        required
+                                    />
+                                </Grid>
+                                <Grid item xs={12} sm={6}>
+                                    <Typography>Address:</Typography>
+                                    <Input
+                                        placeholder="Address"
+                                        value={address}
+                                        onChange={handleAddressChange}
+                                        required
+                                    />
+                                </Grid>
+                                <Grid item xs={12} sm={6}>
+                                    <Button
+                                        type="submit"
+                                        variant="contained"
+                                        color="inherit"
                                     >
-                                        {memberInput.map(option => (
-                                            <MenuItem
-                                                key={option.value}
-                                                value={option.value}
-                                            >
-                                                {option.label}
-                                            </MenuItem>
-                                        ))}
-                                    </TextField>
-                                </FormControl>
+                                        Submit Changes
+                                        <EditIcon
+                                            style={{ margin: "0 0 5px 5px" }}
+                                        />
+                                    </Button>
+                                </Grid>
+                                <Grid item xs={12} sm={6}>
+                                    <Button
+                                        variant="contained"
+                                        color="secondary"
+                                        onClick={handleDelete}
+                                    >
+                                        Delete User
+                                        <DeleteIcon
+                                            style={{ margin: "0 0 5px 5px" }}
+                                        />
+                                    </Button>
+                                </Grid>
                             </Grid>
-                            <Grid item xs={12} sm={6}>
-                                <Typography>Phone Number:</Typography>
-                                <NumberFormat
-                                    customInput={TextField}
-                                    format="+64 ### ### ###"
-                                    placeholder="Phone Number"
-                                    value={phoneNum}
-                                    onChange={handlePhoneNumChange}
-                                    required
-                                />
-                            </Grid>
-                            <Grid item xs={12} sm={6}>
-                                <Typography>Address:</Typography>
-                                <Input
-                                    placeholder="Address"
-                                    value={address}
-                                    onChange={handleAddressChange}
-                                    required
-                                />
-                            </Grid>
-                            <Grid item xs={12} sm={6}>
-                                <Button
-                                    type="submit"
-                                    variant="contained"
-                                    color="inherit"
-                                >
-                                    Submit Changes
-                                    <EditIcon
-                                        style={{ margin: "0 0 5px 5px" }}
-                                    />
-                                </Button>
-                            </Grid>
-                            <Grid item xs={12} sm={6}>
-                                <Button
-                                    variant="contained"
-                                    color="secondary"
-                                    onClick={handleDelete}
-                                >
-                                    Delete User
-                                    <DeleteIcon
-                                        style={{ margin: "0 0 5px 5px" }}
-                                    />
-                                </Button>
-                            </Grid>
-                        </Grid>
-                    </ValidatorForm>
-                </CardContent>
-            </Card>
-        </Grid>
-    );
+                        </ValidatorForm>
+                    </CardContent>
+                </Card>
+            </Grid>
+        );
+    } else return <></>;
 };
 
 export default CustomerCard;

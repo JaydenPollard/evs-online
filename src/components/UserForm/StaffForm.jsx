@@ -15,6 +15,7 @@ import * as firebase from "firebase/app";
 import "firebase/database";
 import NumberFormat from "react-number-format";
 import PasswordValidator from "password-validator";
+import { staff } from "../../models/user";
 
 const StaffForm = () => {
     const schema = new PasswordValidator();
@@ -36,17 +37,7 @@ const StaffForm = () => {
         .not()
         .oneOf(["Passw0rd", "Password123"]);
 
-    const [user, setUser] = useState({
-        name: "",
-        dob: "",
-        email: "",
-        accessLevel: "Staff",
-        phoneNum: "",
-        address: "",
-        password: "",
-        validPassword: "",
-        joinedDate: ""
-    });
+    const [user, setUser] = useState(staff);
     const [error, setError] = useState(false);
     const rootRef = firebase.database
         .ref()
@@ -124,9 +115,8 @@ const StaffForm = () => {
         });
     };
     const handleSubmit = event => {
-        firebase
-            .auth
-            .createUserWithEmailAndPassword(user.email, user.password);
+        event.preventDefault();
+        firebase.auth.createUserWithEmailAndPassword(user.email, user.password);
         firebase.auth.onAuthStateChanged(authUser => {
             const { uid } = authUser;
             const { email } = authUser;
@@ -139,10 +129,11 @@ const StaffForm = () => {
                 DoB: user.dob,
                 JoinedDate: setJoinedDate(),
                 Password: user.password,
-                PhoneNum: user.phoneNum
+                PhoneNum: user.phoneNum,
+                IsActive: user.isActive
             });
         });
-        event.preventDefault();
+        setUser(staff);
     };
 
     const setJoinedDate = () => {
