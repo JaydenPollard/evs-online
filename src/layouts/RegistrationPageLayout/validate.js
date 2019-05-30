@@ -1,4 +1,33 @@
-export const validateRepeatPassword = (element, password) => {
+export const validateNextForm = nextState => {
+    var nextFormValid = false;
+    if (
+        nextState.formdata.email.valid &&
+        nextState.formdata.password.valid &&
+        nextState.formdata.repeatpassword.valid
+    ) {
+        nextFormValid = true;
+    }
+    return nextFormValid;
+};
+
+export const validateRegisterForm = nextState => {
+    const formdata = nextState.formdata;
+    if (validateElement(formdata.email)) {
+        if (
+            nextState.formNextValid &&
+            formdata.firstname.valid &&
+            formdata.lastname.valid &&
+            formdata.dob.valid &&
+            formdata.address.valid &&
+            formdata.phonenumber.valid
+        ) {
+            return true;
+        }
+    }
+    return false;
+};
+
+export const validateRepeatPasswordElement = (element, password) => {
     let error = [true, ""];
 
     if (element.validation.repeatpassword) {
@@ -13,10 +42,17 @@ export const validateRepeatPassword = (element, password) => {
         error = !matching ? [matching, message] : error;
     }
 
+    if (element.validation.required) {
+        const valid = element.value.trim() !== "";
+        const message = `${!valid ? "This field is required" : ""}`;
+
+        error = !valid ? [valid, message] : error;
+    }
+
     return error;
 };
 
-export const validate = element => {
+export const validateElement = element => {
     let error = [true, ""];
 
     if (element.validation.email) {

@@ -1,18 +1,18 @@
-import Image from "../../assests/popcorn-login-background.jpg";
+import Image2 from "../../assests/popcorn-login-background.jpg";
+import Image from "../../assests/cinema.jpeg";
 
 export const registrationPageLayoutStyles = theme => ({
     background: {
         width: "100%",
         height: "100%",
         backgroundImage: `url(${Image})`,
-        backgroundAttachment: "fixed",
-        backgroundPosition: "center",
+        backgroundPosition: "center center",
         backgroundRepeat: "no-repeat",
-        backgroundSize: "cover",
-        position: "relative"
+        backgroundSize: "cover"
     },
     main: {
         width: "80vw",
+        height: "100vw",
         display: "block", // Fix IE 11 issue.
         marginLeft: "auto",
         marginRight: "auto",
@@ -48,9 +48,16 @@ export const registrationPageLayoutStyles = theme => ({
         marginTop: theme.spacing.unit * 2
     },
     button: {
-        alignSelf: "start",
+        margin: "8px"
+    },
+    returnButton: {
         backgroundColor: "#e5e5e5",
-        borderRadius: "5px",
-        padding: "0 5px 4px"
+        margin: "8px"
+    },
+    leftIcon: {
+        marginRight: "8px"
+    },
+    iconSmall: {
+        fontSize: 20
     }
 });

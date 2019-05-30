@@ -1,25 +1,29 @@
-import ArrowBackIcon from "@material-ui/icons/ArrowBackRounded";
+import { registrationPageLayoutStyles } from "./RegistrationPageLayoutStyles";
+import { validateRepeatPasswordElement, validateElement } from "./validate";
+import createUserWithEmailAndPassword from "./auth";
+import { withFirebase } from "../../components/Firebase";
+import CredentialsForm from "./CredentialsForm";
+import AddressForm from "./AddressForm";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
-import FormControl from "@material-ui/core/FormControl";
-import FormField from "./FormFields";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
+import ArrowBackIcon from "@material-ui/icons/ArrowBackRounded";
 import Paper from "@material-ui/core/Paper";
+import Grid from "@material-ui/core/Grid";
 import React from "react";
+import clsx from "clsx";
 import Typography from "@material-ui/core/Typography";
 import withStyles from "@material-ui/core/styles/withStyles";
-import { withFirebase } from "../../components/Firebase";
-import { validate, validateRepeatPassword } from "./validate";
+import Stepper from "@material-ui/core/Stepper";
+import Step from "@material-ui/core/Step";
+import StepLabel from "@material-ui/core/StepLabel";
 import { compose } from "recompose";
 import { Link } from "react-router-dom";
-import { registrationPageLayoutStyles } from "./RegistrationPageLayoutStyles";
-import { createUserWithAuth, createUserInDatabase } from "./auth";
 
 const INITIAL_FORM_STATE = {
-    formValid: false,
-    formError: false,
-    formSuccess: "",
+    formNextValid: false,
+    formRegisterValid: false,
     formdata: {
         email: {
             element: "input",
@@ -35,8 +39,8 @@ const INITIAL_FORM_STATE = {
                 required: true,
                 email: true
             },
-            valid: true,
-            validationMessage: "",
+            valid: false,
+            validationMessage: "This field is required",
             showlabel: true
         },
         password: {
@@ -52,8 +56,8 @@ const INITIAL_FORM_STATE = {
                 required: true,
                 password: true
             },
-            valid: true,
-            validationMessage: "",
+            valid: false,
+            validationMessage: "This field is required",
             showlabel: true
         },
         repeatpassword: {
@@ -69,8 +73,8 @@ const INITIAL_FORM_STATE = {
                 required: true,
                 repeatpassword: true
             },
-            valid: true,
-            validationMessage: "",
+            valid: false,
+            validationMessage: "This field is required",
             showlabel: true
         },
         firstname: {
@@ -87,8 +91,8 @@ const INITIAL_FORM_STATE = {
                 required: true,
                 text: true
             },
-            valid: true,
-            validationMessage: "",
+            valid: false,
+            validationMessage: "This field is required",
             showlabel: true
         },
         lastname: {
@@ -105,8 +109,8 @@ const INITIAL_FORM_STATE = {
                 required: true,
                 text: true
             },
-            valid: true,
-            validationMessage: "",
+            valid: false,
+            validationMessage: "This field is required",
             showlabel: true
         },
         dob: {
@@ -124,8 +128,8 @@ const INITIAL_FORM_STATE = {
                 required: true,
                 date: true
             },
-            valid: true,
-            validationMessage: "",
+            valid: false,
+            validationMessage: "This field is required",
             showlabel: true
         },
         address: {
@@ -142,8 +146,8 @@ const INITIAL_FORM_STATE = {
                 required: true,
                 text: true
             },
-            valid: true,
-            validationMessage: "",
+            valid: false,
+            validationMessage: "This field is required",
             showlabel: true
         },
         phonenumber: {
@@ -160,52 +164,47 @@ const INITIAL_FORM_STATE = {
                 required: true,
                 text: true
             },
-            valid: true,
-            validationMessage: "",
+            valid: false,
+            validationMessage: "This field is required",
             showlabel: true
         }
     }
 };
 
 const RegistrationPage = props => {
+    const steps = ["User credentials", "Personal details"];
     const [formState, setFormState] = React.useState(INITIAL_FORM_STATE);
+    const [activeStep, setActiveStep] = React.useState(0);
 
-    function handleUpdate(element) {
+    const handleButtonEnable = () => {
+        formState.formNextValid = true;
+    };
+
+    const handleUpdate = element => {
         const newFormdata = { ...formState.formdata };
         const pwElement = { ...newFormdata["password"] };
         const newElement = { ...newFormdata[element.id] };
         newElement.value = element.event.target.value;
 
         if (element.id == "repeatpassword") {
-            var validData = validateRepeatPassword(newElement, pwElement.value);
+            var validData = validateRepeatPasswordElement(
+                newElement,
+                pwElement.value
+            );
         } else {
-            var validData = validate(newElement);
+            var validData = validateElement(newElement);
         }
         newElement.valid = validData[0];
         newElement.validationMessage = validData[1];
-
-        if (
-            formState.formdata.email.valid == false ||
-            formState.formdata.password.valid == false ||
-            formState.formdata.repeatpassword.valid == false ||
-            formState.formdata.firstname.valid == false ||
-            formState.formdata.lastname.valid == false ||
-            formState.formdata.dob.valid == false
-        ) {
-            setFormState({ formValid: false });
-        } else {
-            setFormState({ formValid: true });
-        }
-
         newFormdata[element.id] = newElement;
 
         setFormState({
-            formError: false,
             formdata: newFormdata
         });
-    }
+    };
 
-    function handleSubmit(event) {
+    const handleSubmit = event => {
+        event.preventDefault();
         let email = formState.formdata.email.value;
         let password = formState.formdata.password.value;
 
@@ -237,141 +236,205 @@ const RegistrationPage = props => {
                 alert("err code: " + reason.errorCode);
                 alert("err msg: " + reason.errorMessage);
             });
+    };
 
-        event.preventDefault();
+    function getStepContent(step) {
+        switch (step) {
+            case 0:
+                return (
+                    <CredentialsForm
+                        formState={formState}
+                        handleUpdate={handleUpdate}
+                        handleButtonEnable={handleButtonEnable}
+                    />
+                );
+            case 1:
+                return (
+                    <AddressForm
+                        formState={formState}
+                        handleUpdate={handleUpdate}
+                        handleButtonEnable={handleButtonEnable}
+                    />
+                );
+            default:
+                throw new Error("Unknown step");
+        }
     }
+
+    const handleNext = () => {
+        setActiveStep(activeStep + 1);
+    };
+
+    const handleBack = () => {
+        setActiveStep(activeStep - 1);
+    };
 
     return (
         <div className={props.classes.background}>
             <main className={props.classes.main}>
                 <CssBaseline />
                 <Paper className={props.classes.paper}>
-                    <Button className={props.classes.button} color="default">
-                        <Link to="/home" style={{ textDecoration: "none" }}>
+                    <Grid container justify="left" alignItems="left">
+                        <Button
+                            variant="contained"
+                            size="small"
+                            className={props.classes.returnButton}
+                        >
                             <ArrowBackIcon
-                                style={{ transform: "translateY(7px)" }}
+                                className={clsx(
+                                    props.classes.leftIcon,
+                                    props.classes.iconSmall
+                                )}
                             />
-                            Return
-                        </Link>
-                    </Button>
-
+                            <Link
+                                to="/home"
+                                style={{
+                                    textDecorationLine: "none",
+                                    color: "black"
+                                }}
+                            >
+                                Return
+                            </Link>
+                        </Button>
+                    </Grid>
                     <Avatar className={props.classes.avatar}>
                         <LockOutlinedIcon />
                     </Avatar>
                     <Typography component="h1" variant="h5">
                         Registration Form
                     </Typography>
-                    <form className={props.classes.form}>
-                        <FormControl
-                            margin="normal"
-                            required
-                            fullWidth
-                            error={formState.formdata.email.valid}
-                        >
-                            <FormField
-                                id={"email"}
-                                formdata={formState.formdata.email}
-                                change={element => handleUpdate(element)}
-                            />
-                        </FormControl>
-                        <FormControl
-                            margin="normal"
-                            required
-                            fullWidth
-                            error={formState.formdata.password.valid}
-                        >
-                            <FormField
-                                id={"password"}
-                                formdata={formState.formdata.password}
-                                change={element => handleUpdate(element)}
-                            />
-                        </FormControl>
-                        <FormControl
-                            margin="normal"
-                            required
-                            fullWidth
-                            error={formState.formdata.repeatpassword.valid}
-                        >
-                            <FormField
-                                id={"repeatpassword"}
-                                formdata={formState.formdata.repeatpassword}
-                                change={element => handleUpdate(element)}
-                            />
-                        </FormControl>
-                        <FormControl
-                            margin="normal"
-                            required
-                            fullWidth
-                            error={formState.formdata.firstname.valid}
-                        >
-                            <FormField
-                                id={"firstname"}
-                                formdata={formState.formdata.firstname}
-                                change={element => handleUpdate(element)}
-                            />
-                        </FormControl>
-                        <FormControl
-                            margin="normal"
-                            required
-                            fullWidth
-                            error={formState.formdata.lastname.valid}
-                        >
-                            <FormField
-                                id={"lastname"}
-                                formdata={formState.formdata.lastname}
-                                change={element => handleUpdate(element)}
-                            />
-                        </FormControl>
-                        <FormControl
-                            margin="normal"
-                            required
-                            fullWidth
-                            error={formState.formdata.dob.valid}
-                        >
-                            <FormField
-                                id={"dob"}
-                                formdata={formState.formdata.dob}
-                                change={element => handleUpdate(element)}
-                            />
-                        </FormControl>
-                        <FormControl
-                            margin="normal"
-                            required
-                            fullWidth
-                            error={formState.formdata.address.valid}
-                        >
-                            <FormField
-                                id={"address"}
-                                formdata={formState.formdata.address}
-                                change={element => handleUpdate(element)}
-                            />
-                        </FormControl>
-                        <FormControl
-                            margin="normal"
-                            required
-                            fullWidth
-                            error={formState.formdata.phonenumber.valid}
-                        >
-                            <FormField
-                                id={"phonenumber"}
-                                formdata={formState.formdata.phonenumber}
-                                change={element => handleUpdate(element)}
-                            />
-                        </FormControl>
-                        <FormControl margin="normal" justify="center">
-                            <Button
-                                type="submit"
-                                variant="contained"
-                                color="inherit"
-                                size="large"
-                                onClick={event => handleSubmit(event)}
-                                disabled={formState.formValid}
-                            >
-                                Register
-                            </Button>
-                        </FormControl>
-                    </form>
-                    {/* <div className={this.props.classes.divider} /> */}
+                    <Stepper
+                        activeStep={activeStep}
+                        className={props.classes.stepper}
+                    >
+                        {steps.map(label => (
+                            <Step key={label}>
+                                <StepLabel>{label}</StepLabel>
+                            </Step>
+                        ))}
+                    </Stepper>
+                    <React.Fragment>
+                        {activeStep === steps.length ? (
+                            <React.Fragment>
+                                <Typography variant="h5" gutterBottom>
+                                    Thank you for registering with EVS!
+                                </Typography>
+                                <Typography variant="subtitle1">
+                                    Your account email is{" "}
+                                    {formState.formdata.email}
+                                    and you are now logged in. Please click the
+                                    button below to return to the home page.
+                                </Typography>
+                                <Link
+                                    to="/home"
+                                    style={{ textDecoration: "none" }}
+                                >
+                                    <Button
+                                        variant="contained"
+                                        color="inherit"
+                                        size="large"
+                                        className={props.classes.button}
+                                    >
+                                        Home
+                                    </Button>
+                                </Link>
+                            </React.Fragment>
+                        ) : (
+                            <React.Fragment>
+                                <form className={props.classes.form}>
+                                    {getStepContent(activeStep)}
+                                    {activeStep !== 0 && (
+                                        <Grid container direction="column">
+                                            <Grid
+                                                item
+                                                xs="8px"
+                                                justify="flex-start"
+                                            >
+                                                <Button
+                                                    className={
+                                                        props.classes.button
+                                                    }
+                                                    variant="contained"
+                                                    color="inherit"
+                                                    size="large"
+                                                    onClick={handleBack}
+                                                >
+                                                    Back
+                                                </Button>
+                                            </Grid>
+                                            <Grid
+                                                item
+                                                xs="8px"
+                                                justify="flex-end"
+                                            >
+                                                <Button
+                                                    className={
+                                                        props.classes.button
+                                                    }
+                                                    variant="contained"
+                                                    color="inherit"
+                                                    size="large"
+                                                    onClick={
+                                                        activeStep ===
+                                                        steps.length - 1
+                                                            ? event =>
+                                                                  handleSubmit(
+                                                                      event
+                                                                  )
+                                                            : handleNext
+                                                    }
+                                                    disabled={
+                                                        activeStep ===
+                                                        steps.length - 1
+                                                            ? !formState.formRegisterValid
+                                                            : !formState.formNextValid
+                                                    }
+                                                >
+                                                    {activeStep ===
+                                                    steps.length - 1
+                                                        ? "Register"
+                                                        : "Next"}
+                                                </Button>
+                                            </Grid>
+                                        </Grid>
+                                    )}
+                                    {activeStep == 0 && (
+                                        <Grid
+                                            container
+                                            justify="center"
+                                            alignItems="center"
+                                        >
+                                            <Button
+                                                className={props.classes.button}
+                                                variant="contained"
+                                                color="inherit"
+                                                size="large"
+                                                onClick={
+                                                    activeStep ===
+                                                    steps.length - 1
+                                                        ? event =>
+                                                              handleSubmit(
+                                                                  event
+                                                              )
+                                                        : handleNext
+                                                }
+                                                disabled={
+                                                    activeStep ===
+                                                    steps.length - 1
+                                                        ? !formState.formRegisterValid
+                                                        : !formState.formNextValid
+                                                }
+                                            >
+                                                {activeStep === steps.length - 1
+                                                    ? "Register"
+                                                    : "Next"}
+                                            </Button>
+                                        </Grid>
+                                    )}
+                                </form>
+                            </React.Fragment>
+                        )}
+                    </React.Fragment>
                 </Paper>
             </main>
         </div>

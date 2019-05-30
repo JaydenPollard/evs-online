@@ -13,11 +13,7 @@ const FormField = ({ formdata, id, change }) => {
                 error
                 id="component-error-text"
             >
-                <div className="error_label">
-                    {formdata.validation && !formdata.valid
-                        ? formdata.validationMessage
-                        : null}
-                </div>
+                <div className="error_label">{formdata.validationMessage}</div>
             </FormHelperText>
         );
         return errorMessage;
@@ -44,7 +40,9 @@ const FormField = ({ formdata, id, change }) => {
                             id
                             name={formdata.config.type}
                         />
-                        {showError()}
+                        {formdata.validation && !formdata.valid
+                            ? showError()
+                            : null}
                     </FormControl>
                 );
                 break;
