@@ -6,35 +6,45 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import AppBar from "../../../components/AppBar/AppBar";
 import SearchMoviesInput from "../../../components/Movie/SearchMoviesInput/SearchMoviesInput";
-import AddMovieSuccessDialog from "../../../components/Movie/AddMovieSuccessDialog/AddMovieSuccessDialog";
 import OrderMovieSuccessDialog from "../../../components/Order/OrderMovieSuccessDialog/OrderMovieSuccessDialog";
+import SetMovieSuccessDialog from "../../../components/Movie/SetMovieSuccessDialog/SetMovieSuccessDialog";
 import { requestSearchCatalogue } from "../../../reducers/search-catalogue/search-catalogue-actions";
 import MovieItem from "../../../components/Movie/MovieItem/MovieItem";
 import LoadingIndicator from "../../../components/common/LoadingIndicator";
+import isMemberStaff from "../../../logic/common/firebaseauth.function";
+import { fabStyle } from "./ViewMoviesLayoutStyles";
 
-const fabStyle = {
-    top: "auto",
-    right: 10,
-    bottom: 10,
-    left: "auto",
-    position: "fixed"
-};
-
+/**
+ * Display the view movies layout for the user
+ * @param props Props passed into the component
+ * @returns the view
+ */
 const ViewMoviesLayout = props => {
     const { results, location } = props;
-    const { addMovieSuccess, orderMovieSuccess } = location;
-    // TODO: Set this to true until we have a way to get the user type
-    const [isStaff, setIsStaff] = React.useState(false);
+    const { setMovieSuccess, orderMovieSuccess } = location;
+    const [isStaff, setIsStaff] = React.useState(true);
 
+    // Run this function only once when the view first renders
     React.useEffect(() => {
+        // Check if the user is a staff
+        async function isUserStaff() {
+            setIsStaff(await isMemberStaff());
+        }
+        // Set to false if failed
+        isUserStaff().catch(() => {
+            setIsStaff(false);
+        });
+        // Do not request another database connection if there are results
         if (results.searchResults.length === 0) {
             props.requestSearchCatalogue();
         }
     }, []);
 
+    // Render the view
     return (
         <React.Fragment>
-            {addMovieSuccess ? <AddMovieSuccessDialog open /> : null}
+            {/* Display the set movie success dialog if the user was redirected */}
+            {setMovieSuccess ? <SetMovieSuccessDialog open /> : null}
             {orderMovieSuccess ? <OrderMovieSuccessDialog open /> : null}
             <Grid
                 container
@@ -47,8 +57,10 @@ const ViewMoviesLayout = props => {
                     variant="h2"
                     style={{ marginTop: 16, marginBottom: 8 }}
                 >
+                    {/* Display header based on user type */}
                     {isStaff ? "Movie Management" : "Movie Search"}
                 </Typography>
+                {/* Display a loading indicator or results depending on if the search is loading */}
                 {results.isLoading ? (
                     <LoadingIndicator message="Loading..." />
                 ) : (
@@ -59,6 +71,7 @@ const ViewMoviesLayout = props => {
                                 : "Search for movies to purchase:"}
                         </Typography>
                         <SearchMoviesInput />
+                        {/* Display results or a no results message */}
                         {results.searchResults.length > 0 ? (
                             results.searchResults.map(result => {
                                 return (
@@ -83,12 +96,13 @@ const ViewMoviesLayout = props => {
                     </React.Fragment>
                 )}
             </Grid>
+            {/* Hide the movie management button if user isn't staff */}
             {isStaff ? (
                 <Fab
                     variant="extended"
                     style={fabStyle}
                     component={Link}
-                    to="/management/movie"
+                    to={{ pathname: "/management/movie", isStaff }}
                 >
                     <Add />
                     Add a Movie
@@ -98,10 +112,19 @@ const ViewMoviesLayout = props => {
     );
 };
 
+/**
+ * Map the state to redux
+ * @param state the state in Redux
+ * @returns {{results}} data related to search
+ */
 function mapStateToProps(state) {
     return { results: state.searchCatalogueResults };
 }
-
+/**
+ * Map the dispatch to redux
+ * @param dispatch dispatch a Redux Action
+ * @returns the action we can dispatch
+ */
 function mapDispatchToProps(dispatch) {
     return {
         requestSearchCatalogue: () =>
@@ -109,12 +132,14 @@ function mapDispatchToProps(dispatch) {
     };
 }
 
+// Declare prop types
 ViewMoviesLayout.propTypes = {
     location: PropTypes.object,
     results: PropTypes.object.isRequired,
     requestSearchCatalogue: PropTypes.func.isRequired
 };
 
+// Connect component to Redux
 export default connect(
     mapStateToProps,
     mapDispatchToProps

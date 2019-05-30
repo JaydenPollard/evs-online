@@ -10,7 +10,7 @@ import LoginPage from "./layouts/LoginPageLayout/LoginPageLayout";
 import SearchOrders from "./layouts/OrderLayout/SearchOrders";
 import NewOrder from "./layouts/OrderLayout/NewOrder";
 import ViewMoviesLayout from "./layouts/MovieLayout/ViewMoviesLayout/ViewMoviesLayout";
-import AddMoviesLayout from "./layouts/MovieLayout/MovieContentProcessingLayout/MovieContentProcessingLayout";
+import MovieContentProcessingLayout from "./layouts/MovieLayout/MovieContentProcessingLayout/MovieContentProcessingLayout";
 
 const theme = createMuiTheme({
     palette: {
@@ -30,7 +30,7 @@ const App = () => (
                 <Route
                     path="/management/movie"
                     exact
-                    component={AddMoviesLayout}
+                    component={MovieContentProcessingLayout}
                 />
                 <Route component={ViewMoviesLayout} />
             </Switch>

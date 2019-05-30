@@ -4,36 +4,36 @@ import { Link } from "react-router-dom";
 import PropTypes from "prop-types";
 import {
     capitalizeString,
-    formatDateToString
+    formatDateToDateString
 } from "../../../logic/common/utilities.function";
 import ConfirmRemoveMovieDialog from "../ConfirmRemoveMovieDialog/ConfirmRemoveMovieDialog";
 import removeMovie from "../../../logic/movie/removeMovie.function";
 import InfoSnackbar from "../../common/InfoSnackbar";
+import { buttonAlignment, imagePreviewStyle } from "./MovieItemStyles";
 
-const imagePreviewStyle = {
-    height: "200px",
-    width: "140px"
-};
-
-const buttonAlignment = {
-    textAlign: "right",
-    displayInline: "block"
-};
-
+/**
+ * Renders a movie item that the user can see and interact with
+ * @param props The props being passed into the component
+ * @returns a view
+ */
 const MovieItem = props => {
     const { movie, movieID, isStaff } = props;
 
     const [promptRemove, setPromptRemove] = React.useState(false);
     const [displaySnackbar, setDisplaySnackbar] = React.useState(false);
 
+    // Handle button click for removing movie
     function handleRemoveMovieClick(event) {
+        // Prevent page from refreshing
         event.preventDefault();
         setPromptRemove(true);
     }
 
+    // Handle movie removal confirmation
     async function handleRemoveConfirmation(removeConfirm) {
         if (removeConfirm === true) {
             setPromptRemove(false);
+            // Remove the movie from database and get removal success status
             const removeSuccess = await removeMovie(movieID);
             if (removeSuccess) {
                 setDisplaySnackbar(removeSuccess);
@@ -41,10 +41,12 @@ const MovieItem = props => {
         }
     }
 
+    // Do not render anything if the movie is hidden
     if (movie.movieHidden) {
         return null;
     }
 
+    // Render the view
     return (
         <Paper style={{ padding: 16 }}>
             <Grid container direction="row" spacing={16}>
@@ -67,6 +69,7 @@ const MovieItem = props => {
                             {capitalizeString(movie.movieName)}
                         </Typography>
                         <Typography variant="subtitle1">
+                            {/* Render price depending if it's free or not */}
                             {Number(movie.moviePrice) === 0
                                 ? "FREE"
                                 : `$${movie.moviePrice}`}
@@ -104,6 +107,7 @@ const MovieItem = props => {
                 </Grid>
             </Grid>
             <Grid style={buttonAlignment}>
+                {/* Render button options depending on the user type */}
                 {isStaff ? (
                     <React.Fragment>
                         <Button
@@ -111,7 +115,8 @@ const MovieItem = props => {
                             to={{
                                 pathname: "/management/movie",
                                 toEditMovie: movie,
-                                movieID
+                                movieID,
+                                isStaff
                             }}
                         >
                             Edit Movie Details
@@ -141,7 +146,7 @@ const MovieItem = props => {
             </Grid>
             <ConfirmRemoveMovieDialog
                 open={promptRemove}
-                onClose={handleRemoveConfirmation}
+                removeMovie={handleRemoveConfirmation}
             />
             <InfoSnackbar
                 open={displaySnackbar}
@@ -154,6 +159,7 @@ const MovieItem = props => {
     );
 };
 
+// Declare proptypes
 MovieItem.propTypes = {
     movie: PropTypes.object.isRequired,
     movieID: PropTypes.string.isRequired,
