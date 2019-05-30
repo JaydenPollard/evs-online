@@ -16,6 +16,7 @@ import "firebase/database";
 import NumberFormat from "react-number-format";
 import PasswordValidator from "password-validator";
 import { customer } from "../../models/user";
+import { createNewCustomer } from "../../logic/user/addUser.function";
 
 function CustomerForm() {
     const schema = new PasswordValidator();
@@ -116,31 +117,8 @@ function CustomerForm() {
     };
     const handleSubmit = event => {
         event.preventDefault();
-        firebase.auth.createUserWithEmailAndPassword(user.email, user.password);
-        firebase.auth.onAuthStateChanged(authUser => {
-            const { uid } = authUser;
-            const { email } = authUser;
-            const newUserRef = rootRef.child(uid);
-            return newUserRef.set({
-                Name: user.name,
-                Address: user.address,
-                Email: email,
-                MemberType: user.memberType,
-                DoB: user.dob,
-                JoinedDate: setJoinedDate(),
-                Password: user.password,
-                PhoneNum: user.phoneNum,
-                IsActive: user.isActive
-            });
-        });
+        createNewCustomer(rootRef, user);
         setUser(customer);
-    };
-
-    const setJoinedDate = () => {
-        const placeHolderDate = new Date();
-        const formattedDate = `${placeHolderDate.getFullYear()}-${`0${placeHolderDate.getMonth() +
-            1}`.slice(-2)}-${`0${placeHolderDate.getDate()}`.slice(-2)}`;
-        return formattedDate;
     };
     return (
         <Grid item xs={12}>

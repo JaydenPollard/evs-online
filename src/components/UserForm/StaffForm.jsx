@@ -16,6 +16,7 @@ import "firebase/database";
 import NumberFormat from "react-number-format";
 import PasswordValidator from "password-validator";
 import { staff } from "../../models/user";
+import { createNewStaff } from "../../logic/user/addUser.function";
 
 const StaffForm = () => {
     const schema = new PasswordValidator();
@@ -116,31 +117,8 @@ const StaffForm = () => {
     };
     const handleSubmit = event => {
         event.preventDefault();
-        firebase.auth.createUserWithEmailAndPassword(user.email, user.password);
-        firebase.auth.onAuthStateChanged(authUser => {
-            const { uid } = authUser;
-            const { email } = authUser;
-            const newUserRef = rootRef.child(uid);
-            return newUserRef.set({
-                Name: user.name,
-                Address: user.address,
-                Email: email,
-                AccessLevel: user.accessLevel,
-                DoB: user.dob,
-                JoinedDate: setJoinedDate(),
-                Password: user.password,
-                PhoneNum: user.phoneNum,
-                IsActive: user.isActive
-            });
-        });
+        createNewStaff(rootRef, user);
         setUser(staff);
-    };
-
-    const setJoinedDate = () => {
-        const placeHolderDate = new Date();
-        const formattedDate = `${placeHolderDate.getFullYear()}-${`0${placeHolderDate.getMonth() +
-            1}`.slice(-2)}-${`0${placeHolderDate.getDate() + 1}`.slice(-2)}`;
-        return formattedDate;
     };
 
     return (
