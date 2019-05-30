@@ -18,49 +18,40 @@ import MoneyTextField from "../../../components/common/MoneyTextField";
 import CustomDatePicker from "../../../components/common/CustomDatePicker";
 import movie from "../../../models/movie";
 import ErrorSnackbar from "../../../components/common/ErrorSnackbar";
-import setMovie from "../../../logic/movie/addMovie.function";
+import setMovie from "../../../logic/movie/setMovie.function";
 import LoadingIndicator from "../../../components/common/LoadingIndicator";
 import MovieSelect from "../../../components/Movie/MovieSelect/MovieSelect";
 
-const imagePreviewStyle = {
-    height: "336px",
-    width: "200px"
-};
-
-const moviesLayoutStyle = {
-    width: "50%",
-    margin: "auto",
-    marginTop: "16px",
-    padding: "16px"
-};
-
-const fabStyle = {
-    top: "auto",
-    right: "auto",
-    bottom: 10,
-    left: 10,
-    position: "fixed"
-};
+import {
+    addPhotoAlternateStyle,
+    fabStyle,
+    imagePreviewStyle,
+    movieContentProcessingLayoutStyle,
+    submitMovieStyle
+} from "./MovieContentProcessingLayoutStyle";
 
 const MovieContentProcessingLayout = props => {
     const { location } = props;
-    const { toEditMovie, movieID } = location;
+    const { toEditMovie, movieID, isStaff } = location;
     const [newMovie, setNewMovie] = React.useState(toEditMovie || movie);
     const [ratingError, setRatingError] = React.useState(false);
     const [openSnackbar, setOpenSnackbar] = React.useState(false);
     const [showSubmittingIndicator, setSubmittingIndicator] = React.useState(
         false
     );
-    const [addMovieSuccess, setAddMovieSuccess] = React.useState(false);
-    const [isStaff, setIsStaff] = React.useState(true);
+    const [setMovieSuccess, handleSetMovieSuccess] = React.useState(false);
 
+    // Handle image change
     function handleImageSelect(event) {
         event.preventDefault();
 
         const reader = new FileReader();
         const selectedImage = event.target.files[0];
+        // Check the user has selected an image
         if (selectedImage) {
+            // Read the image
             reader.readAsDataURL(selectedImage);
+            // Save the image to state after reading it
             reader.onloadend = () => {
                 setNewMovie(movieData => {
                     return { ...movieData, movieImage: reader.result };
@@ -69,34 +60,63 @@ const MovieContentProcessingLayout = props => {
         }
     }
 
+    // Handle snackbar closing
     function handleSnackbarClosing() {
         setOpenSnackbar(false);
     }
 
-    if (addMovieSuccess) {
-        return <Redirect to={{ pathname: "/", addMovieSuccess: true }} />;
+    async function submitMovie(event) {
+        event.preventDefault();
+        if (!newMovie.movieImage) {
+            setOpenSnackbar(true);
+        } else if (!ratingError) {
+            setSubmittingIndicator(true);
+            // Submit movie to Firebase Database
+            const setMovieSuccessStatus = await setMovie(newMovie, movieID);
+            if (setMovieSuccessStatus) {
+                handleSetMovieSuccess(true);
+            } else {
+                // Failure
+            }
+        }
+    }
+
+    // Redirect if movies are successfully added or the if user isn't a staff
+    if (setMovieSuccess) {
+        return <Redirect to={{ pathname: "/", setMovieSuccess: true }} />;
     } else if (!isStaff) {
         return <Redirect to="/" />;
     }
 
+    // Render the view for movie content processing
     return (
         <Grid container direction="column" justify="center" alignItems="center">
             <AppBar />
             <Typography variant="h2" style={{ marginTop: 16 }}>
+                {/* Conditional rendering if it's modifying or adding a movie */}
                 {toEditMovie ? "Modify a Movie" : "Add a Movie"}
             </Typography>
             <Typography variant="subtitle1">
                 Enter the movie details here:
             </Typography>
-            <Paper style={moviesLayoutStyle}>
+            <Paper style={movieContentProcessingLayoutStyle}>
+                {/* Display a submitting indicator or the form to add a movie */}
                 {showSubmittingIndicator ? (
-                    <LoadingIndicator
-                        message={
-                            toEditMovie
-                                ? "Updating Movie..."
-                                : "Adding Movie..."
-                        }
-                    />
+                    <React.Fragment>
+                        <LoadingIndicator
+                            message={
+                                toEditMovie
+                                    ? "Updating Movie..."
+                                    : "Adding Movie..."
+                            }
+                        />
+                        <Typography
+                            style={{ textAlign: "center" }}
+                            variant="h6"
+                        >
+                            This may take awhile depending on your image size
+                        </Typography>
+                    </React.Fragment>
                 ) : (
                     <Grid
                         container
@@ -117,6 +137,7 @@ const MovieContentProcessingLayout = props => {
                                     justify="center"
                                     alignItems="center"
                                 >
+                                    {/* Display the selected image, otherwise show a placeholder */}
                                     {newMovie.movieImage ? (
                                         <React.Fragment>
                                             <CardMedia
@@ -128,11 +149,7 @@ const MovieContentProcessingLayout = props => {
                                     ) : (
                                         <React.Fragment>
                                             <AddPhotoAlternate
-                                                style={{
-                                                    transform: "scale(5)",
-                                                    color: "white",
-                                                    marginBottom: "40px"
-                                                }}
+                                                style={addPhotoAlternateStyle}
                                             />
                                             <Typography variant="h6">
                                                 Image Preview
@@ -160,22 +177,7 @@ const MovieContentProcessingLayout = props => {
                                     justify="center"
                                     component="form"
                                     spacing={8}
-                                    onSubmit={async function(event) {
-                                        event.preventDefault();
-                                        if (!newMovie.movieImage) {
-                                            setOpenSnackbar(true);
-                                        } else if (!ratingError) {
-                                            setSubmittingIndicator(true);
-                                            // Submit movie to Firebase Database
-                                            const addMovieSuccess = await setMovie(
-                                                newMovie,
-                                                movieID
-                                            );
-                                            if (addMovieSuccess) {
-                                                setAddMovieSuccess(true);
-                                            }
-                                        }
-                                    }}
+                                    onSubmit={submitMovie}
                                 >
                                     <Grid item>
                                         <TextField
@@ -222,7 +224,7 @@ const MovieContentProcessingLayout = props => {
                                                         movieRating: rating
                                                     };
                                                 });
-
+                                                // Check if rating is valid
                                                 switch (rating) {
                                                     case "G":
                                                     case "PG":
@@ -359,17 +361,12 @@ const MovieContentProcessingLayout = props => {
                                             }}
                                         />
                                     </Grid>
-                                    <Grid
-                                        item
-                                        style={{
-                                            marginLeft: "auto",
-                                            marginTop: 8
-                                        }}
-                                    >
+                                    <Grid item style={submitMovieStyle}>
                                         <Button
                                             type="submit"
                                             variant="contained"
                                         >
+                                            {/* Conditional rendering depending on the movie processing type */}
                                             {toEditMovie
                                                 ? "Update Movie"
                                                 : "Add Movie"}
@@ -394,6 +391,7 @@ const MovieContentProcessingLayout = props => {
     );
 };
 
+// Declare proptypes
 MovieContentProcessingLayout.propTypes = {
     location: PropTypes.object
 };

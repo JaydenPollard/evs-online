@@ -10,12 +10,22 @@ import CustomerGrid from "../../components/UserGrid/CustomerGrid";
 import StaffGrid from "../../components/UserGrid/StaffGrid";
 import CustomerForm from "../../components/UserForm/CustomerForm";
 import StaffForm from "../../components/UserForm/StaffForm";
+import { isMemberAdmin } from "../../logic/common/firebaseauth.function";
 
 const UserManagementLayout = props => {
     const { classes } = props;
     const [tabValue, setTabValue] = useState(0);
     // TODO: Use auth to recognise user
-    const [isAdmin, setIsAdmin] = useState(true);
+    const [isAdmin, setIsAdmin] = React.useState(false);
+
+    React.useEffect(() => {
+        async function isUserAdmin() {
+            setIsAdmin(await isMemberAdmin());
+        }
+        isUserAdmin().catch(() => {
+            setIsAdmin(false);
+        })
+    }, []);
 
     const TabContainer = tabProps => {
         return <div>{tabProps.children}</div>;
