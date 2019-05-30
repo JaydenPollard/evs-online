@@ -33,7 +33,7 @@ function LoginPageLayout(props) {
                         </Link>
                     </Button>
 
-                    <Avatar className={classes.avatar} color="primary">
+                    <Avatar className={classes.avatar}>
                         <LockOutlinedIcon />
                     </Avatar>
                     <Typography component="h1" variant="h5">
@@ -62,7 +62,7 @@ function LoginPageLayout(props) {
                         </FormControl>
                         <FormControlLabel
                             control={
-                                <Checkbox value="remember" color="secondary" />
+                                <Checkbox value="remember" color="primary" />
                             }
                             label="Remember me"
                         />

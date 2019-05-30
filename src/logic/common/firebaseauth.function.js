@@ -26,9 +26,9 @@ export async function isMemberAdmin() {
     if (user) {
         const userID = user.uid;
         const rootRef = firebase.database.ref(`Users/Staffs`);
-        const query = rootRef.child(userID).child("AccessLevel") 
+        const query = rootRef.child(userID).child("AccessLevel");
         return query.once("value").then(function(snapshot) {
-            return snapshot.val() === "Admin" 
+            return snapshot.val() === "Admin";
         });
     }
     return false;

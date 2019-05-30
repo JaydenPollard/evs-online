@@ -4,8 +4,7 @@ import "firebase/database";
 export function createNewCustomer(rootRef, user) {
     firebase.auth.createUserWithEmailAndPassword(user.email, user.password);
     firebase.auth.onAuthStateChanged(authUser => {
-        const { uid } = authUser;
-        const { email } = authUser;
+        const { uid, email } = authUser;
         const newUserRef = rootRef.child(uid);
         return newUserRef.set({
             Name: user.name,
@@ -24,8 +23,7 @@ export function createNewCustomer(rootRef, user) {
 export function createNewStaff(rootRef, user) {
     firebase.auth.createUserWithEmailAndPassword(user.email, user.password);
     firebase.auth.onAuthStateChanged(authUser => {
-        const { uid } = authUser;
-        const { email } = authUser;
+        const { uid, email } = authUser;
         const newUserRef = rootRef.child(uid);
         return newUserRef.set({
             Name: user.name,

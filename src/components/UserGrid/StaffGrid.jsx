@@ -1,14 +1,13 @@
 /* eslint-disable func-names */
 import React, { useEffect, useState } from "react";
 import Grid from "@material-ui/core/Grid";
-import firebase from "firebase";
+import * as firebase from "firebase/app";
 import StaffCard from "../UserCard/StaffCard";
 
 function StaffGrid() {
     const [userKey, setUserKey] = useState([1, 2, 3]);
     const placeHolder = [];
-    const rootRef = firebase
-        .database
+    const rootRef = firebase.database
         .ref()
         .child("Users")
         .child("Staffs");

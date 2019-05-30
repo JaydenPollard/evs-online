@@ -21,7 +21,6 @@ import ErrorSnackbar from "../../../components/common/ErrorSnackbar";
 import setMovie from "../../../logic/movie/setMovie.function";
 import LoadingIndicator from "../../../components/common/LoadingIndicator";
 import MovieSelect from "../../../components/Movie/MovieSelect/MovieSelect";
-
 import {
     addPhotoAlternateStyle,
     fabStyle,
