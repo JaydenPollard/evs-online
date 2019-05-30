@@ -89,7 +89,7 @@ const OrderItem = props => {
                             </Grid>
                         </Grid>
                         <Grid container spacing={8}>
-                            {/* Render button different if paid or not at all if staff*/}
+                            {/* Display paid status button if user is a customer */}
                             {!isStaff ? (
                                 order.OrderPaid ? (
                                     <Grid item>
@@ -107,9 +107,7 @@ const OrderItem = props => {
                                         </Button>
                                     </Grid>
                                 )
-                            ) : (
-                                ""
-                            )}
+                            ) : null}
                             <Grid item>
                                 <Button
                                     variant="contained"

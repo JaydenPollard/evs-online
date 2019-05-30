@@ -2,18 +2,10 @@ import React from "react";
 import { Grid, Typography, Fab } from "@material-ui/core";
 import { Link } from "react-router-dom";
 import ArrowBack from "@material-ui/icons/ArrowBack";
-import AppBar from "../../components/AppBar/AppBar";
-import OrderList from "./OrderList";
-import SearchOrderInput from "../../components/Order/SearchOrderInput/SearchOrderInput";
-
-//Styling for fab component
-const fabStyle = {
-    top: "auto",
-    right: "auto",
-    bottom: 10,
-    left: 10,
-    position: "fixed"
-};
+import AppBar from "../../../components/AppBar/AppBar";
+import OrderList from "../OrderList";
+import SearchOrderInput from "../../../components/Order/SearchOrderInput/SearchOrderInput";
+import { fabStyle } from "./SearchOrdersStyles";
 
 /**
  * Displays the base search order page

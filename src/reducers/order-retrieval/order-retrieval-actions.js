@@ -1,6 +1,5 @@
 import searchOrders from "../../logic/order/searchOrder.function";
 
-export const REQUEST_ORDERS_RETRIEVAL = "@@catalogue/REQUEST_ORDER_RETRIEVAL";
 export const REQUEST_ORDERS_RETRIEVAL_FAIL =
     "@@catalogue/REQUEST_ORDER_RETRIEVAL_FAIL";
 export const REQUEST_ORDERS_RETRIEVAL_SUCCESS =

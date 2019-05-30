@@ -39,7 +39,7 @@ const OrderMovieSuccessDialog = props => {
             <DialogTitle>Order Complete!</DialogTitle>
             <DialogContent>
                 <DialogContentText>
-                    Your order has been submitted! Check it's status in your
+                    Your order has been submitted! Check its status in your
                     order history!
                 </DialogContentText>
             </DialogContent>

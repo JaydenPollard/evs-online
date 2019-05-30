@@ -11,20 +11,12 @@ import {
 import { Link, withRouter, Redirect } from "react-router-dom";
 import ArrowBack from "@material-ui/icons/ArrowBack";
 import PropTypes from "prop-types";
-import AppBar from "../../components/AppBar/AppBar";
-import order from "../../models/order";
-import createOrder from "../../logic/order/createOrder.function";
-import setMovie from "../../logic/movie/setMovie.function";
-import getCurrentUser from "../../logic/common/firebaseauth.function";
-
-//Styling to be used for Fab component
-const fabStyle = {
-    top: "auto",
-    right: "auto",
-    bottom: 10,
-    left: 10,
-    position: "fixed"
-};
+import AppBar from "../../../components/AppBar/AppBar";
+import order from "../../../models/order";
+import createOrder from "../../../logic/order/createOrder.function";
+import setMovie from "../../../logic/movie/setMovie.function";
+import getCurrentUser from "../../../logic/common/firebaseauth.function";
+import { fabStyle, cardStyle, paperStyle, gridStyle } from "./NewOrderStyles";
 
 /**
  * Display the new order page, allow user to create order
@@ -95,6 +87,7 @@ const NewOrder = props => {
 
     //Rendering conditions, redirect to home if success or movie not found
     if (orderMovieSuccess) {
+        movie.movieReleaseDate = new Date(movie.movieReleaseDate);
         return <Redirect to={{ pathname: "/", orderMovieSuccess: true }} />;
     } else if (!movie) {
         return <Redirect to="/" />;
@@ -111,13 +104,13 @@ const NewOrder = props => {
                 >
                     <Typography variant="h3">Checkout</Typography>
                     <Grid item>
-                        <Paper style={{ width: "50vw", padding: "15px" }}>
+                        <Paper style={paperStyle}>
                             <Grid
                                 container
                                 direction="column"
                                 alignItems="baseline"
                                 spacing={10}
-                                style={{ padding: "15px" }}
+                                style={gridStyle}
                             >
                                 <Typography variant="h5">
                                     Payment and Delivery
@@ -134,10 +127,7 @@ const NewOrder = props => {
                                         <Grid item>
                                             <Card
                                                 raised={!newOrder.OrderDeliver}
-                                                style={{
-                                                    width: "20vw",
-                                                    padding: "10px"
-                                                }}
+                                                style={cardStyle}
                                             >
                                                 <Typography
                                                     gutterBottom
@@ -163,10 +153,7 @@ const NewOrder = props => {
                                         <Grid item>
                                             <Card
                                                 raised={newOrder.OrderDeliver}
-                                                style={{
-                                                    width: "20vw",
-                                                    padding: "10px"
-                                                }}
+                                                style={cardStyle}
                                             >
                                                 <Typography
                                                     gutterBottom
@@ -202,10 +189,7 @@ const NewOrder = props => {
                                         <Grid item>
                                             <Card
                                                 raised={newOrder.OrderPaid}
-                                                style={{
-                                                    width: "20vw",
-                                                    padding: "10px"
-                                                }}
+                                                style={cardStyle}
                                             >
                                                 <Typography
                                                     gutterBottom
@@ -229,10 +213,7 @@ const NewOrder = props => {
                                         <Grid item>
                                             <Card
                                                 raised={!newOrder.OrderPaid}
-                                                style={{
-                                                    width: "20vw",
-                                                    padding: "10px"
-                                                }}
+                                                style={cardStyle}
                                             >
                                                 <Typography
                                                     gutterBottom
@@ -264,7 +245,7 @@ const NewOrder = props => {
                                 direction="column"
                                 alignItems="baseline"
                                 spacing={8}
-                                style={{ padding: "15px" }}
+                                style={gridStyle}
                             >
                                 <Typography variant="h5">
                                     Review Item
@@ -308,7 +289,7 @@ const NewOrder = props => {
                                 direction="column"
                                 alignItems="baseline"
                                 spacing={8}
-                                style={{ padding: "15px" }}
+                                style={gridStyle}
                             >
                                 <Typography gutterBottom variant="h5">
                                     Order Total: ${movie.moviePrice}
