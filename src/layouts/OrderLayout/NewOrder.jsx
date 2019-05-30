@@ -14,7 +14,8 @@ import PropTypes from "prop-types";
 import AppBar from "../../components/AppBar/AppBar";
 import order from "../../models/order";
 import createOrder from "../../logic/order/createOrder.function";
-import setMovie from "../../logic/movie/addMovie.function";
+import setMovie from "../../logic/movie/setMovie.function";
+import getCurrentUser from "../../logic/common/firebaseauth.function";
 
 const fabStyle = {
     top: "auto",
@@ -58,7 +59,13 @@ const NewOrder = props => {
         const status = newOrder.OrderPaid ? "Order Pending" : "Pending Payment";
         const changeOrder = newOrder;
 
-        changeOrder.CustomerID = "anon";
+        const currentUser = await getCurrentUser();
+        if (currentUser) {
+            changeOrder.CustomerID = currentUser;
+        } else {
+            changeOrder.CustomerID = "anon";
+        }
+
         changeOrder.MovieID = movieID;
         changeOrder.OrderStatus = status;
         changeOrder.OrderPrice = movie.moviePrice;
@@ -76,22 +83,7 @@ const NewOrder = props => {
     if (orderMovieSuccess) {
         return <Redirect to={{ pathname: "/", orderMovieSuccess: true }} />;
     } else if (!movie) {
-        return (
-            <React.Fragment>
-                <AppBar />
-                <Grid
-                    container
-                    direction="column"
-                    justify="center"
-                    alignItems="center"
-                    spacing={5}
-                >
-                    <Typography variant="h5">
-                        MovieID not found. Please try again.
-                    </Typography>
-                </Grid>
-            </React.Fragment>
-        );
+        return <Redirect to="/" />;
     } else {
         return (
             <React.Fragment>
@@ -166,8 +158,8 @@ const NewOrder = props => {
                                                     gutterBottom
                                                     variant="caption"
                                                 >
-                                                    Deliver movie to this
-                                                    address: {props.userAddress}
+                                                    Deliver movie to your home
+                                                    address
                                                 </Typography>
                                                 <Button
                                                     variant={

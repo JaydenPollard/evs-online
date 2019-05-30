@@ -6,13 +6,13 @@ import updateOrderStatus from "../../../logic/order/updateOrderStatus.function";
 import updatePaidStatus from "../../../logic/order/updateOrderPaid.function";
 
 const OrderItem = props => {
-    const { currentUser, orderId, order, movie, customerName } = props;
+    const { isStaff, currentUser, orderId, order, movie } = props;
     const [movieName, setMovieName] = useState("");
+    const [currentUserId, setCurrentUserId] = useState("");
     const [orderCancelSuccess, setOrderCancelSuccess] = useState(false);
     const [orderPaidSuccess, setOrderPaidSuccess] = useState(false);
     const [statusUpdateSuccess, setStatusUpdateSuccess] = useState(false);
     const [orderStatus, setOrderStatus] = useState(order.OrderStatus);
-    const [isStaff, setIsStaff] = useState(true);
 
     async function handleCancel(e) {
         e.preventDefault();
@@ -45,13 +45,21 @@ const OrderItem = props => {
         movie.then(function(snapshot) {
             setMovieName(snapshot.movieName);
         });
-    }, [movie]);
+
+        currentUser.then(function(snapshot) {
+            if (snapshot) {
+                setCurrentUserId(snapshot.uid);
+            } else {
+                setCurrentUserId("anon");
+            }
+        });
+    }, [movie, currentUser]);
 
     if (order.OrderStatus === "Cancelled") {
         return null;
     }
 
-    if (order.CustomerID !== currentUser && !isStaff) {
+    if (order.CustomerID !== currentUserId) {
         return null;
     } else {
         return (

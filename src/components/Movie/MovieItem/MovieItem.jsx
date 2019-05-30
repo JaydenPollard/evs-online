@@ -91,10 +91,10 @@ const MovieItem = props => {
                                 <Typography>{movie.movieLength} min</Typography>
                                 <Typography>{movie.movieGenre}</Typography>
                                 <Typography>
-                                    {//Error occuring here when using formatDateToString when movie ordered
+                                    {/*Error occuring here when using formatDateToDateString when movie ordered for some reason */
                                     new Date(
                                         movie.movieReleaseDate
-                                    ).toLocaleDateString()}
+                                    ).toLocaleDateString("en-AU")}
                                 </Typography>
                                 <Typography>
                                     {movie.movieStockCount} left

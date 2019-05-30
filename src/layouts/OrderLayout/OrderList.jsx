@@ -1,9 +1,11 @@
-import React from "react";
+import React, { useEffect } from "react";
 import * as firebase from "firebase/app";
 import "firebase/database";
 import { connect } from "react-redux";
 import { Grid, Typography } from "@material-ui/core";
 import OrderItem from "../../components/Order/OrderItem/OrderItem";
+import isMemberStaff from "../../logic/common/firebaseauth.function";
+import getCurrentUser from "../../logic/common/firebaseauth.function";
 
 async function getMovie(movieId) {
     let movie = {};
@@ -19,6 +21,18 @@ async function getMovie(movieId) {
 }
 
 const OrderList = ({ result }) => {
+    const [isStaff, setIsStaff] = React.useState(true);
+
+    useEffect(() => {
+        async function isUserStaff() {
+            setIsStaff(await isMemberStaff());
+        }
+        // Set to false if failed
+        isUserStaff().catch(() => {
+            setIsStaff(false);
+        });
+    }, []);
+
     if (result.isLoading) {
         return "";
     } else {
@@ -33,7 +47,8 @@ const OrderList = ({ result }) => {
                 {result.orders.length > 0 ? (
                     result.orders.map(order => (
                         <OrderItem
-                            key={order[0]}
+                            isStaff={isStaff}
+                            currentUser={getCurrentUser()}
                             orderId={order[0]}
                             order={order[1]}
                             movie={getMovie(order[1].MovieID)}
