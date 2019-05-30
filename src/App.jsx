@@ -7,9 +7,11 @@ import {
     CssBaseline
 } from "@material-ui/core";
 import LoginPage from "./layouts/LoginPageLayout/LoginPageLayout";
+import ManagementPage from "./layouts/UserManagementLayout/UserManagementLayout";
 import SearchOrders from "./layouts/OrderLayout/SearchOrders/SearchOrders";
 import NewOrder from "./layouts/OrderLayout/NewOrder/NewOrder";
 import ViewMoviesLayout from "./layouts/MovieLayout/ViewMoviesLayout/ViewMoviesLayout";
+
 import MovieContentProcessingLayout from "./layouts/MovieLayout/MovieContentProcessingLayout/MovieContentProcessingLayout";
 
 const theme = createMuiTheme({
@@ -27,6 +29,11 @@ const App = () => (
                 <Route path="/order/search" exact component={SearchOrders} />
                 <Route path="/order/new" exact component={NewOrder} />
                 <Route path="/login" exact component={LoginPage} />
+                <Route
+                    path="/management/users"
+                    exact
+                    component={ManagementPage}
+                />
                 <Route
                     path="/management/movie"
                     exact
