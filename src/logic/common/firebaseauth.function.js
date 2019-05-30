@@ -21,6 +21,19 @@ export default async function isMemberStaff() {
     return false;
 }
 
+export async function isMemberAdmin() {
+    const user = await getCurrentUser();
+    if (user) {
+        const userID = user.uid;
+        const rootRef = firebase.database.ref(`Users/Staffs`);
+        const query = rootRef.child(userID).child("AccessLevel");
+        return query.once("value").then(function(snapshot) {
+            return snapshot.val() === "Admin";
+        });
+    }
+    return false;
+}
+
 /**
  * Gets the current user from Firebase Auth
  * @returns Returns the current user

@@ -68,6 +68,16 @@ function SearchAppBar(props) {
                         Epic Video Store
                     </Typography>
                     <div className={classes.grow} />
+                    <div>
+                        <Button variant="contained" color="inherit">
+                            <Link
+                                to="/order/search"
+                                style={{ textDecoration: "none" }}
+                            >
+                                Order History
+                            </Link>
+                        </Button>
+                    </div>
                     <div className={classes.search}>
                         <div className={classes.searchIcon}>
                             <SearchIcon />

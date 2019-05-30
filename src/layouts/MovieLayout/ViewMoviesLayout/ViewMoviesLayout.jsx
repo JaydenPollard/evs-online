@@ -6,6 +6,7 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import AppBar from "../../../components/AppBar/AppBar";
 import SearchMoviesInput from "../../../components/Movie/SearchMoviesInput/SearchMoviesInput";
+import OrderMovieSuccessDialog from "../../../components/Order/OrderMovieSuccessDialog/OrderMovieSuccessDialog";
 import SetMovieSuccessDialog from "../../../components/Movie/SetMovieSuccessDialog/SetMovieSuccessDialog";
 import { requestSearchCatalogue } from "../../../reducers/search-catalogue/search-catalogue-actions";
 import MovieItem from "../../../components/Movie/MovieItem/MovieItem";
@@ -20,8 +21,8 @@ import { fabStyle } from "./ViewMoviesLayoutStyles";
  */
 const ViewMoviesLayout = props => {
     const { results, location } = props;
-    const { setMovieSuccess } = location;
-    const [isStaff, setIsStaff] = React.useState(true);
+    const { setMovieSuccess, orderMovieSuccess } = location;
+    const [isStaff, setIsStaff] = React.useState(false);
 
     // Run this function only once when the view first renders
     React.useEffect(() => {
@@ -44,6 +45,7 @@ const ViewMoviesLayout = props => {
         <React.Fragment>
             {/* Display the set movie success dialog if the user was redirected */}
             {setMovieSuccess ? <SetMovieSuccessDialog open /> : null}
+            {orderMovieSuccess ? <OrderMovieSuccessDialog open /> : null}
             <Grid
                 container
                 direction="column"
