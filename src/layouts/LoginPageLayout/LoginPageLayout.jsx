@@ -34,9 +34,10 @@ function LoginPage(props) {
     // method for authorise user and writing log --> maybe refactor to new function ?!
     
     function login() {
+        firebase.auth.onAuthStateChanged(user=> console.log(user))
         firebase.auth.signInWithEmailAndPassword(email, password)
         .then(() => {
-                props.history.push("/accesslog");
+                // props.history.push("/accesslog");
                 const userID= firebase.auth.currentUser.uid;
                 const dbref = firebase.database.ref("AccessLog/");
                 const newDbRef = dbref.child(userID).push();

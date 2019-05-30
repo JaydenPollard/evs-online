@@ -10,7 +10,8 @@ import LoginPage from "./layouts/LoginPageLayout/LoginPageLayout";
 import ViewMoviesLayout from "./layouts/MovieLayout/ViewMoviesLayout/ViewMoviesLayout";
 import MovieContentProcessingLayout from "./layouts/MovieLayout/MovieContentProcessingLayout/MovieContentProcessingLayout";
 import AccessMan from "./layouts/AccessManLayout/accessManLayout";
-
+import firebase from "firebase/app"
+import "firebase/auth"
 const theme = createMuiTheme({
     palette: {
         type: "dark"
@@ -30,7 +31,7 @@ const App = () => (
                     exact
                     component={MovieContentProcessingLayout}
                 />
-                <Route component={ViewMoviesLayout} />
+                <Route component={AccessMan} />
             </Switch>
         </BrowserRouter>
     </MuiThemeProvider>

@@ -2,35 +2,23 @@
 import React, { useState, useEffect } from "react";
 // import PropTypes from "prop-types";
 import Grid from "@material-ui/core/Grid";
-import { Button, TextField, Link } from "@material-ui/core";
+import { Button, TextField, Typography } from "@material-ui/core";
 // import { makeStyles } from "@material-ui/core/styles";
 import DateFnsUtils from "@date-io/date-fns";
 import {
     MuiPickersUtilsProvider,
     } from "material-ui-pickers";
     import * as firebase from "firebase/app";
-// import { firebase } from "../firebase";
-// import {
-//     getTime
-    
-// }  from "../../components/LogComponent/Generaltable";
+import "firebase/database";
+import "firebase/auth"
 import SearchedBlo from "../../components/LogComponent/SearchedTable";
 import HistoryBlo from "../../components/LogComponent/Generaltable";
 import AppBar from "../../components/AppBar/AppBar";
 
-// const useStyles = makeStyles(theme => ({
-//     root: {
-//         width: "100%",
-//         marginTop: theme.spacing(3),
-//         overflowX: "auto"
-//     },
-//     table: {
-//         minWidth: 650
-//     }
-// }));
+
 function AccessMan(props) {
     // const classes = useStyles();
-    const [userId, setUserId] = useState([]);
+    
     const [date, setDate] = useState([]);
     const [time, setTime] = useState([]);
     const [logKey, setLogKey] = useState([]);
@@ -42,7 +30,7 @@ function AccessMan(props) {
     const uIdRef = firebase.database.ref("AccessLog/");
     
     let userName;
-    const user = firebase.auth.currentUser.uid;
+    const user = firebase.auth.currentUser;
     // handle change of check box
     // function handleCheckBox(event, key) {
     //     const { target } = event;
@@ -86,6 +74,7 @@ function AccessMan(props) {
             .once("value").then(function(snapshot) {
                 userName = snapshot.val();
             });
+        
         if (userName == null)
             firebase
                 .database
@@ -95,7 +84,7 @@ function AccessMan(props) {
                 });
     }
     useEffect(() => {
-        uIdRef.child(user).once("value").then(snapshot => {
+        uIdRef.child(user.uid).once("value").then(snapshot => {
             const temp = snapshot.val();
             const tempLogKey = [];
             const dateRecord = [];
@@ -112,11 +101,12 @@ function AccessMan(props) {
                 timeRecord.push(temp[k].time);
               
             }
+            
             setDate(dateRecord);
             
             setLogKey(tempLogKey)
             setTime(timeRecord);
-           console.log(temp,"Log Key",tempLogKey, "datewanted")
+           
         });
     }, []);
 
@@ -125,8 +115,8 @@ function AccessMan(props) {
             <AppBar />
             <div className="history_blocks">
                 {getUserName()}
-                <h2> Hello, {userName} </h2>
-                <h3> This is your access log page </h3>
+                <Typography> Hello, {userName} </Typography>
+                <Typography> This is your access log page </Typography>
                 <Grid container justify="center">
                     <Grid item xs={2}>
                         <MuiPickersUtilsProvider utils={DateFnsUtils}>
@@ -159,14 +149,6 @@ function AccessMan(props) {
                 <Button type="submit" onClick={e => setShAll(true)}>
                     {" "}
                     Show all{" "}
-                </Button>
-
-                <Button
-                    type="submit"
-                    
-                >
-                    {" "} <Link to="/home"> logout </Link>
-                    {" "}
                 </Button>
             </div>
         </div>
