@@ -23,6 +23,7 @@ function SearchAppBar(props) {
             return (
                 <div>
                     <Button variant="contained" color="inherit">
+                        
                         <Link to="/login" style={{ textDecoration: "none" }}>
                             Login
                         </Link>
