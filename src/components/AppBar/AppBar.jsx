@@ -17,7 +17,7 @@ import "firebase/auth"
 function SearchAppBar(props) {
     const { classes } = props;
     const user = firebase.auth.currentUser;
-    const userPara = firebase.auth.onAuthStateChanged(user => user)
+    
     // Check login status to modify app bar
     function loginStatus() {
         if (user == null)

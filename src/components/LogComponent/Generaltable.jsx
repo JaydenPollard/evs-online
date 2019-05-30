@@ -7,15 +7,17 @@ import TableBody from "@material-ui/core/TableBody";
 import TableRow from "@material-ui/core/TableRow";
 import { Checkbox } from "@material-ui/core";
 import * as firebase from "firebase/app";
-import "firebase/auth"
+import "firebase/auth";
+import "firebase/database"
 import {delEntry,  handleClick} from "../LogFunction/SharedFunction";
 
 import EnhanceTableHead from "./HeadTable/Header";
+// import { setDate } from "date-fns/esm";
 // Extracting whole data for the current user
 export const getTime = (logKey, date, time) => {
     const saving = [];
     
-    const user = firebase.auth().currentUser.uid;
+    const user = firebase.auth.currentUser.uid;
 
     for (let i = 0; i < logKey.length; i+=1)
         if (logKey[i] !== undefined) {
@@ -30,30 +32,32 @@ export const getTime = (logKey, date, time) => {
 
     return saving;
 };
+export const findLogID= (logKeyFind,logKey) => {
+    for (let i=0; i<logKey.length; i+=1)
+        if (logKey[i]===logKeyFind)
+        return i;
+    return null;
+}
 
 
 // data render
 export default function HistoryBlo(props) {
     const accLog = props;
-    const abc = getTime(accLog.logKey, accLog.date, accLog.time);
+    const infoSaved = getTime(accLog.logKey, accLog.date, accLog.time);
     const [selected,setSelected] = useState([]);
     const checkVal = [];
+    const user = firebase.auth.currentUser.uid;
+    const rootRef = firebase.database.ref().child(user)
     function handleSelectAllClick(event) {
     
         if (event.target.checked) {
-          const newSelecteds = abc.map(n => n.usID);
+          const newSelecteds = infoSaved.map(n => n.logID);
           setSelected(newSelecteds);
           return;
         }
         setSelected([]);
       }
-    // function handleCheckBox(event, key) {
-    //     const {target} = event;
-        
-    //     if (target.checked) checkVal.push(key);
-    //     else if (target.checked === false)
-    //         checkVal.splice(checkVal.indexOf(key), 1);
-    // }
+   
     // below method actually handles checkbox  --> to be moved to sharedFunction
     // function handleClick(event, name) {
     //     const selectedIndex = selected.indexOf(name);
@@ -76,9 +80,8 @@ export default function HistoryBlo(props) {
         
        
     // }
-    
     const isSelected = name => selected.indexOf(name) !== -1;
-
+   
     return (
         <div>
             <Table>
@@ -90,11 +93,11 @@ export default function HistoryBlo(props) {
                 />
                    
                 <TableBody>
-                    {abc.map(row => {
+                    {infoSaved.map(row => {
                         const isItemSelected = isSelected(row.logID);
                         return (
                             <TableRow 
-                                key={row.id}
+                                key={row.logID}
                                 hover
                                 onClick={event => setSelected(handleClick(event, row.logID,selected))}
                                 role="checkbox"
@@ -108,10 +111,13 @@ export default function HistoryBlo(props) {
                                 <TableCell padding="checkbox">
                                     <Checkbox checked={isItemSelected} />
                                 </TableCell>
+                               
                             </TableRow>
+                           
                         );
                     })}
                 </TableBody>
+                
             </Table>
 
             <div>
@@ -121,9 +127,7 @@ export default function HistoryBlo(props) {
                     type="submit"
                     onClick={e => {
                         delEntry(selected);
-                        setTimeout(()=> {
-                            window.location.reload();
-                        }, 3);
+                       
                         
                     }}
                 >

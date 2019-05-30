@@ -10,24 +10,12 @@ import * as firebase from "firebase/app";
 import {delEntry, handleClick} from "../LogFunction/SharedFunction";
 import EnhanceTableHead from "./HeadTable/Header";
 
-// method for deleting data based on logID
-// export function delEntry(deletedArray)
-
-// { const abc ="1"
-//   const uIdRef = firebase.database().ref("AccessLog/");
-//   for (let i = 0; i < deletedArray.length; i+=1)
-//     uIdRef.child(deletedArray[i]).remove();
-  
-//    return abc;
-// }
-
-
 // export Data of search criteria for render
 export const getSearchResult = (logKey,date,time,searchedDate) => { 
   const result = [];
   
   const dateToCompare = moment(searchedDate).format("DD/MM/YYYY")
-  const user = firebase.auth().currentUser.uid;
+  const user = firebase.auth.currentUser.uid;
   for (let i =0; i < logKey.length; i+=1)
   if (logKey[i] !== undefined && date[i] === dateToCompare )  
       {  result.push({
@@ -58,7 +46,6 @@ export default function SearchedBlo (props)  {
     
 } 
 function handleSelectAllClick(event) {
-    
     if (event.target.checked) {
       const newSelecteds = result.map(n => n.usID);
       setSelected(newSelecteds);
@@ -111,13 +98,12 @@ function checkResultView(){
   return(   
       <div> 
           {checkResultView()}
-      
           <div> 
               
               <button 
                   type="submit" 
                   onClick={e => {delEntry(checkVal);
-                                 setTimeout(()=> {window.location.reload();},5); }}
+                                 }}
               > Delete  
               </button> 
      
