@@ -102,7 +102,7 @@ function LoginPage(props) {
                             Login
                         </Button>
 
-                        <div> {err} </div>
+                        <Typography> {err} </Typography>
                     </ValidatorForm>
                     {/* </form> */}
                 </Paper>
