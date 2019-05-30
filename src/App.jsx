@@ -8,6 +8,8 @@ import {
 } from "@material-ui/core";
 import LoginPage from "./layouts/LoginPageLayout/LoginPageLayout";
 import ManagementPage from "./layouts/UserManagementLayout/UserManagementLayout";
+import SearchOrders from "./layouts/OrderLayout/SearchOrders/SearchOrders";
+import NewOrder from "./layouts/OrderLayout/NewOrder/NewOrder";
 import ViewMoviesLayout from "./layouts/MovieLayout/ViewMoviesLayout/ViewMoviesLayout";
 
 import MovieContentProcessingLayout from "./layouts/MovieLayout/MovieContentProcessingLayout/MovieContentProcessingLayout";
@@ -24,6 +26,8 @@ const App = () => (
         <BrowserRouter>
             <Switch>
                 <Route path="/home" exact component={ViewMoviesLayout} />
+                <Route path="/order/search" exact component={SearchOrders} />
+                <Route path="/order/new" exact component={NewOrder} />
                 <Route path="/login" exact component={LoginPage} />
                 <Route
                     path="/management/users"

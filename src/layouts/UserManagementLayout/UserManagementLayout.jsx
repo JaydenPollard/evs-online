@@ -15,17 +15,16 @@ import { isMemberAdmin } from "../../logic/common/firebaseauth.function";
 const UserManagementLayout = props => {
     const { classes } = props;
     const [tabValue, setTabValue] = useState(0);
-    // TODO: Use auth to recognise user
-    const [isAdmin, setIsAdmin] = useState(true);
+    const [isAdmin, setIsAdmin] = useState(false);
 
-    // React.useEffect(() => {
-    //     async function isUserAdmin() {
-    //         setIsAdmin(await isMemberAdmin());
-    //     }
-    //     isUserAdmin().catch(() => {
-    //         setIsAdmin(false);
-    //     });
-    // }, []);
+    React.useEffect(() => {
+        async function isUserAdmin() {
+            setIsAdmin(await isMemberAdmin());
+        }
+        isUserAdmin().catch(() => {
+            setIsAdmin(false);
+        });
+    }, []);
 
     const TabContainer = tabProps => {
         return <div>{tabProps.children}</div>;

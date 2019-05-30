@@ -2,7 +2,6 @@ import * as firebase from "firebase/app";
 import "firebase/database";
 
 export const disableCustomer = async user => {
-    // TODO: Disable auth user
     const customerRef = firebase.database.ref(`Users/Customers/${user.userId}`);
     const isActive = customerRef.child("IsActive");
     // Try to update user attribute, return true if successful, false if not
