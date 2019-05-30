@@ -9,17 +9,18 @@ import {
     FormControl,
     Input,
     InputLabel,
-    Link
+    
 } from "@material-ui/core";
 import moment from "moment";
 import CssBaseline from "@material-ui/core/CssBaseline";
 // import Image from "../../assests/popcorn-login-background.jpg";
 import { TextValidator, ValidatorForm } from "react-material-ui-form-validator";
-import * as firebase from "firebase/app";
+import * as firebase from "firebase";
+import "firebase/auth";
+import "firebase/database"
 import { loginPageLayoutStyles } from "./LoginPageLayoutStyles";
 // import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
-import "firebase/auth";// not sure why these do not work
-import  "firebase/database"
+
 
 function LoginPage(props) {
     const { classes } = props;
@@ -30,19 +31,22 @@ function LoginPage(props) {
     const handleEmail = e => {
         setEmail(e.target.value);
     };
+    // method for authorise user and writing log --> maybe refactor to new function ?!
+    
     function login() {
-        firebase.
-        auth.
-        signInWithEmailAndPassword(email, password).then(() => {
-                props.history.push("/home");
+        firebase.auth.signInWithEmailAndPassword(email, password)
+        .then(() => {
+                props.history.push("/accesslog");
+                const userID= firebase.auth.currentUser.uid;
                 const dbref = firebase.database.ref("AccessLog/");
-                const newDbRef = dbref.push();
+                const newDbRef = dbref.child(userID).push();
                 newDbRef.set({
                     date: moment(Date()).format("DD/MM/YYYY"),
                     time: moment(Date()).format("hh:mm A"),
-                    userID: firebase.auth().currentUser.uid
+                   
                 });
                 setErr("Successful");
+                
             })
             .catch(error => {
                 setErr(error.message);

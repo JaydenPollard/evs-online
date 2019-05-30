@@ -1,38 +1,38 @@
 import React from "react";
 import { Route, BrowserRouter } from "react-router-dom";
 import { Switch } from "react-router";
-import PrivateRoute from "./components/Route/PrivateApp";
-import PublicRoute from "./components/Route/PublicApp";
-import HomePage from "./layouts/HomePageLayout/HomePageLayout";
+import {
+    MuiThemeProvider,
+    createMuiTheme,
+    CssBaseline
+} from "@material-ui/core";
 import LoginPage from "./layouts/LoginPageLayout/LoginPageLayout";
+import ViewMoviesLayout from "./layouts/MovieLayout/ViewMoviesLayout/ViewMoviesLayout";
+import MovieContentProcessingLayout from "./layouts/MovieLayout/MovieContentProcessingLayout/MovieContentProcessingLayout";
 import AccessMan from "./layouts/AccessManLayout/accessManLayout";
 
-const App = () => {
-    return (
+const theme = createMuiTheme({
+    palette: {
+        type: "dark"
+    }
+});
+
+const App = () => (
+    <MuiThemeProvider theme={theme}>
+        <CssBaseline />
         <BrowserRouter>
             <Switch>
-                <PublicRoute
-                    restricted
-                    
-                    path="/login"
+                <Route path="/home" exact component={ViewMoviesLayout} />
+                <Route path="/login" exact component={LoginPage} />
+                <Route path="/accesslog" exact component={AccessMan} />
+                <Route
+                    path="/management/movie"
                     exact
-                    component={LoginPage}
+                    component={MovieContentProcessingLayout}
                 />
-                <PrivateRoute
-                    
-                    path="/accesslog"
-                    exact
-                    component={AccessMan}
-                />
-                <PublicRoute
-                    restricted={false}
-                    path="/home"
-                    exact
-                    component={HomePage}
-                />
-                <Route component={HomePage} />
+                <Route component={ViewMoviesLayout} />
             </Switch>
         </BrowserRouter>
-    );
-};
+    </MuiThemeProvider>
+);
 export default App;

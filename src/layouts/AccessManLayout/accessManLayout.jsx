@@ -2,12 +2,12 @@
 import React, { useState, useEffect } from "react";
 // import PropTypes from "prop-types";
 import Grid from "@material-ui/core/Grid";
-import { Button, TextField } from "@material-ui/core";
+import { Button, TextField, Link } from "@material-ui/core";
 // import { makeStyles } from "@material-ui/core/styles";
 import DateFnsUtils from "@date-io/date-fns";
 import {
     MuiPickersUtilsProvider,
-    } from "@material-ui/pickers";
+    } from "material-ui-pickers";
     import * as firebase from "firebase/app";
 // import { firebase } from "../firebase";
 // import {
@@ -33,16 +33,16 @@ function AccessMan(props) {
     const [userId, setUserId] = useState([]);
     const [date, setDate] = useState([]);
     const [time, setTime] = useState([]);
-    const [headKey, setHeadKey] = useState([]);
+    const [logKey, setLogKey] = useState([]);
     const [searchedDate, setSearchedDate] = useState();
     const [shAll, setShAll] = useState(true);
-
+    // const useID = firebase.auth().currentUser.uid;
     // let abc = getTime(headKey, date, time, userId);
     // let def = getSearchResult(headKey, date, time, userId, searchedDate);
-    const uIdRef = firebase.database().ref("AccessLog");
+    const uIdRef = firebase.database.ref("AccessLog/");
     
     let userName;
-    const user = firebase.auth().currentUser;
+    const user = firebase.auth.currentUser.uid;
     // handle change of check box
     // function handleCheckBox(event, key) {
     //     const { target } = event;
@@ -60,19 +60,19 @@ function AccessMan(props) {
         if (showAll)
             return (
                 <HistoryBlo
-                    headKey={headKey}
+                    logKey={logKey}
                     date={date}
                     time={time}
-                    idKey={userId}
+                    
                 />
+                
             );
 
         return (
             <SearchedBlo
-                headKey={headKey}
+                logKey={logKey}
                 date={date}
                 time={time}
-                idKey={userId}
                 searchedDate={searchedDate}
             />
         );
@@ -81,40 +81,42 @@ function AccessMan(props) {
     // return userName
     function getUserName() {
         firebase
-            .database()
+            .database
             .ref(`Users/Staffs/${  user.uid  }/Name`)
             .once("value").then(function(snapshot) {
                 userName = snapshot.val();
             });
         if (userName == null)
             firebase
-                .database()
+                .database
                 .ref(`Users/Customers/${  user.uid  }/Name`)
                 .on("value", function(snapshot) {
                     userName = snapshot.val();
                 });
     }
     useEffect(() => {
-        uIdRef.once("value").then(snapshot => {
+        uIdRef.child(user).once("value").then(snapshot => {
             const temp = snapshot.val();
-            const logKey = [];
+            const tempLogKey = [];
             const dateRecord = [];
             const timeRecord = [];
-            const userKey = [];
+            // const userKey = [];
             snapshot.forEach(function(childSnapshot) {
-                logKey.push(childSnapshot.key);
+                tempLogKey.push(childSnapshot.key);
             });
+            
 
-            for (let i = 0; i < logKey.length; i+=1) {
-                const k = logKey[i];
+            for (let i = 0; i < tempLogKey.length; i+=1) {
+                const k = tempLogKey[i];
                 dateRecord.push(temp[k].date);
                 timeRecord.push(temp[k].time);
-                userKey.push(temp[k].userID);
+              
             }
             setDate(dateRecord);
-            setUserId(userKey);
-            setHeadKey(logKey);
+            
+            setLogKey(tempLogKey)
             setTime(timeRecord);
+           console.log(temp,"Log Key",tempLogKey, "datewanted")
         });
     }, []);
 
@@ -161,12 +163,10 @@ function AccessMan(props) {
 
                 <Button
                     type="submit"
-                    onClick={e => {
-                        firebase.auth().signOut();
-                    }}
+                    
                 >
+                    {" "} <Link to="/home"> logout </Link>
                     {" "}
-                    LogOut{" "}
                 </Button>
             </div>
         </div>

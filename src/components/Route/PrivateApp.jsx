@@ -5,7 +5,7 @@ import * as firebase from "firebase/app";
 import "firebase/auth"
 
 const PrivateRoutes = ({component: Comp, ...rest }) => {
-  const user =firebase.auth.currentUser; 
+  const user =firebase.auth().currentUser; 
   return (
       <Route
           {...rest}

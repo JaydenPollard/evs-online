@@ -2,23 +2,22 @@
 import "typeface-roboto";
 import React from "react";
 import ReactDOM from "react-dom";
+import { Provider } from "react-redux";
 import { BrowserRouter } from "react-router-dom";
-
 import * as firebase from "firebase/app";
 import App from "./App";
+import store from "./reducers/store/store";
 import Firebase, { FirebaseContext } from "./components/Firebase";
-import "firebase/auth"
+import "firebase/auth";
 
-const AppUI = props => {
-    return (
-        <FirebaseContext.Provider value={new Firebase()}>
+
+ReactDOM.render(
+    <FirebaseContext.Provider value={new Firebase()}>
+        <Provider store={store}>
             <BrowserRouter>
-                <App  />
+                <App />
             </BrowserRouter>
-        </FirebaseContext.Provider>
-    );
-};
-
-
-    ReactDOM.render(<App />, document.getElementById("root"));
-
+        </Provider>
+    </FirebaseContext.Provider>,
+    document.getElementById("root")
+);

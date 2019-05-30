@@ -8,41 +8,34 @@ import TableRow from "@material-ui/core/TableRow";
 import { Checkbox } from "@material-ui/core";
 import * as firebase from "firebase/app";
 import "firebase/auth"
-import {delEntry} from "../LogFunction/SharedFunction";
-// import { firebase } from "../../layouts/firebase";
+import {delEntry,  handleClick} from "../LogFunction/SharedFunction";
+
 import EnhanceTableHead from "./HeadTable/Header";
 // Extracting whole data for the current user
-export const getTime = (headKey, date, time, idKey) => {
+export const getTime = (logKey, date, time) => {
     const saving = [];
-    const dateToSearch = [];
-    const user = firebase.auth.currentUser;
+    
+    const user = firebase.auth().currentUser.uid;
 
-    for (let i = 0; i < headKey.length; i+=1)
-        if (idKey[i] !== undefined && idKey[i] === user.uid) {
+    for (let i = 0; i < logKey.length; i+=1)
+        if (logKey[i] !== undefined) {
             saving.push({
                 date: date[i],
                 time: time[i],
-                usID: headKey[i],
+                logID: logKey[i],
                 
             });
-            dateToSearch.push(date[i]);
+           
         }
 
     return saving;
 };
 
-// method for deleting data based on logID
-// export function delEntry(deletedArray) {
-//     const uIdRef = firebase.database().ref("AccessLog/");
-//     for (let i = 0; i < deletedArray.length; i+=1)
-//         uIdRef.child(deletedArray[i]).remove();
-      
-// }
 
 // data render
 export default function HistoryBlo(props) {
     const accLog = props;
-    const abc = getTime(accLog.headKey, accLog.date, accLog.time, accLog.idKey);
+    const abc = getTime(accLog.logKey, accLog.date, accLog.time);
     const [selected,setSelected] = useState([]);
     const checkVal = [];
     function handleSelectAllClick(event) {
@@ -61,27 +54,28 @@ export default function HistoryBlo(props) {
     //     else if (target.checked === false)
     //         checkVal.splice(checkVal.indexOf(key), 1);
     // }
-    function handleClick(event, name) {
-        const selectedIndex = selected.indexOf(name);
+    // below method actually handles checkbox  --> to be moved to sharedFunction
+    // function handleClick(event, name) {
+    //     const selectedIndex = selected.indexOf(name);
         
-        let newSelected = [];
+    //     let newSelected = [];
     
-        if (selectedIndex === -1) {
-          newSelected = newSelected.concat(selected, name);
-        } else if (selectedIndex === 0) {
-          newSelected = newSelected.concat(selected.slice(1));
-        } else if (selectedIndex === selected.length - 1) {
-          newSelected = newSelected.concat(selected.slice(0, -1));
-        } else if (selectedIndex > 0) {
-          newSelected = newSelected.concat(
-            selected.slice(0, selectedIndex),
-            selected.slice(selectedIndex + 1),
-          );
-        }
-        return newSelected;
+    //     if (selectedIndex === -1) {
+    //       newSelected = newSelected.concat(selected, name);
+    //     } else if (selectedIndex === 0) {
+    //       newSelected = newSelected.concat(selected.slice(1));
+    //     } else if (selectedIndex === selected.length - 1) {
+    //       newSelected = newSelected.concat(selected.slice(0, -1));
+    //     } else if (selectedIndex > 0) {
+    //       newSelected = newSelected.concat(
+    //         selected.slice(0, selectedIndex),
+    //         selected.slice(selectedIndex + 1),
+    //       );
+    //     }
+    //     return newSelected;
         
        
-    }
+    // }
     
     const isSelected = name => selected.indexOf(name) !== -1;
 
@@ -92,17 +86,17 @@ export default function HistoryBlo(props) {
                 <EnhanceTableHead
                     numSelected={selected.length}
                     onSelectAllClick={handleSelectAllClick}
-                    rowCount={accLog.headKey.length}
+                    rowCount={accLog.logKey.length}
                 />
                    
                 <TableBody>
                     {abc.map(row => {
-                        const isItemSelected = isSelected(row.usID);
+                        const isItemSelected = isSelected(row.logID);
                         return (
                             <TableRow 
                                 key={row.id}
                                 hover
-                                onClick={event => setSelected(handleClick(event, row.usID))}
+                                onClick={event => setSelected(handleClick(event, row.logID,selected))}
                                 role="checkbox"
                                 aria-checked={isItemSelected}
                                 tabIndex={-1}
@@ -110,7 +104,7 @@ export default function HistoryBlo(props) {
                             >
                                 <TableCell> {row.date} </TableCell>
                                 <TableCell> {row.time} </TableCell>
-                                <TableCell>{row.usID} </TableCell>
+                                <TableCell>{row.logID} </TableCell>
                                 <TableCell padding="checkbox">
                                     <Checkbox checked={isItemSelected} />
                                 </TableCell>

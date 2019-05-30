@@ -4,7 +4,8 @@ import { Route, Redirect } from 'react-router-dom';
 import * as firebase from "firebase/app";
 import "firebase/auth"
 const PublicRoutes = ({ component: Comp, ...rest }) => {
-  const user =firebase.auth.currentUser; 
+  const user =firebase.auth().currentUser; 
+  
   return (
       <Route
           {...rest}
