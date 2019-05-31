@@ -1,5 +1,4 @@
 import {
-    setJoinedDate,
     createUserWithAuth,
     createUserInDatabase
 } from "../../logic/register/authUser.function";
@@ -7,14 +6,13 @@ import {
     validateRepeatPasswordElement,
     validateElement
 } from "../../logic/register/validateForm.function";
-import {
-    validateNextForm,
-    validateRegisterForm
-} from "../../logic/register/validateForm.function";
 import { registrationPageLayoutStyles } from "./RegistrationPageLayoutStyles";
 import CredentialsForm from "../../components/Registration/CredentialsForm";
 import PersonalDetailsForm from "../../components/Registration/PersonalDetailsForm";
 import { customer } from "../../models/user";
+import { initialFormState } from "../../models/registration-form";
+import ErrorSnackbar from "../../components/common/ErrorSnackbar";
+import PropTypes from "prop-types";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -31,165 +29,21 @@ import Step from "@material-ui/core/Step";
 import StepLabel from "@material-ui/core/StepLabel";
 import { Link } from "react-router-dom";
 
-const INITIAL_FORM_STATE = {
-    formdata: {
-        formNextValid: true,
-        formRegisterValid: true,
-        email: {
-            element: "input",
-            value: "",
-            config: {
-                name: "email_input",
-                label: "Enter your email address *",
-                type: "email",
-                placeholder: "",
-                showlabel: true
-            },
-            validation: {
-                required: true,
-                email: true
-            },
-            valid: false,
-            validationMessage: "This field is required",
-            showlabel: true
-        },
-        password: {
-            element: "input",
-            value: "",
-            config: {
-                name: "password_input",
-                type: "password",
-                label: "Enter a password *",
-                placeholder: ""
-            },
-            validation: {
-                required: true,
-                password: true
-            },
-            valid: false,
-            validationMessage: "This field is required",
-            showlabel: true
-        },
-        repeatpassword: {
-            element: "input",
-            value: "",
-            config: {
-                name: "repeatpassword_input",
-                type: "password",
-                label: "Re-enter password *",
-                placeholder: ""
-            },
-            validation: {
-                required: true,
-                repeatpassword: true
-            },
-            valid: false,
-            validationMessage: "This field is required",
-            showlabel: true
-        },
-        firstname: {
-            element: "input",
-            value: "",
-            config: {
-                name: "firstname_input",
-                label: "Enter your first name *",
-                type: "text",
-                placeholder: "",
-                showlabel: true
-            },
-            validation: {
-                required: true,
-                text: true
-            },
-            valid: false,
-            validationMessage: "This field is required",
-            showlabel: true
-        },
-        lastname: {
-            element: "input",
-            value: "",
-            config: {
-                name: "lastname_input",
-                label: "Enter your last name *",
-                type: "text",
-                placeholder: "",
-                showlabel: true
-            },
-            validation: {
-                required: true,
-                text: true
-            },
-            valid: false,
-            validationMessage: "This field is required",
-            showlabel: true
-        },
-        dob: {
-            element: "date",
-            value: "",
-            config: {
-                name: "date_input",
-                label:
-                    "Enter your date of birth (used for movie age restrictions) *",
-                type: "date",
-                placeholder: "",
-                showlabel: true
-            },
-            validation: {
-                required: true,
-                date: true
-            },
-            valid: false,
-            validationMessage: "This field is required",
-            showlabel: true
-        },
-        address: {
-            element: "input",
-            value: "",
-            config: {
-                name: "address_input",
-                label: "Enter your address *",
-                type: "text",
-                placeholder: "",
-                showlabel: true
-            },
-            validation: {
-                required: true,
-                address: true
-            },
-            valid: false,
-            validationMessage: "This field is required",
-            showlabel: true
-        },
-        phonenumber: {
-            element: "input",
-            value: "",
-            config: {
-                name: "phonenumber_input",
-                label: "Enter your phone number (8-10 digits) *",
-                type: "text",
-                placeholder: "",
-                showlabel: true
-            },
-            validation: {
-                required: true,
-                phonenumber: true
-            },
-            valid: false,
-            validationMessage: "This field is required",
-            showlabel: true
-        }
-    }
-};
-
 const RegistrationPage = props => {
     const steps = ["User credentials", "Personal details"];
     const [user, setUser] = React.useState(customer);
-    const [formState, setFormState] = React.useState(INITIAL_FORM_STATE);
+    const [formState, setFormState] = React.useState(initialFormState);
     const [activeStep, setActiveStep] = React.useState(0);
+    const [openSnackbar, setOpenSnackbar] = React.useState(false);
+    const [snackbarMessage, setSnackbarMessage] = React.useState("");
 
-    const buttonNextEnabled = formState.formdata.formNextValid;
-    const buttonRegisterEnabled = formState.formdata.formRegisterValid;
+    // Handle snackbar closing
+    function handleSnackbarClosing() {
+        setOpenSnackbar(false);
+        setSnackbarMessage("");
+    }
 
+    // Handle form input updates
     const handleUpdate = element => {
         const newFormdata = { ...formState.formdata };
         const pwElement = { ...newFormdata["password"] };
@@ -211,15 +65,9 @@ const RegistrationPage = props => {
         setFormState({
             formdata: newFormdata
         });
-
-        if (validateNextForm(newElement, newFormdata)) {
-            newFormdata.formNextValid = true;
-            if (validateRegisterForm(newElement, newFormdata)) {
-                newFormdata.formRegisterValid = true;
-            }
-        }
     };
 
+    // Handle form submission event
     const handleSubmit = event => {
         event.preventDefault();
         let userEmail = formState.formdata.email.value;
@@ -232,6 +80,7 @@ const RegistrationPage = props => {
         let userAddress = formState.formdata.address.value;
         let userPhoneNum = formState.formdata.phonenumber.value;
 
+        // Sets a customer object in state
         setUser(data => {
             return {
                 ...data,
@@ -244,22 +93,28 @@ const RegistrationPage = props => {
             };
         });
 
+        // Invoke Firebase functions for user creation
         createUserWithAuth(userEmail, userPassword)
             .then(authUser => {
                 createUserInDatabase(authUser.user.uid, user)
                     .then(createdUser => {
-                        setFormState({ ...INITIAL_FORM_STATE });
+                        setFormState({ ...initialFormState });
                         setActiveStep(activeStep + 1);
                     })
                     .catch(reason => {
-                        // Objects are not valid as a React child
+                        // Handle database error, display snackbar message
+                        setOpenSnackbar(true);
+                        setSnackbarMessage(reason);
                     });
             })
             .catch(reason => {
-                alert(reason.errorMessage);
+                // Handle auth error, display snackbar message
+                setOpenSnackbar(true);
+                setSnackbarMessage(reason.errorMessage);
             });
     };
 
+    // Checks which page to display as user steps through Registration Page
     function getStepContent(step) {
         switch (step) {
             case 0:
@@ -281,10 +136,12 @@ const RegistrationPage = props => {
         }
     }
 
+    // Handles going to next Registration Page form piece
     const handleNext = () => {
         setActiveStep(activeStep + 1);
     };
 
+    // Handles going back to Registration Page form piece
     const handleBack = () => {
         setActiveStep(activeStep - 1);
     };
@@ -323,6 +180,7 @@ const RegistrationPage = props => {
                     <Typography component="h1" variant="h5">
                         Registration Form
                     </Typography>
+                    {/* Stepper for the form labels and tracking in Registration Page*/}
                     <Stepper
                         activeStep={activeStep}
                         className={props.classes.stepper}
@@ -334,15 +192,14 @@ const RegistrationPage = props => {
                         ))}
                     </Stepper>
                     <React.Fragment>
+                        {/* Conditional fragment for the registration success message*/}
                         {activeStep === steps.length ? (
                             <React.Fragment>
                                 <Typography variant="h5" gutterBottom>
                                     Thank you for registering with EVS!
                                 </Typography>
                                 <Typography variant="subtitle1">
-                                    Your account email is
-                                    {formState.formdata.email}
-                                    and you are now logged in. Please click the
+                                    You are now logged in. Please click the
                                     button below to return to the home page.
                                 </Typography>
                                 <Link
@@ -360,8 +217,10 @@ const RegistrationPage = props => {
                                 </Link>
                             </React.Fragment>
                         ) : (
+                            /* Conditional fragment for the current Registration form piece and buttons*/
                             <React.Fragment>
                                 <form className={props.classes.form}>
+                                    {/*Gets the current Registration form piece*/}
                                     {getStepContent(activeStep)}
                                     {activeStep !== 0 && (
                                         <Grid
@@ -378,6 +237,7 @@ const RegistrationPage = props => {
                                             >
                                                 Back
                                             </Button>
+                                            {/*Conditional Register/Next button for form navigation*/}
                                             <Button
                                                 className={props.classes.button}
                                                 variant="contained"
@@ -392,7 +252,6 @@ const RegistrationPage = props => {
                                                               )
                                                         : handleNext
                                                 }
-                                                disabled={!buttonNextEnabled}
                                             >
                                                 {activeStep === steps.length - 1
                                                     ? "Register"
@@ -400,6 +259,7 @@ const RegistrationPage = props => {
                                             </Button>
                                         </Grid>
                                     )}
+                                    {/*Conditional Register/Next button for form navigation*/}
                                     {activeStep == 0 && (
                                         <Grid
                                             container
@@ -411,22 +271,9 @@ const RegistrationPage = props => {
                                                 variant="contained"
                                                 color="inherit"
                                                 size="large"
-                                                onClick={
-                                                    activeStep ===
-                                                    steps.length - 1
-                                                        ? event =>
-                                                              handleSubmit(
-                                                                  event
-                                                              )
-                                                        : handleNext
-                                                }
-                                                disabled={
-                                                    !buttonRegisterEnabled
-                                                }
+                                                onClick={handleNext}
                                             >
-                                                {activeStep === steps.length - 1
-                                                    ? "Register"
-                                                    : "Next"}
+                                                Next
                                             </Button>
                                         </Grid>
                                     )}
@@ -434,10 +281,21 @@ const RegistrationPage = props => {
                             </React.Fragment>
                         )}
                     </React.Fragment>
+                    {/*Snackbar for displaying form input errors from Firebase*/}
+                    <ErrorSnackbar
+                        open={openSnackbar}
+                        onClose={handleSnackbarClosing}
+                        message={snackbarMessage}
+                    />
                 </Paper>
             </main>
         </div>
     );
+};
+
+// Declare proptypes
+RegistrationPage.propTypes = {
+    formState: PropTypes.object
 };
 
 export default withStyles(registrationPageLayoutStyles)(RegistrationPage);

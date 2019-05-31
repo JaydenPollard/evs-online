@@ -6,6 +6,7 @@ import Typography from "@material-ui/core/Typography";
 import FormControl from "@material-ui/core/FormControl";
 import { FormHelperText } from "@material-ui/core";
 
+// Custom FormFields for each input and helper text
 const FormField = ({ formdata, id, change }) => {
     const showError = () => {
         let errorMessage = (
@@ -20,6 +21,7 @@ const FormField = ({ formdata, id, change }) => {
         return errorMessage;
     };
 
+    /* Conditional input element with Input Label, Input and HelperText for errors, if applicable */
     const renderTemplate = () => {
         let formTemplate = null;
 
@@ -69,8 +71,7 @@ const FormField = ({ formdata, id, change }) => {
         }
         return formTemplate;
     };
-
-    return <div>{renderTemplate()}</div>;
+    return <React.Fragment>{renderTemplate()}</React.Fragment>;
 };
 
 export default FormField;

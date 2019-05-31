@@ -1,118 +1,10 @@
-export const validateNextForm = (newElement, formdata) => {
-    switch (newElement.id) {
-        case "email":
-            if (validateElement(newElement)) {
-                if (formdata.password.valid && formdata.repeatpassword.valid) {
-                    return true;
-                }
-            }
-            return false;
-        case "password":
-            if (validateElement(newElement)) {
-                if (formdata.email.valid && formdata.repeatpassword.valid) {
-                    return true;
-                }
-            }
-            return false;
-        case "repeatpassword":
-            if (
-                validateRepeatPasswordElement(
-                    newElement,
-                    formdata.password.value
-                )
-            ) {
-                if (formdata.email.valid && formdata.password.valid) {
-                    return true;
-                }
-            }
-            return false;
-        default:
-            return false;
-    }
-};
-
-export const validateRegisterForm = (newElement, formdata) => {
-    switch (newElement.id) {
-        case "firstname":
-            if (validateElement(newElement)) {
-                if (
-                    formdata.lastname.valid &&
-                    formdata.dob.valid &&
-                    formdata.address.valid &&
-                    formdata.phonenumber.valid
-                ) {
-                    return true;
-                }
-            }
-            return false;
-        case "lastname":
-            if (validateElement(newElement)) {
-                if (
-                    formdata.firstname.valid &&
-                    formdata.dob.valid &&
-                    formdata.address.valid &&
-                    formdata.phonenumber.valid
-                ) {
-                    return true;
-                }
-            }
-            return false;
-        case "dob":
-            if (
-                validateRepeatPasswordElement(
-                    newElement,
-                    formdata.password.value
-                )
-            ) {
-                if (
-                    formdata.firstname.valid &&
-                    formdata.lastname.valid &&
-                    formdata.address.valid &&
-                    formdata.phonenumber.valid
-                ) {
-                    return true;
-                }
-            }
-            return false;
-        case "address":
-            if (
-                validateRepeatPasswordElement(
-                    newElement,
-                    formdata.password.value
-                )
-            ) {
-                if (
-                    formdata.firstname.valid &&
-                    formdata.lastname.valid &&
-                    formdata.dob.valid &&
-                    formdata.phonenumber.valid
-                ) {
-                    return true;
-                }
-            }
-            return false;
-        case "phonenumber":
-            if (
-                validateRepeatPasswordElement(
-                    newElement,
-                    formdata.password.value
-                )
-            ) {
-                if (
-                    formdata.firstname.valid &&
-                    formdata.lastname.valid &&
-                    formdata.dob.valid &&
-                    formdata.address.valid
-                ) {
-                    return true;
-                }
-            }
-            return false;
-        default:
-            return false;
-    }
-};
-
+/**
+ * Validates a repeat password element against current password value
+ * @param element An object containing the element the was updated ("repeatpassword")
+ * @param password A string of the current password, as fetched through the state
+ * @returns tuple [boolean, string] whether the validation was successful and
+ * includes an error message if there was an error
+ */
 export const validateRepeatPasswordElement = (element, password) => {
     let error = [true, ""];
 
@@ -138,6 +30,12 @@ export const validateRepeatPasswordElement = (element, password) => {
     return error;
 };
 
+/**
+ * Validates an element against Regular Expression logic
+ * @param element An object containing the element the was updated
+ * @returns tuple [boolean, string] whether the validation was successful and
+ * includes an error message if there was an error
+ */
 export const validateElement = element => {
     let error = [true, ""];
 

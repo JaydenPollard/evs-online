@@ -2,6 +2,13 @@ import * as firebase from "firebase/app";
 import "firebase/auth";
 import "firebase/database";
 
+/**
+ * Creates a user in Firebase Auth with email and password
+ * @param email A string of the current email, as fetched through the state
+ * @param password A string of the current password, as fetched through the state
+ * @returns Promise<UserCredential> which contains the User object (user.uid and user.email)
+ * and logs the user in with Firebase Auth
+ */
 export const createUserWithAuth = (email, password) => {
     const promise = new Promise((resolve, reject) => {
         firebase.auth
@@ -16,6 +23,14 @@ export const createUserWithAuth = (email, password) => {
     return promise;
 };
 
+/**
+ * Creates a user in Firebase Database.ref("Users/Customers") with authUserId key and
+ * sets their information using the user object
+ * @param authUserId A string of the current authUserId, as fetched through createUserWithAuth()
+ * @param user An object of the current user details, as fetched through the state
+ * @returns Promise<any> which signifies a success or failure, and should be handled
+ * by anything that consumes this function
+ */
 export const createUserInDatabase = (authUserId, user) => {
     const customersRef = firebase.database.ref("Users/Customers");
     const userRef = customersRef.child(authUserId);

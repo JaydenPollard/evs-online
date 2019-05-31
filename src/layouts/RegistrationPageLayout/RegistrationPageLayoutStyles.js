@@ -11,7 +11,7 @@ export const registrationPageLayoutStyles = theme => ({
     },
     main: {
         width: "80vw",
-        height: "100vw",
+        height: "100vh",
         display: "block", // Fix IE 11 issue.
         marginLeft: "auto",
         marginRight: "auto",

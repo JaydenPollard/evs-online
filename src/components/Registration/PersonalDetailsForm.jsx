@@ -6,6 +6,7 @@ import withStyles from "@material-ui/core/styles/withStyles";
 import FormField from "./FormFields";
 import { FormGroup } from "@material-ui/core";
 
+// Form for filling out personal details, includes custom FormFields for each input and helper text
 class PersonalDetailsForm extends Component {
     render() {
         return (
@@ -75,6 +76,7 @@ class PersonalDetailsForm extends Component {
     }
 }
 
+// Declare PropTypes
 PersonalDetailsForm.propTypes = {
     formState: PropTypes.object,
     handleUpdate: PropTypes.func

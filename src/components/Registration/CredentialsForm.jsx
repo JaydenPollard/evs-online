@@ -6,6 +6,7 @@ import withStyles from "@material-ui/core/styles/withStyles";
 import FormField from "./FormFields";
 import { FormGroup } from "@material-ui/core";
 
+// Form for filling out credentials, includes custom FormFields for each input and helper text
 class CredentialsForm extends Component {
     render() {
         return (
@@ -51,6 +52,7 @@ class CredentialsForm extends Component {
     }
 }
 
+// Declare PropTypes
 CredentialsForm.propTypes = {
     formState: PropTypes.object,
     handleUpdate: PropTypes.func
