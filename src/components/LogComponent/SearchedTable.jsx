@@ -4,7 +4,7 @@ import Table from "@material-ui/core/Table";
 import TableCell from "@material-ui/core/TableCell";
 import TableBody from "@material-ui/core/TableBody";
 import TableRow from "@material-ui/core/TableRow";
-import { Checkbox } from "@material-ui/core";
+import { Checkbox, Button } from "@material-ui/core";
 import * as firebase from "firebase/app";
 import { delEntry, handleClick } from "../LogFunction/SharedFunction";
 import EnhanceTableHead from "./HeadTable/Header";
@@ -127,7 +127,7 @@ export default function SearchedBlo(props) {
         <div>
             {checkResultView()}
             <div>
-                <button
+                <Button
                     type="submit"
                     onClick={e => {
                         const result = handleDelete(selected, accessHistory);
@@ -137,7 +137,7 @@ export default function SearchedBlo(props) {
                 >
                     {" "}
                     Delete
-                </button>
+                </Button>
             </div>
         </div>
     );

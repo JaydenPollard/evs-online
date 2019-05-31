@@ -5,7 +5,7 @@ import TableCell from "@material-ui/core/TableCell";
 // import TableHead from "@material-ui/core/TableHead";
 import TableBody from "@material-ui/core/TableBody";
 import TableRow from "@material-ui/core/TableRow";
-import { Checkbox } from "@material-ui/core";
+import { Checkbox, Button } from "@material-ui/core";
 import * as firebase from "firebase/app";
 import "firebase/auth";
 import "firebase/database";
@@ -108,17 +108,16 @@ export default function HistoryBlo(props) {
 
             <div>
                 {" "}
-                <button
+                <Button
                     type="submit"
                     onClick={e => {
                         const result = handleDelete(selected, accessHistory);
                         setAccessHistory(result);
                         delEntry(selected);
-                        console.log(userID);
                     }}
                 >
                     Delete
-                </button>
+                </Button>
             </div>
         </div>
     );

@@ -1,6 +1,6 @@
 /* eslint-disable func-names */
 import React, { useState, useEffect } from "react";
-// import PropTypes from "prop-types";
+import PropTypes from "prop-types";
 import Grid from "@material-ui/core/Grid";
 import { Button, TextField, Typography } from "@material-ui/core";
 // import { makeStyles } from "@material-ui/core/styles";
@@ -86,7 +86,6 @@ function AccessMan(props) {
         <div>
             <AppBar user={useID} />
             <div>
-                {getUserName()}
                 <Typography> Hello, {getUserName()} </Typography>
                 <Typography> This is your access log page </Typography>
                 <Grid container justify="center">
@@ -126,8 +125,20 @@ function AccessMan(props) {
                     {" "}
                     Show all{" "}
                 </Button>
+                <Button
+                    type="submit"
+                    onClick={e => {
+                        props.history.push("/home");
+                    }}
+                >
+                    {" "}
+                    Home{" "}
+                </Button>
             </div>
         </div>
     );
 }
+AccessMan.propTypes = {
+    history: PropTypes.object.isRequired
+};
 export default AccessMan;

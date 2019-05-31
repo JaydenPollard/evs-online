@@ -16,10 +16,10 @@ import "firebase/auth";
 
 function SearchAppBar(props) {
     const { classes } = props;
-
+    const userInfo = props;
     // Check login status to modify app bar
     function loginStatus() {
-        if (props.user == null)
+        if (userInfo.user == null)
             return (
                 <div>
                     <Button variant="contained" color="inherit">

@@ -9,11 +9,7 @@ const PrivateRoutes = ({ user, component: Comp, ...rest }) => {
         <Route
             {...rest}
             component={props =>
-                user == null ? (
-                    <Redirect to="/home" />
-                ) : (
-                    <Comp {...props} user={user} />
-                )
+                user ? <Comp {...props} user={user} /> : <Redirect to="/home" />
             }
         />
     );
