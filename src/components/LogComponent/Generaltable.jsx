@@ -20,10 +20,8 @@ export default function HistoryBlo(props) {
     const [selected, setSelected] = useState([]);
     const [accessHistory, setAccessHistory] = useState([]);
 
-    const userID = props.testid;
-    // let get = '';
-    // get = userID.join();
-    const rootRef = firebase.database.ref("AccessLog/" + userID);
+    const userID = accLog.testid;
+    const rootRef = firebase.database.ref(`AccessLog/${userID}`);
 
     function handleSelectAllClick(event) {
         if (event.target.checked) {
@@ -50,7 +48,7 @@ export default function HistoryBlo(props) {
                 tempDate.push(temp1.date);
                 tempHidden.push(temp1.hidden);
             });
-            console.log(userID);
+
             for (let i = 0; i < tempLogKey.length; i += 1) {
                 const k = tempLogKey[i];
 
@@ -60,7 +58,6 @@ export default function HistoryBlo(props) {
                     time: tempTime[i],
                     hidden: tempHidden[i]
                 });
-                console.log(tempHis);
             }
 
             setAccessHistory(tempHis);

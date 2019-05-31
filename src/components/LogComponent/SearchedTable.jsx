@@ -13,9 +13,9 @@ import { handleDelete } from "../../logic/log/deleteLog";
 export default function SearchedBlo(props) {
     const accLog = props;
     const [accessHistory, setAccessHistory] = useState([]);
-    const userID = accLog.testid;
-    const get = userID.join();
-    const rootRef = firebase.database.ref(`AccessLog/${get}/`);
+    const userID = props.testid;
+
+    const rootRef = firebase.database.ref(`AccessLog/${userID}/`);
     const copyAccHis = [...accessHistory];
     const [selected, setSelected] = useState([]);
 
@@ -36,12 +36,14 @@ export default function SearchedBlo(props) {
             const tempHidden = [];
             const tempLogKey = [];
             const tempHis = [];
+
             let temp1 = [];
             snapshot.forEach(function(childSnapshot) {
                 temp1 = childSnapshot.val();
                 tempLogKey.push(childSnapshot.key);
                 tempDate.push(temp1.date);
                 tempHidden.push(temp1.hidden);
+                tempTime.push(temp1.time);
             });
 
             for (let i = 0; i < tempLogKey.length; i += 1) {
@@ -70,37 +72,40 @@ export default function SearchedBlo(props) {
                     <EnhanceTableHead
                         numSelected={selected.length}
                         onSelectAllClick={handleSelectAllClick}
-                        rowCount={accLog.logKey.length}
+                        rowCount={accessHistory.length}
                     />
                     <TableBody>
                         {accessHistory.map(row => {
                             const isItemSelected = isSelected(row.logID);
-                            return (
-                                <TableRow
-                                    key={row.id}
-                                    hover
-                                    onClick={event =>
-                                        setSelected(
-                                            handleClick(
-                                                event,
-                                                row.logID,
-                                                selected
+                            if (row.hidden === false)
+                                return (
+                                    <TableRow
+                                        key={row.id}
+                                        hover
+                                        onClick={event =>
+                                            setSelected(
+                                                handleClick(
+                                                    event,
+                                                    row.logID,
+                                                    selected
+                                                )
                                             )
-                                        )
-                                    }
-                                    role="checkbox"
-                                    aria-checked={isItemSelected}
-                                    tabIndex={-1}
-                                    selected={isItemSelected}
-                                >
-                                    <TableCell> {row.date} </TableCell>
-                                    <TableCell> {row.time} </TableCell>
-                                    <TableCell>{row.logID} </TableCell>
-                                    <TableCell padding="checkbox">
-                                        <Checkbox checked={isItemSelected} />
-                                    </TableCell>
-                                </TableRow>
-                            );
+                                        }
+                                        role="checkbox"
+                                        aria-checked={isItemSelected}
+                                        tabIndex={-1}
+                                        selected={isItemSelected}
+                                    >
+                                        <TableCell> {row.date} </TableCell>
+                                        <TableCell> {row.time} </TableCell>
+                                        <TableCell>{row.logID} </TableCell>
+                                        <TableCell padding="checkbox">
+                                            <Checkbox
+                                                checked={isItemSelected}
+                                            />
+                                        </TableCell>
+                                    </TableRow>
+                                );
                         })}
                     </TableBody>
                 </Table>

@@ -25,7 +25,7 @@ function AccessMan(props) {
     // let abc = getTime(headKey, date, time, userId);
     // let def = getSearchResult(headKey, date, time, userId, searchedDate);
     const uIdRef = firebase.database.ref("AccessLog/");
-    let test = props.user;
+    const useID = userLogedInID.user;
 
     let userName;
 
@@ -35,23 +35,15 @@ function AccessMan(props) {
     }
     // return which view will be used
     function checkView(showAll) {
-        if (showAll)
-            return (
-                <HistoryBlo
-                    logKey={logKey}
-                    date={date}
-                    time={time}
-                    testid={test}
-                />
-            );
+        if (showAll) return <HistoryBlo testid={userLogedInID.user} />;
 
-        return <SearchedBlo searchedDate={searchedDate} testid={test} />;
+        return <SearchedBlo searchedDate={searchedDate} testid={useID} />;
     }
 
     // return userName
     function getUserName() {
         firebase.database
-            .ref(`Users/Staffs/${test}/Name`)
+            .ref(`Users/Staffs/${userLogedInID.user}/Name`)
             .once("value")
             .then(function(snapshot) {
                 userName = snapshot.val();
@@ -59,14 +51,14 @@ function AccessMan(props) {
 
         if (userName == null)
             firebase.database
-                .ref(`Users/Customers/${test}/Name`)
+                .ref(`Users/Customers/${userLogedInID.user}/Name`)
                 .on("value", function(snapshot) {
                     userName = snapshot.val();
                 });
     }
     useEffect(() => {
         uIdRef
-            .child(`${test}`)
+            .child(`/${userLogedInID.user}`)
             .once("value")
             .then(snapshot => {
                 const temp = snapshot.val();
@@ -92,10 +84,10 @@ function AccessMan(props) {
     }, []);
     return (
         <div>
-            <AppBar user={test} />
+            <AppBar user={useID} />
             <div>
                 {getUserName()}
-                <Typography> Hello, {userName} </Typography>
+                <Typography> Hello, {getUserName()} </Typography>
                 <Typography> This is your access log page </Typography>
                 <Grid container justify="center">
                     <Grid item xs={2}>
@@ -129,7 +121,6 @@ function AccessMan(props) {
                     type="submit"
                     onClick={e => {
                         setShAll(true);
-                        console.log(props.user);
                     }}
                 >
                     {" "}

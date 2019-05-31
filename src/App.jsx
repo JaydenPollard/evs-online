@@ -27,8 +27,11 @@ const theme = createMuiTheme({
 });
 
 const App = () => {
-    let userArr = "GXBVUH2uzhRjK2ld0Ido89Tw2et1";
-    // firebase.auth.onAuthStateChanged(user => {userArr = user.uid; console.log(userArr)} ); // keep user logged in even when page is refreshed
+    const [userArr, setUserArr] = useState("");
+    firebase.auth.onAuthStateChanged(user => {
+        setUserArr(user.uid);
+        console.log(userArr);
+    }); // keep user logged in even when page is refreshed
 
     return (
         <MuiThemeProvider theme={theme}>
