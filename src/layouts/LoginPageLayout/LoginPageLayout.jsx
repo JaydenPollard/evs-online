@@ -30,20 +30,19 @@ function LoginPage(props) {
         setEmail(e.target.value);
     };
     // method for authorise user and writing log --> maybe refactor to new function ?!
-    const handleSubmit = e => {
-        e.preventDefault();
-    };
+
     function login() {
         firebase.auth
             .signInWithEmailAndPassword(email, password)
             .then(() => {
-                props.history.push("/accesslog");
+                props.history.push("/home");
                 const userID = firebase.auth.currentUser.uid;
                 const dbref = firebase.database.ref("AccessLog/");
                 const newDbRef = dbref.child(userID).push();
                 newDbRef.set({
                     date: moment(Date()).format("DD/MM/YYYY"),
-                    time: moment(Date()).format("hh:mm A")
+                    time: moment(Date()).format("hh:mm A"),
+                    hidden: false
                 });
                 setErr("Successful");
             })

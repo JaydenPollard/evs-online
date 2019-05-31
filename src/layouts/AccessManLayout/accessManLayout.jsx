@@ -15,7 +15,7 @@ import AppBar from "../../components/AppBar/AppBar";
 
 function AccessMan(props) {
     // const classes = useStyles();
-
+    const userLogedInID = props;
     const [date, setDate] = useState([]);
     const [time, setTime] = useState([]);
     const [logKey, setLogKey] = useState([]);
@@ -25,9 +25,10 @@ function AccessMan(props) {
     // let abc = getTime(headKey, date, time, userId);
     // let def = getSearchResult(headKey, date, time, userId, searchedDate);
     const uIdRef = firebase.database.ref("AccessLog/");
+    const test = userLogedInID.user;
 
     let userName;
-    const user = firebase.auth.currentUser;
+
     // handle change of check box
     // function handleCheckBox(event, key) {
     //     const { target } = event;
@@ -43,7 +44,14 @@ function AccessMan(props) {
     // return which view will be used
     function checkView(showAll) {
         if (showAll)
-            return <HistoryBlo logKey={logKey} date={date} time={time} />;
+            return (
+                <HistoryBlo
+                    logKey={logKey}
+                    date={date}
+                    time={time}
+                    testid={test}
+                />
+            );
 
         return (
             <SearchedBlo
@@ -58,7 +66,7 @@ function AccessMan(props) {
     // return userName
     function getUserName() {
         firebase.database
-            .ref(`Users/Staffs/${user.uid}/Name`)
+            .ref(`Users/Staffs/${test[0]}/Name`)
             .once("value")
             .then(function(snapshot) {
                 userName = snapshot.val();
@@ -66,14 +74,14 @@ function AccessMan(props) {
 
         if (userName == null)
             firebase.database
-                .ref(`Users/Customers/${user.uid}/Name`)
+                .ref(`Users/Customers/${test[0]}/Name`)
                 .on("value", function(snapshot) {
                     userName = snapshot.val();
                 });
     }
     useEffect(() => {
         uIdRef
-            .child(user.uid)
+            .child(`${test[0]}`)
             .once("value")
             .then(snapshot => {
                 const temp = snapshot.val();
