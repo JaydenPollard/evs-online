@@ -31,6 +31,7 @@ import { Link } from "react-router-dom";
 
 const RegistrationPage = props => {
     const steps = ["User credentials", "Personal details"];
+    const { classes } = props;
     const [user, setUser] = React.useState(customer);
     const [formState, setFormState] = React.useState(initialFormState);
     const [activeStep, setActiveStep] = React.useState(0);
@@ -132,7 +133,10 @@ const RegistrationPage = props => {
                     />
                 );
             default:
-                throw new Error("Unknown step");
+                // Handle stepper error, display snackbar message
+                setOpenSnackbar(true);
+                setSnackbarMessage("An error occurred whilst loading the form");
+                setActiveStep(0);
         }
     }
 
@@ -147,20 +151,20 @@ const RegistrationPage = props => {
     };
 
     return (
-        <div className={props.classes.background}>
-            <main className={props.classes.main}>
+        <div className={classes.background}>
+            <main className={classes.main}>
                 <CssBaseline />
-                <Paper className={props.classes.paper}>
+                <Paper className={classes.paper}>
                     <Grid container justify="left" alignItems="left">
                         <Button
                             variant="contained"
                             size="small"
-                            className={props.classes.returnButton}
+                            className={classes.returnButton}
                         >
                             <ArrowBackIcon
                                 className={clsx(
-                                    props.classes.leftIcon,
-                                    props.classes.iconSmall
+                                    classes.leftIcon,
+                                    classes.iconSmall
                                 )}
                             />
                             <Link
@@ -174,7 +178,7 @@ const RegistrationPage = props => {
                             </Link>
                         </Button>
                     </Grid>
-                    <Avatar className={props.classes.avatar}>
+                    <Avatar className={classes.avatar}>
                         <LockOutlinedIcon />
                     </Avatar>
                     <Typography component="h1" variant="h5">
@@ -183,7 +187,7 @@ const RegistrationPage = props => {
                     {/* Stepper for the form labels and tracking in Registration Page*/}
                     <Stepper
                         activeStep={activeStep}
-                        className={props.classes.stepper}
+                        className={classes.stepper}
                     >
                         {steps.map(label => (
                             <Step key={label}>
@@ -210,7 +214,7 @@ const RegistrationPage = props => {
                                         variant="contained"
                                         color="inherit"
                                         size="large"
-                                        className={props.classes.button}
+                                        className={classes.button}
                                     >
                                         Home
                                     </Button>
@@ -219,7 +223,7 @@ const RegistrationPage = props => {
                         ) : (
                             /* Conditional fragment for the current Registration form piece and buttons*/
                             <React.Fragment>
-                                <form className={props.classes.form}>
+                                <form className={classes.form}>
                                     {/*Gets the current Registration form piece*/}
                                     {getStepContent(activeStep)}
                                     {activeStep !== 0 && (
@@ -229,7 +233,7 @@ const RegistrationPage = props => {
                                             alignItems="center"
                                         >
                                             <Button
-                                                className={props.classes.button}
+                                                className={classes.button}
                                                 variant="contained"
                                                 color="inherit"
                                                 size="large"
@@ -239,7 +243,7 @@ const RegistrationPage = props => {
                                             </Button>
                                             {/*Conditional Register/Next button for form navigation*/}
                                             <Button
-                                                className={props.classes.button}
+                                                className={classes.button}
                                                 variant="contained"
                                                 color="inherit"
                                                 size="large"
@@ -267,7 +271,7 @@ const RegistrationPage = props => {
                                             alignItems="center"
                                         >
                                             <Button
-                                                className={props.classes.button}
+                                                className={classes.button}
                                                 variant="contained"
                                                 color="inherit"
                                                 size="large"
