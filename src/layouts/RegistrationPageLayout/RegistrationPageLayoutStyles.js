@@ -1,12 +1,11 @@
-import Image2 from "../../assests/popcorn-login-background.jpg";
-import Image from "../../assests/cinema.jpeg";
+import Image from "../../assests/popcorn-login-background.jpg";
 
 export const registrationPageLayoutStyles = theme => ({
     background: {
         width: "100%",
         height: "100%",
         backgroundImage: `url(${Image})`,
-        backgroundPosition: "center center",
+        backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
         backgroundSize: "cover"
     },

@@ -2,6 +2,7 @@ import React from "react";
 import Input from "@material-ui/core/Input";
 import InputLabel from "@material-ui/core/InputLabel";
 import TextField from "@material-ui/core/TextField";
+import Typography from "@material-ui/core/Typography";
 import FormControl from "@material-ui/core/FormControl";
 import { FormHelperText } from "@material-ui/core";
 
@@ -28,16 +29,14 @@ const FormField = ({ formdata, id, change }) => {
                     <FormControl fullWidth>
                         <InputLabel>
                             {formdata.showlabel ? (
-                                <div className="label_inputs">
-                                    {formdata.config.label}
-                                </div>
+                                <Typography>{formdata.config.label}</Typography>
                             ) : null}
                         </InputLabel>
                         <Input
                             {...formdata.config}
                             value={formdata.value}
                             onChange={event => change({ event, id })}
-                            id
+                            id={id}
                             name={formdata.config.type}
                         />
                         {formdata.validation && !formdata.valid
@@ -52,7 +51,7 @@ const FormField = ({ formdata, id, change }) => {
                     <FormControl fullWidth>
                         <TextField
                             {...formdata.config}
-                            id
+                            id={id}
                             name={formdata.config.type}
                             value={formdata.value}
                             onChange={event => change({ event, id })}

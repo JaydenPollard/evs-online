@@ -1,9 +1,20 @@
+import {
+    setJoinedDate,
+    createUserWithAuth,
+    createUserInDatabase
+} from "../../logic/register/authUser.function";
+import {
+    validateRepeatPasswordElement,
+    validateElement
+} from "../../logic/register/validateForm.function";
+import {
+    validateNextForm,
+    validateRegisterForm
+} from "../../logic/register/validateForm.function";
 import { registrationPageLayoutStyles } from "./RegistrationPageLayoutStyles";
-import { validateRepeatPasswordElement, validateElement } from "./validate";
-import createUserWithEmailAndPassword from "./auth";
-import { withFirebase } from "../../components/Firebase";
-import CredentialsForm from "./CredentialsForm";
-import AddressForm from "./AddressForm";
+import CredentialsForm from "../../components/Registration/CredentialsForm";
+import PersonalDetailsForm from "../../components/Registration/PersonalDetailsForm";
+import { customer } from "../../models/user";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -18,13 +29,12 @@ import withStyles from "@material-ui/core/styles/withStyles";
 import Stepper from "@material-ui/core/Stepper";
 import Step from "@material-ui/core/Step";
 import StepLabel from "@material-ui/core/StepLabel";
-import { compose } from "recompose";
 import { Link } from "react-router-dom";
 
 const INITIAL_FORM_STATE = {
-    formNextValid: false,
-    formRegisterValid: false,
     formdata: {
+        formNextValid: true,
+        formRegisterValid: true,
         email: {
             element: "input",
             value: "",
@@ -144,7 +154,7 @@ const INITIAL_FORM_STATE = {
             },
             validation: {
                 required: true,
-                text: true
+                address: true
             },
             valid: false,
             validationMessage: "This field is required",
@@ -162,7 +172,7 @@ const INITIAL_FORM_STATE = {
             },
             validation: {
                 required: true,
-                text: true
+                phonenumber: true
             },
             valid: false,
             validationMessage: "This field is required",
@@ -173,12 +183,12 @@ const INITIAL_FORM_STATE = {
 
 const RegistrationPage = props => {
     const steps = ["User credentials", "Personal details"];
+    const [user, setUser] = React.useState(customer);
     const [formState, setFormState] = React.useState(INITIAL_FORM_STATE);
     const [activeStep, setActiveStep] = React.useState(0);
 
-    const handleButtonEnable = () => {
-        formState.formNextValid = true;
-    };
+    const buttonNextEnabled = formState.formdata.formNextValid;
+    const buttonRegisterEnabled = formState.formdata.formRegisterValid;
 
     const handleUpdate = element => {
         const newFormdata = { ...formState.formdata };
@@ -201,40 +211,52 @@ const RegistrationPage = props => {
         setFormState({
             formdata: newFormdata
         });
+
+        if (validateNextForm(newElement, newFormdata)) {
+            newFormdata.formNextValid = true;
+            if (validateRegisterForm(newElement, newFormdata)) {
+                newFormdata.formRegisterValid = true;
+            }
+        }
     };
 
     const handleSubmit = event => {
         event.preventDefault();
-        let email = formState.formdata.email.value;
-        let password = formState.formdata.password.value;
+        let userEmail = formState.formdata.email.value;
+        let userPassword = formState.formdata.password.value;
+        let userName =
+            formState.formdata.firstname.value +
+            " " +
+            formState.formdata.lastname.value;
+        let userDob = formState.formdata.dob.value;
+        let userAddress = formState.formdata.address.value;
+        let userPhoneNum = formState.formdata.phonenumber.value;
 
-        let userData = {
-            email: email,
-            firstname: formState.formdata.firstname.value,
-            lastname: formState.formdata.lastname.value,
-            dob: formState.formdata.dob.value,
-            address: formState.formdata.address.value,
-            phonenumber: formState.formdata.phonenumber.value
-        };
+        setUser(data => {
+            return {
+                ...data,
+                name: userName,
+                dob: userDob,
+                email: userEmail,
+                phoneNum: userPhoneNum,
+                address: userAddress,
+                password: userPassword
+            };
+        });
 
-        createUserWithAuth(email, password)
+        createUserWithAuth(userEmail, userPassword)
             .then(authUser => {
-                setFormState({ ...INITIAL_FORM_STATE });
-                createUserInDatabase(authUser, userData)
+                createUserInDatabase(authUser.user.uid, user)
                     .then(createdUser => {
-                        alert(
-                            "Successfully registered user with email " +
-                                createdUser.email
-                        );
+                        setFormState({ ...INITIAL_FORM_STATE });
+                        setActiveStep(activeStep + 1);
                     })
                     .catch(reason => {
-                        alert("DATABASE_ERROR reason: " + reason);
+                        // Objects are not valid as a React child
                     });
             })
             .catch(reason => {
-                alert("AUTH_ERROR reason: " + reason);
-                alert("err code: " + reason.errorCode);
-                alert("err msg: " + reason.errorMessage);
+                alert(reason.errorMessage);
             });
     };
 
@@ -245,15 +267,13 @@ const RegistrationPage = props => {
                     <CredentialsForm
                         formState={formState}
                         handleUpdate={handleUpdate}
-                        handleButtonEnable={handleButtonEnable}
                     />
                 );
             case 1:
                 return (
-                    <AddressForm
+                    <PersonalDetailsForm
                         formState={formState}
                         handleUpdate={handleUpdate}
-                        handleButtonEnable={handleButtonEnable}
                     />
                 );
             default:
@@ -320,7 +340,7 @@ const RegistrationPage = props => {
                                     Thank you for registering with EVS!
                                 </Typography>
                                 <Typography variant="subtitle1">
-                                    Your account email is{" "}
+                                    Your account email is
                                     {formState.formdata.email}
                                     and you are now logged in. Please click the
                                     button below to return to the home page.
@@ -344,58 +364,40 @@ const RegistrationPage = props => {
                                 <form className={props.classes.form}>
                                     {getStepContent(activeStep)}
                                     {activeStep !== 0 && (
-                                        <Grid container direction="column">
-                                            <Grid
-                                                item
-                                                xs="8px"
-                                                justify="flex-start"
+                                        <Grid
+                                            container
+                                            justify="center"
+                                            alignItems="center"
+                                        >
+                                            <Button
+                                                className={props.classes.button}
+                                                variant="contained"
+                                                color="inherit"
+                                                size="large"
+                                                onClick={handleBack}
                                             >
-                                                <Button
-                                                    className={
-                                                        props.classes.button
-                                                    }
-                                                    variant="contained"
-                                                    color="inherit"
-                                                    size="large"
-                                                    onClick={handleBack}
-                                                >
-                                                    Back
-                                                </Button>
-                                            </Grid>
-                                            <Grid
-                                                item
-                                                xs="8px"
-                                                justify="flex-end"
-                                            >
-                                                <Button
-                                                    className={
-                                                        props.classes.button
-                                                    }
-                                                    variant="contained"
-                                                    color="inherit"
-                                                    size="large"
-                                                    onClick={
-                                                        activeStep ===
-                                                        steps.length - 1
-                                                            ? event =>
-                                                                  handleSubmit(
-                                                                      event
-                                                                  )
-                                                            : handleNext
-                                                    }
-                                                    disabled={
-                                                        activeStep ===
-                                                        steps.length - 1
-                                                            ? !formState.formRegisterValid
-                                                            : !formState.formNextValid
-                                                    }
-                                                >
-                                                    {activeStep ===
+                                                Back
+                                            </Button>
+                                            <Button
+                                                className={props.classes.button}
+                                                variant="contained"
+                                                color="inherit"
+                                                size="large"
+                                                onClick={
+                                                    activeStep ===
                                                     steps.length - 1
-                                                        ? "Register"
-                                                        : "Next"}
-                                                </Button>
-                                            </Grid>
+                                                        ? event =>
+                                                              handleSubmit(
+                                                                  event
+                                                              )
+                                                        : handleNext
+                                                }
+                                                disabled={!buttonNextEnabled}
+                                            >
+                                                {activeStep === steps.length - 1
+                                                    ? "Register"
+                                                    : "Next"}
+                                            </Button>
                                         </Grid>
                                     )}
                                     {activeStep == 0 && (
@@ -419,10 +421,7 @@ const RegistrationPage = props => {
                                                         : handleNext
                                                 }
                                                 disabled={
-                                                    activeStep ===
-                                                    steps.length - 1
-                                                        ? !formState.formRegisterValid
-                                                        : !formState.formNextValid
+                                                    !buttonRegisterEnabled
                                                 }
                                             >
                                                 {activeStep === steps.length - 1
@@ -441,6 +440,4 @@ const RegistrationPage = props => {
     );
 };
 
-const RegistrationComposed = compose(withFirebase)(RegistrationPage);
-
-export default withStyles(registrationPageLayoutStyles)(RegistrationComposed);
+export default withStyles(registrationPageLayoutStyles)(RegistrationPage);

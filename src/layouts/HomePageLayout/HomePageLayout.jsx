@@ -4,7 +4,6 @@ import withStyles from "@material-ui/core/styles/withStyles";
 import AppBar from "../../components/AppBar/AppBar";
 import Image from "../../assests/wolf-temp-hero.jpg";
 import { homePageLayoutStyles } from "./HomePageLayoutStyles";
-import Footer from "../../components/Footer/Footer";
 
 function HomePageLayout(props) {
     const { classes } = props;
@@ -13,7 +12,6 @@ function HomePageLayout(props) {
             <AppBar />
             <img src={Image} alt="" width="100%" />
             {/* <div className={classes.main} /> */}
-            <Footer />
         </div>
     );
 }

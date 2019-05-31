@@ -6,7 +6,6 @@ import {
     createMuiTheme,
     CssBaseline
 } from "@material-ui/core";
-import HomePage from "./layouts/HomePageLayout/HomePageLayout";
 import RegistrationPage from "./layouts/RegistrationPageLayout/RegistrationPageLayout";
 import LoginPage from "./layouts/LoginPageLayout/LoginPageLayout";
 import ManagementPage from "./layouts/UserManagementLayout/UserManagementLayout";
@@ -27,7 +26,6 @@ const App = () => (
         <CssBaseline />
         <BrowserRouter>
             <Switch>
-                <Route component={HomePage} />
                 <Route path="/home" exact component={ViewMoviesLayout} />
                 <Route path="/login" exact component={LoginPage} />
                 <Route path="/register" exact component={RegistrationPage} />
