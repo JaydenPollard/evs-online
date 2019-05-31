@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import PropTypes from "prop-types";
 import Table from "@material-ui/core/Table";
 import TableCell from "@material-ui/core/TableCell";
 import TableBody from "@material-ui/core/TableBody";
@@ -8,8 +7,8 @@ import { Checkbox, Button } from "@material-ui/core";
 import * as firebase from "firebase/app";
 import "firebase/auth";
 import "firebase/database";
-import { delEntry, handleClick } from "../LogFunction/SharedFunction";
-import { handleDelete } from "../../logic/log/deleteLog";
+import { handleClick } from "../LogFunction/SharedFunction";
+import { handleDelete, delEntry } from "../../logic/log/deleteLog";
 import EnhanceTableHead from "./HeadTable/Header";
 
 // data render

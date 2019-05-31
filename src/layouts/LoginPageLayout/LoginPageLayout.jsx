@@ -28,7 +28,6 @@ function LoginPageLayout(props) {
     const handleEmail = e => {
         setEmail(e.target.value);
     };
-    // method for authorise user and writing log --> maybe refactor to new function ?!
 
     async function login() {
         await firebase.auth

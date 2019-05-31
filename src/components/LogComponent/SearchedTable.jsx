@@ -6,9 +6,9 @@ import TableBody from "@material-ui/core/TableBody";
 import TableRow from "@material-ui/core/TableRow";
 import { Checkbox, Button } from "@material-ui/core";
 import * as firebase from "firebase/app";
-import { delEntry, handleClick } from "../LogFunction/SharedFunction";
+import { handleClick } from "../LogFunction/SharedFunction";
 import EnhanceTableHead from "./HeadTable/Header";
-import { handleDelete } from "../../logic/log/deleteLog";
+import { handleDelete, delEntry } from "../../logic/log/deleteLog";
 // data render
 export default function SearchedBlo(props) {
     const accLog = props;
@@ -22,7 +22,6 @@ export default function SearchedBlo(props) {
         if (event.target.checked) {
             const newSelecteds = accessHistory.map(n => n.logID);
             setSelected(newSelecteds);
-            return;
         }
     }
 

@@ -1,3 +1,7 @@
+import * as firebase from "firebase/app";
+import "firebase/database";
+import "firebase/auth";
+
 export function handleDelete(theSelected, accessHistory) {
     const indexDeleted = [];
     const copyAccHis = [...accessHistory];
@@ -14,4 +18,14 @@ export function handleDelete(theSelected, accessHistory) {
     });
 
     return copyAccHis;
+}
+export function delEntry(deletedArray) {
+    const user = firebase.auth.currentUser.uid;
+    const uIdRef = firebase.database.ref("AccessLog/").child(user);
+
+    for (let i = 0; i < deletedArray.length; i += 1)
+        uIdRef
+            .child(deletedArray[i])
+            .child("hidden")
+            .set(true);
 }
