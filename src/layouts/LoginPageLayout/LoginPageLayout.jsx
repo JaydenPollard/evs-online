@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import PropTypes from 'prop-types'
+import PropTypes from "prop-types";
 import withStyles from "@material-ui/core/styles/withStyles";
 import {
     Typography,
@@ -8,8 +8,7 @@ import {
     Button,
     FormControl,
     Input,
-    InputLabel,
-    
+    InputLabel
 } from "@material-ui/core";
 import moment from "moment";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -17,10 +16,9 @@ import CssBaseline from "@material-ui/core/CssBaseline";
 import { TextValidator, ValidatorForm } from "react-material-ui-form-validator";
 import * as firebase from "firebase";
 import "firebase/auth";
-import "firebase/database"
+import "firebase/database";
 import { loginPageLayoutStyles } from "./LoginPageLayoutStyles";
 // import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
-
 
 function LoginPage(props) {
     const { classes } = props;
@@ -32,22 +30,22 @@ function LoginPage(props) {
         setEmail(e.target.value);
     };
     // method for authorise user and writing log --> maybe refactor to new function ?!
-    
+    const handleSubmit = e => {
+        e.preventDefault();
+    };
     function login() {
-        
-        firebase.auth.signInWithEmailAndPassword(email, password)
-        .then(() => {
+        firebase.auth
+            .signInWithEmailAndPassword(email, password)
+            .then(() => {
                 props.history.push("/accesslog");
-                const userID= firebase.auth.currentUser.uid;
+                const userID = firebase.auth.currentUser.uid;
                 const dbref = firebase.database.ref("AccessLog/");
                 const newDbRef = dbref.child(userID).push();
                 newDbRef.set({
                     date: moment(Date()).format("DD/MM/YYYY"),
-                    time: moment(Date()).format("hh:mm A"),
-                   
+                    time: moment(Date()).format("hh:mm A")
                 });
                 setErr("Successful");
-                
             })
             .catch(error => {
                 setErr(error.message);
@@ -67,7 +65,7 @@ function LoginPage(props) {
                         className={classes.form}
                         onSubmit={e => e.preventDefault() && false}
                     > */}
-                    <ValidatorForm>
+                    <ValidatorForm onSubmit={login}>
                         <FormControl margin="normal" required fullWidth>
                             <Typography> Enter your email </Typography>
                             <TextValidator
@@ -96,7 +94,6 @@ function LoginPage(props) {
                             fullWidth
                             variant="contained"
                             color="primary"
-                            onClick={login}
                             className={classes.submit}
                         >
                             {" "}
@@ -111,9 +108,8 @@ function LoginPage(props) {
         </div>
     );
 }
-LoginPage.propTypes ={
-    history: PropTypes.func.isRequired,
+LoginPage.propTypes = {
+    history: PropTypes.object.isRequired,
     classes: PropTypes.object.isRequired
-
-}
+};
 export default withStyles(loginPageLayoutStyles)(LoginPage);

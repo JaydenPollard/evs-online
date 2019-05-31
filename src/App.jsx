@@ -7,8 +7,6 @@ import {
     CssBaseline
 } from "@material-ui/core";
 
-
-
 import AccessMan from "./layouts/AccessManLayout/accessManLayout";
 
 import LoginPage from "./layouts/LoginPageLayout/LoginPageLayout";
@@ -31,7 +29,6 @@ const App = () => (
         <BrowserRouter>
             <Switch>
                 <Route path="/home" exact component={ViewMoviesLayout} />
-                
                 <Route path="/accesslog" exact component={AccessMan} />
                 <Route path="/order/search" exact component={SearchOrders} />
                 <Route path="/order/new" exact component={NewOrder} />
