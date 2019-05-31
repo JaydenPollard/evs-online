@@ -1,8 +1,7 @@
 import React, { useState, useEffect } from "react";
-// import moment from "moment";
+import PropTypes from "prop-types";
 import Table from "@material-ui/core/Table";
 import TableCell from "@material-ui/core/TableCell";
-// import TableHead from "@material-ui/core/TableHead";
 import TableBody from "@material-ui/core/TableBody";
 import TableRow from "@material-ui/core/TableRow";
 import { Checkbox, Button } from "@material-ui/core";
@@ -16,10 +15,8 @@ import EnhanceTableHead from "./HeadTable/Header";
 // data render
 export default function HistoryBlo(props) {
     const accLog = props;
-    // const infoSaved = getTime(accLog.logKey, accLog.date, accLog.time);
     const [selected, setSelected] = useState([]);
     const [accessHistory, setAccessHistory] = useState([]);
-
     const userID = accLog.testid;
     const rootRef = firebase.database.ref(`AccessLog/${userID}`);
 
@@ -27,12 +24,11 @@ export default function HistoryBlo(props) {
         if (event.target.checked) {
             const newSelecteds = accessHistory.map(n => n.logID);
             setSelected(newSelecteds);
-            return;
         }
-        setSelected([]);
     }
-
+    // check status of checkbox
     const isSelected = name => selected.indexOf(name) !== -1;
+    // real time fetching
     useEffect(() => {
         rootRef.on("value", snapshot => {
             const tempLogKey = [];
@@ -50,10 +46,10 @@ export default function HistoryBlo(props) {
             });
 
             for (let i = 0; i < tempLogKey.length; i += 1) {
-                const k = tempLogKey[i];
+                const logKey = tempLogKey[i];
 
                 tempHis.push({
-                    logID: k,
+                    logID: logKey,
                     date: tempDate[i],
                     time: tempTime[i],
                     hidden: tempHidden[i]
@@ -89,7 +85,6 @@ export default function HistoryBlo(props) {
                                         )
                                     }
                                     role="checkbox"
-                                    aria-checked={isItemSelected}
                                     tabIndex={-1}
                                     selected={isItemSelected}
                                 >

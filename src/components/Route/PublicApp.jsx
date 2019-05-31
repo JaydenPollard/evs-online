@@ -3,10 +3,10 @@ import PropTypes from "prop-types";
 import { Route } from "react-router-dom";
 
 // anyone can access this
-const PublicRoutes = ({ user, component: Comp, ...rest }) => {
+const PublicRoutes = ({ user, component: Comp, ...otherProps }) => {
     return (
         <Route
-            {...rest}
+            {...otherProps}
             component={props => {
                 // will be fixed to create public and private route
 

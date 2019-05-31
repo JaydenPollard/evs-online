@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import PropTypes from "prop-types";
 import moment from "moment";
 import Table from "@material-ui/core/Table";
 import TableCell from "@material-ui/core/TableCell";
@@ -15,7 +16,7 @@ export default function SearchedBlo(props) {
     const [accessHistory, setAccessHistory] = useState([]);
     const userID = accLog.testid;
     const rootRef = firebase.database.ref(`AccessLog/${userID}/`);
-    // const copyAccHis = [...accessHistory];
+
     const [selected, setSelected] = useState([]);
 
     function handleSelectAllClick(event) {

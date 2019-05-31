@@ -1,6 +1,5 @@
 /* eslint-disable func-names */
 import React, { useState, useEffect } from "react";
-import PropTypes from "prop-types";
 import Grid from "@material-ui/core/Grid";
 import { Button, TextField, Typography } from "@material-ui/core";
 import DateFnsUtils from "@date-io/date-fns";
@@ -13,16 +12,13 @@ import SearchedBlo from "../../components/LogComponent/SearchedTable";
 import HistoryBlo from "../../components/LogComponent/Generaltable";
 import AppBar from "../../components/AppBar/AppBar";
 
-function AccessMan(props) {
+export default function AccessManLayout(props) {
     const userLogedInID = props;
-
     const [searchedDate, setSearchedDate] = useState();
     const [shAll, setShAll] = useState(true);
-
+    const [userName, setUserName] = useState("");
     const uIdRef = firebase.database.ref("AccessLog/");
     const useID = userLogedInID.user;
-
-    let userName;
 
     // set searched value
     function handleSearch(e) {
@@ -41,14 +37,16 @@ function AccessMan(props) {
             .ref(`Users/Staffs/${userLogedInID.user}/Name`)
             .once("value")
             .then(function(snapshot) {
-                userName = snapshot.val();
+                setUserName(snapshot.val());
+                console.log(snapshot.val());
             });
 
         if (userName == null)
             firebase.database
                 .ref(`Users/Customers/${userLogedInID.user}/Name`)
                 .on("value", function(snapshot) {
-                    userName = snapshot.val();
+                    setUserName(snapshot.val());
+                    console.log(userName);
                 });
     }
     useEffect(() => {
@@ -79,11 +77,12 @@ function AccessMan(props) {
                 <Grid container justify="center">
                     <Typography variant="h5" component="h5">
                         {" "}
-                        Hello, {getUserName()}{" "}
+                        {getUserName()}
+                        Hello, {userName}, {"  "}
                     </Typography>
                     <Typography variant="h5" component="h4">
-                        {" "}
-                        This is your access log page{" "}
+                        {"   "}
+                        this is your access log page{" "}
                     </Typography>
                 </Grid>
                 <Grid container justify="center">
@@ -124,14 +123,9 @@ function AccessMan(props) {
                     Show all{" "}
                 </Button>
                 <Button type="submit">
-                    {" "}
                     <Link to="/home"> Home </Link>
                 </Button>
             </div>
         </div>
     );
 }
-AccessMan.propTypes = {
-    history: PropTypes.object.isRequired
-};
-export default AccessMan;

@@ -1,5 +1,3 @@
-// import React from 'react';
-
 import * as firebase from "firebase/app";
 import "firebase/database";
 import "firebase/auth";
@@ -14,9 +12,9 @@ export function delEntry(deletedArray) {
             .child("hidden")
             .set(true);
 }
+// handle check box as they input
 export function handleClick(event, name, selected) {
     const selectedIndex = selected.indexOf(name);
-
     let newSelected = [];
 
     if (selectedIndex === -1) {

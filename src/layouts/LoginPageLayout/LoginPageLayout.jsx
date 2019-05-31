@@ -12,7 +12,6 @@ import {
 } from "@material-ui/core";
 import moment from "moment";
 import CssBaseline from "@material-ui/core/CssBaseline";
-
 import { TextValidator, ValidatorForm } from "react-material-ui-form-validator";
 import * as firebase from "firebase";
 import "firebase/auth";
@@ -20,7 +19,7 @@ import "firebase/database";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import { loginPageLayoutStyles } from "./LoginPageLayoutStyles";
 
-function LoginPage(props) {
+function LoginPageLayout(props) {
     const { classes } = props;
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -43,7 +42,6 @@ function LoginPage(props) {
                     time: moment(Date()).format("hh:mm A"),
                     hidden: false
                 });
-                setErr("Successful");
                 props.history.push("/home");
             })
 
@@ -105,8 +103,8 @@ function LoginPage(props) {
         </div>
     );
 }
-LoginPage.propTypes = {
+LoginPageLayout.propTypes = {
     history: PropTypes.object.isRequired,
     classes: PropTypes.object.isRequired
 };
-export default withStyles(loginPageLayoutStyles)(LoginPage);
+export default withStyles(loginPageLayoutStyles)(LoginPageLayout);
