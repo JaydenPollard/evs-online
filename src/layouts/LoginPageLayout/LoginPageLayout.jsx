@@ -31,11 +31,10 @@ function LoginPage(props) {
     };
     // method for authorise user and writing log --> maybe refactor to new function ?!
 
-    function login() {
-        firebase.auth
+    async function login() {
+        await firebase.auth
             .signInWithEmailAndPassword(email, password)
             .then(() => {
-                props.history.push("/home");
                 const userID = firebase.auth.currentUser.uid;
                 const dbref = firebase.database.ref("AccessLog/");
                 const newDbRef = dbref.child(userID).push();
@@ -45,7 +44,9 @@ function LoginPage(props) {
                     hidden: false
                 });
                 setErr("Successful");
+                props.history.push("/home");
             })
+
             .catch(error => {
                 setErr(error.message);
             });

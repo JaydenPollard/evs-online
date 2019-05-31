@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import moment from "moment";
 import Table from "@material-ui/core/Table";
 import TableCell from "@material-ui/core/TableCell";
@@ -8,57 +8,63 @@ import { Checkbox } from "@material-ui/core";
 import * as firebase from "firebase/app";
 import { delEntry, handleClick } from "../LogFunction/SharedFunction";
 import EnhanceTableHead from "./HeadTable/Header";
-
-// export Data of search criteria for render
-export const getSearchResult = (logKey, date, time, searchedDate) => {
-    const result = [];
-
-    const dateToCompare = moment(searchedDate).format("DD/MM/YYYY");
-    //   const user = firebase.auth.currentUser.uid;
-    for (let i = 0; i < logKey.length; i += 1)
-        if (logKey[i] !== undefined && date[i] === dateToCompare) {
-            result.push({
-                date: date[i],
-                time: time[i],
-                logID: logKey[i]
-            });
-        }
-
-    return result;
-};
+import { handleDelete } from "../../logic/log/deleteLog";
 // data render
 export default function SearchedBlo(props) {
     const accLog = props;
-    const result = getSearchResult(
-        accLog.logKey,
-        accLog.date,
-        accLog.time,
-        accLog.searchedDate
-    );
+    const [accessHistory, setAccessHistory] = useState([]);
+    const userID = accLog.testid;
+    const get = userID.join();
+    const rootRef = firebase.database.ref(`AccessLog/${get}/`);
+    const copyAccHis = [...accessHistory];
     const [selected, setSelected] = useState([]);
-    const checkVal = [];
-    // handle changes made in check box --> prepapred to change to new Material ui method
-    //   function handleCheckBox(event,key) {
-    //     const {target} = event;
 
-    //     if (target.checked)
-    //           checkVal.push(key);
-    //     else
-    //        checkVal.splice(checkVal.indexOf(key),1);
-
-    // }
     function handleSelectAllClick(event) {
         if (event.target.checked) {
-            const newSelecteds = result.map(n => n.usID);
+            const newSelecteds = accessHistory.map(n => n.logID);
             setSelected(newSelecteds);
             return;
         }
         setSelected([]);
     }
+
     const isSelected = name => selected.indexOf(name) !== -1;
+    useEffect(() => {
+        rootRef.once("value").then(snapshot => {
+            const tempDate = [];
+            const tempTime = [];
+            const tempHidden = [];
+            const tempLogKey = [];
+            const tempHis = [];
+            let temp1 = [];
+            snapshot.forEach(function(childSnapshot) {
+                temp1 = childSnapshot.val();
+                tempLogKey.push(childSnapshot.key);
+                tempDate.push(temp1.date);
+                tempHidden.push(temp1.hidden);
+            });
+
+            for (let i = 0; i < tempLogKey.length; i += 1) {
+                const k = tempLogKey[i];
+                const dateToCompare = moment(accLog.searchedDate).format(
+                    "DD/MM/YYYY"
+                );
+                if (dateToCompare == tempDate[i]) {
+                    tempHis.push({
+                        logID: k,
+                        date: tempDate[i],
+                        time: tempTime[i],
+                        hidden: tempHidden[i]
+                    });
+                }
+            }
+
+            setAccessHistory(tempHis);
+        });
+    }, []);
     // return null message when search found nothing
     function checkResultView() {
-        if (result.length !== 0)
+        if (accessHistory.length !== 0)
             return (
                 <Table>
                     <EnhanceTableHead
@@ -67,7 +73,7 @@ export default function SearchedBlo(props) {
                         rowCount={accLog.logKey.length}
                     />
                     <TableBody>
-                        {result.map(row => {
+                        {accessHistory.map(row => {
                             const isItemSelected = isSelected(row.logID);
                             return (
                                 <TableRow
@@ -119,7 +125,9 @@ export default function SearchedBlo(props) {
                 <button
                     type="submit"
                     onClick={e => {
-                        delEntry(checkVal);
+                        const result = handleDelete(selected, accessHistory);
+                        setAccessHistory(result);
+                        delEntry(selected);
                     }}
                 >
                     {" "}

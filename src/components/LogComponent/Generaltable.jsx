@@ -10,33 +10,8 @@ import * as firebase from "firebase/app";
 import "firebase/auth";
 import "firebase/database";
 import { delEntry, handleClick } from "../LogFunction/SharedFunction";
-
+import { handleDelete } from "../../logic/log/deleteLog";
 import EnhanceTableHead from "./HeadTable/Header";
-// import { setDate } from "date-fns/esm";
-// Extracting whole data for the current user
-// export const getTime = (logKey, date, time) => {
-//     const saving = [];
-
-//     const user = firebase.auth.currentUser.uid;
-
-//     for (let i = 0; i < logKey.length; i+=1)
-//         if (logKey[i] !== undefined) {
-//             saving.push({
-//                 date: date[i],
-//                 time: time[i],
-//                 logID: logKey[i],
-
-//             });
-
-//         }
-
-//     return saving;
-// };
-export const findLogID = (logKeyFind, logKey) => {
-    for (let i = 0; i < logKey.length; i += 1)
-        if (logKey[i] === logKeyFind) return i;
-    return null;
-};
 
 // data render
 export default function HistoryBlo(props) {
@@ -45,10 +20,11 @@ export default function HistoryBlo(props) {
     const [selected, setSelected] = useState([]);
     const [accessHistory, setAccessHistory] = useState([]);
 
-    const userID = accLog.testid;
-    let get = userID.join();
-    const rootRef = firebase.database.ref(`AccessLog/${get}/`);
-    const copyAccHis = [...accessHistory];
+    const userID = props.testid;
+    // let get = '';
+    // get = userID.join();
+    const rootRef = firebase.database.ref("AccessLog/" + userID);
+
     function handleSelectAllClick(event) {
         if (event.target.checked) {
             const newSelecteds = accessHistory.map(n => n.logID);
@@ -58,49 +34,33 @@ export default function HistoryBlo(props) {
         setSelected([]);
     }
 
-    function handleDelete(theSelected) {
-        const indexDeleted = [];
-        for (let i = 0; i < theSelected.length; i += 1)
-            indexDeleted.push(
-                accessHistory.findIndex(x => x.logID === theSelected[i])
-            );
-
-        indexDeleted.sort(function(a, b) {
-            return b - a;
-        });
-        indexDeleted.forEach(function(index) {
-            copyAccHis.splice(index, 1);
-        });
-
-        // for (let i = indexDeleted.length -1; i >= 0; i--)
-        // copyAccHis.splice(indexDeleted[i],1);
-
-        return copyAccHis;
-    }
-
     const isSelected = name => selected.indexOf(name) !== -1;
     useEffect(() => {
-        rootRef.once("value").then(snapshot => {
+        rootRef.on("value", snapshot => {
             const tempLogKey = [];
             const tempHis = [];
+            const tempDate = [];
+            const tempHidden = [];
+            const tempTime = [];
             let temp1 = [];
             snapshot.forEach(function(childSnapshot) {
                 temp1 = childSnapshot.val();
-
-                childSnapshot.forEach(function(superChild) {
-                    tempLogKey.push(superChild.key);
-                });
+                tempLogKey.push(childSnapshot.key);
+                tempTime.push(temp1.time);
+                tempDate.push(temp1.date);
+                tempHidden.push(temp1.hidden);
             });
-
+            console.log(userID);
             for (let i = 0; i < tempLogKey.length; i += 1) {
                 const k = tempLogKey[i];
-                if (temp1[k] !== undefined)
-                    tempHis.push({
-                        logID: k,
-                        date: temp1[k].date,
-                        time: temp1[k].time,
-                        hidden: temp1[k].hidden
-                    });
+
+                tempHis.push({
+                    logID: k,
+                    date: tempDate[i],
+                    time: tempTime[i],
+                    hidden: tempHidden[i]
+                });
+                console.log(tempHis);
             }
 
             setAccessHistory(tempHis);
@@ -154,9 +114,10 @@ export default function HistoryBlo(props) {
                 <button
                     type="submit"
                     onClick={e => {
-                        handleDelete(selected);
-                        setAccessHistory(copyAccHis);
+                        const result = handleDelete(selected, accessHistory);
+                        setAccessHistory(result);
                         delEntry(selected);
+                        console.log(userID);
                     }}
                 >
                     Delete

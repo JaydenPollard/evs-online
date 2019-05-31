@@ -12,19 +12,17 @@ import { Link } from "react-router-dom";
 import { withStyles } from "@material-ui/core/styles";
 import * as firebase from "firebase/app";
 import { appBarStyles } from "./AppBarStyles";
-import "firebase/auth"
+import "firebase/auth";
 
 function SearchAppBar(props) {
     const { classes } = props;
-    const user = firebase.auth.currentUser;
-    
+
     // Check login status to modify app bar
     function loginStatus() {
-        if (user == null)
+        if (props.user == null)
             return (
                 <div>
                     <Button variant="contained" color="inherit">
-                        
                         <Link to="/login" style={{ textDecoration: "none" }}>
                             Login
                         </Link>
@@ -40,7 +38,7 @@ function SearchAppBar(props) {
                         onClick={e => {
                             firebase.auth.signOut();
                         }}
-                        to="/home"
+                        to="/"
                     >
                         Logout
                     </Link>

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Route, BrowserRouter } from "react-router-dom";
 import { Switch } from "react-router";
 import {
@@ -14,9 +14,11 @@ import ManagementPage from "./layouts/UserManagementLayout/UserManagementLayout"
 import SearchOrders from "./layouts/OrderLayout/SearchOrders/SearchOrders";
 import NewOrder from "./layouts/OrderLayout/NewOrder/NewOrder";
 import ViewMoviesLayout from "./layouts/MovieLayout/ViewMoviesLayout/ViewMoviesLayout";
-import PublicRoute from "./components/Route/PublicApp";
+import PublicRoutes from "./components/Route/PublicApp";
+import PrivateRoutes from "./components/Route/PrivateApp";
 import MovieContentProcessingLayout from "./layouts/MovieLayout/MovieContentProcessingLayout/MovieContentProcessingLayout";
 import "firebase/auth";
+import InternalRoutes from "./components/Route/InternalApp";
 
 const theme = createMuiTheme({
     palette: {
@@ -25,8 +27,8 @@ const theme = createMuiTheme({
 });
 
 const App = () => {
-    const userArr = [];
-    firebase.auth.onAuthStateChanged(user => userArr.push(user.uid)); // keep user logged in even when page is refreshed
+    let userArr = "GXBVUH2uzhRjK2ld0Ido89Tw2et1";
+    // firebase.auth.onAuthStateChanged(user => {userArr = user.uid; console.log(userArr)} ); // keep user logged in even when page is refreshed
 
     return (
         <MuiThemeProvider theme={theme}>
@@ -34,11 +36,9 @@ const App = () => {
             <BrowserRouter>
                 <Switch>
                     <Route path="/home" exact component={ViewMoviesLayout} />
-                    <PublicRoute
-                        user={userArr}
+                    <Route
                         path="/accesslog"
-                        exact
-                        component={AccessMan}
+                        component={() => <AccessMan user={userArr} />}
                     />
                     <Route
                         path="/order/search"

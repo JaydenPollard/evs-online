@@ -21,22 +21,14 @@ function AccessMan(props) {
     const [logKey, setLogKey] = useState([]);
     const [searchedDate, setSearchedDate] = useState();
     const [shAll, setShAll] = useState(true);
-    // const useID = firebase.auth().currentUser.uid;
+    // const useID = firebase.auth.currentUser.uid;
     // let abc = getTime(headKey, date, time, userId);
     // let def = getSearchResult(headKey, date, time, userId, searchedDate);
     const uIdRef = firebase.database.ref("AccessLog/");
-    const test = userLogedInID.user;
+    let test = props.user;
 
     let userName;
 
-    // handle change of check box
-    // function handleCheckBox(event, key) {
-    //     const { target } = event;
-    //     const checkVal = new Array();
-    //     if (target.checked) checkVal.push(key);
-    //     else checkVal.splice(checkVal.indexOf(key), 1);
-    //     setToBeDeleted(checkVal);
-    // }
     // set searched value
     function handleSearch(e) {
         setSearchedDate(e.target.value);
@@ -53,20 +45,13 @@ function AccessMan(props) {
                 />
             );
 
-        return (
-            <SearchedBlo
-                logKey={logKey}
-                date={date}
-                time={time}
-                searchedDate={searchedDate}
-            />
-        );
+        return <SearchedBlo searchedDate={searchedDate} testid={test} />;
     }
 
     // return userName
     function getUserName() {
         firebase.database
-            .ref(`Users/Staffs/${test[0]}/Name`)
+            .ref(`Users/Staffs/${test}/Name`)
             .once("value")
             .then(function(snapshot) {
                 userName = snapshot.val();
@@ -74,14 +59,14 @@ function AccessMan(props) {
 
         if (userName == null)
             firebase.database
-                .ref(`Users/Customers/${test[0]}/Name`)
+                .ref(`Users/Customers/${test}/Name`)
                 .on("value", function(snapshot) {
                     userName = snapshot.val();
                 });
     }
     useEffect(() => {
         uIdRef
-            .child(`${test[0]}`)
+            .child(`${test}`)
             .once("value")
             .then(snapshot => {
                 const temp = snapshot.val();
@@ -107,7 +92,7 @@ function AccessMan(props) {
     }, []);
     return (
         <div>
-            <AppBar />
+            <AppBar user={test} />
             <div>
                 {getUserName()}
                 <Typography> Hello, {userName} </Typography>
@@ -140,7 +125,13 @@ function AccessMan(props) {
                 <div>{checkView(shAll)}</div>
             </div>
             <div>
-                <Button type="submit" onClick={e => setShAll(true)}>
+                <Button
+                    type="submit"
+                    onClick={e => {
+                        setShAll(true);
+                        console.log(props.user);
+                    }}
+                >
                     {" "}
                     Show all{" "}
                 </Button>
