@@ -13,6 +13,7 @@ function StaffGrid() {
         .child("Staffs");
 
     useEffect(() => {
+        // Push all userID from our list of users in firebase to a placeholder, then set userKey array to that value
         rootRef.once("value").then(function(snapshot) {
             snapshot.forEach(function(childSnapshot) {
                 placeHolder.push(childSnapshot.key);
@@ -23,6 +24,7 @@ function StaffGrid() {
 
     return (
         <Grid container spacing={24}>
+            {/* For each user ID, render a user card with that ID passed into its props */}
             {userKey.map(userId => (
                 <Grid item key={userId}>
                     <StaffCard userId={userId} />
