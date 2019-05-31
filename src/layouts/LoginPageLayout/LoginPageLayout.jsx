@@ -1,54 +1,76 @@
-import ArrowBackIcon from "@material-ui/icons/ArrowBackRounded";
-import Avatar from "@material-ui/core/Avatar";
-import Button from "@material-ui/core/Button";
-import Checkbox from "@material-ui/core/Checkbox";
-import CssBaseline from "@material-ui/core/CssBaseline";
-import FormControl from "@material-ui/core/FormControl";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Input from "@material-ui/core/Input";
-import InputLabel from "@material-ui/core/InputLabel";
-import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
-import Paper from "@material-ui/core/Paper";
+import React, { useState } from "react";
 import PropTypes from "prop-types";
-import React from "react";
-import Typography from "@material-ui/core/Typography";
 import withStyles from "@material-ui/core/styles/withStyles";
-import { Link } from "react-router-dom";
+import {
+    Typography,
+    Paper,
+    Avatar,
+    Button,
+    FormControl,
+    Input,
+    InputLabel
+} from "@material-ui/core";
+import moment from "moment";
+import CssBaseline from "@material-ui/core/CssBaseline";
+import { TextValidator, ValidatorForm } from "react-material-ui-form-validator";
+import * as firebase from "firebase";
+import "firebase/auth";
+import "firebase/database";
+import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import { loginPageLayoutStyles } from "./LoginPageLayoutStyles";
 
 function LoginPageLayout(props) {
     const { classes } = props;
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [err, setErr] = useState("");
+
+    const handleEmail = e => {
+        setEmail(e.target.value);
+    };
+
+    async function login() {
+        await firebase.auth
+            .signInWithEmailAndPassword(email, password)
+            .then(() => {
+                const userID = firebase.auth.currentUser.uid;
+                const dbref = firebase.database.ref("AccessLog/");
+                const newDbRef = dbref.child(userID).push();
+                newDbRef.set({
+                    date: moment(Date()).format("DD/MM/YYYY"),
+                    time: moment(Date()).format("hh:mm A"),
+                    hidden: false
+                });
+                props.history.push("/home");
+            })
+
+            .catch(error => {
+                setErr(error.message);
+            });
+    }
 
     return (
         <div className={classes.background}>
             <main className={classes.main}>
                 <CssBaseline />
                 <Paper className={classes.paper}>
-                    <Button className={classes.button} color="default">
-                        <Link to="/home" style={{ textDecoration: "none" }}>
-                            <ArrowBackIcon
-                                style={{ transform: "translateY(7px)" }}
-                            />
-                            Return
-                        </Link>
-                    </Button>
-
                     <Avatar className={classes.avatar}>
                         <LockOutlinedIcon />
                     </Avatar>
                     <Typography component="h1" variant="h5">
                         Log in
                     </Typography>
-                    <form className={classes.form}>
+                    <ValidatorForm onSubmit={login}>
                         <FormControl margin="normal" required fullWidth>
-                            <InputLabel htmlFor="email">
-                                Email Address
-                            </InputLabel>
-                            <Input
-                                id="email"
+                            <Typography> Enter your email </Typography>
+                            <TextValidator
                                 name="email"
-                                autoComplete="email"
-                                autoFocus
+                                placeholder="Email"
+                                value={email}
+                                onChange={handleEmail}
+                                validators={["isEmail"]}
+                                errorMessages={["Invalid Email"]}
+                                required
                             />
                         </FormControl>
                         <FormControl margin="normal" required fullWidth>
@@ -57,37 +79,31 @@ function LoginPageLayout(props) {
                                 name="password"
                                 type="password"
                                 id="password"
-                                autoComplete="current-password"
+                                autoComplete="off"
+                                value={password}
+                                onChange={e => setPassword(e.target.value)}
                             />
                         </FormControl>
-                        <FormControlLabel
-                            control={
-                                <Checkbox value="remember" color="primary" />
-                            }
-                            label="Remember me"
-                        />
                         <Button
                             type="submit"
                             fullWidth
                             variant="contained"
-                            color="inherit"
+                            color="primary"
                             className={classes.submit}
                         >
-                            Log in
+                            {" "}
+                            Login
                         </Button>
-                    </form>
-                    {/* <div className={classes.divider} /> */}
-                    <form className={classes.form}>
-                        {/* TODO: Add Google and Facebook Login Button here */}
-                    </form>
+
+                        <Typography> {err} </Typography>
+                    </ValidatorForm>
                 </Paper>
             </main>
         </div>
     );
 }
-
 LoginPageLayout.propTypes = {
+    history: PropTypes.object.isRequired,
     classes: PropTypes.object.isRequired
 };
-
 export default withStyles(loginPageLayoutStyles)(LoginPageLayout);

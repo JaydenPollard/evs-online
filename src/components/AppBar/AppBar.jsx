@@ -10,10 +10,42 @@ import Toolbar from "@material-ui/core/Toolbar";
 import Typography from "@material-ui/core/Typography";
 import { Link } from "react-router-dom";
 import { withStyles } from "@material-ui/core/styles";
+import * as firebase from "firebase/app";
 import { appBarStyles } from "./AppBarStyles";
+import "firebase/auth";
 
 function SearchAppBar(props) {
     const { classes } = props;
+    const userInfo = firebase.auth.currentUser;
+    // Check login status to modify app bar
+    function loginStatus() {
+        if (userInfo == null)
+            return (
+                <div>
+                    <Button variant="contained" color="inherit">
+                        <Link to="/login" style={{ textDecoration: "none" }}>
+                            Login
+                        </Link>
+                    </Button>
+                </div>
+            );
+
+        return (
+            <div>
+                <Button variant="contained" color="inherit">
+                    <Link
+                        style={{ textDecoration: "none" }}
+                        onClick={e => {
+                            firebase.auth.signOut();
+                        }}
+                        to="/home"
+                    >
+                        Logout
+                    </Link>
+                </Button>
+            </div>
+        );
+    }
     return (
         <div className={classes.root}>
             <AppBar position="static" color="primary">
@@ -56,16 +88,7 @@ function SearchAppBar(props) {
                             }}
                         />
                     </div>
-                    <div>
-                        <Button variant="contained" color="inherit">
-                            <Link
-                                to="/login"
-                                style={{ textDecoration: "none" }}
-                            >
-                                Login
-                            </Link>
-                        </Button>
-                    </div>
+                    <div>{loginStatus()}</div>
                     <div>
                         <Button
                             variant="contained"
@@ -77,6 +100,20 @@ function SearchAppBar(props) {
                                 style={{ textDecoration: "none" }}
                             >
                                 Register
+                            </Link>
+                        </Button>
+                    </div>
+                    <div>
+                        <Button
+                            variant="contained"
+                            color="inherit"
+                            style={{ marginLeft: "8px" }}
+                        >
+                            <Link
+                                to="/accesslog"
+                                style={{ textDecoration: "none" }}
+                            >
+                                View Access Log
                             </Link>
                         </Button>
                     </div>
