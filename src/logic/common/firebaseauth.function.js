@@ -27,6 +27,7 @@ export async function isMemberAdmin() {
         const userID = user.uid;
         const rootRef = firebase.database.ref(`Users/Staffs`);
         const query = rootRef.child(userID).child("AccessLevel");
+        // Query the current user's AccessLevel field in firebase, returns true if user is an Admin
         return query.once("value").then(function(snapshot) {
             return snapshot.val() === "Admin";
         });

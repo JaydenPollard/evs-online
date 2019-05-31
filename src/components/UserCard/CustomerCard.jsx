@@ -48,6 +48,7 @@ const CustomerCard = props => {
         }
     ];
 
+    // Individual functions to update each user fields
     const handleNameChange = e => {
         setName(e.target.value);
     };
@@ -109,6 +110,7 @@ const CustomerCard = props => {
     };
 
     useEffect(() => {
+        // Loops through each user attributes, and fill in corresponding fields
         rootRef.once("value").then(snapshot => {
             snapshot.forEach(attributes => {
                 switch (attributes.key) {
@@ -140,8 +142,6 @@ const CustomerCard = props => {
                 }
             });
         });
-        // Stops rootRef from being passed into watchlist, which stops user from editing cards
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     if (isActive === true) {

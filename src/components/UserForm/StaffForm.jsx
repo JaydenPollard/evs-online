@@ -20,6 +20,7 @@ import { createNewStaff } from "../../logic/user/addUser.function";
 
 const StaffForm = () => {
     const schema = new PasswordValidator();
+    // Sets some common validation rules for password
     schema
         .is()
         .min(7)
@@ -38,6 +39,7 @@ const StaffForm = () => {
         .not()
         .oneOf(["Passw0rd", "Password123"]);
 
+    // Use an empty staff model as a template for creating new staffs
     const [user, setUser] = useState(staff);
     const [error, setError] = useState(false);
     const rootRef = firebase.database
@@ -55,6 +57,7 @@ const StaffForm = () => {
         }
     ];
 
+    // Handle appropriate onChange events for each fields in the form
     const handleNameChange = event => {
         const newName = event.target.value;
         setUser(data => {
@@ -97,6 +100,7 @@ const StaffForm = () => {
             return { ...data, password: newPassword };
         });
     };
+    // Handles password validation for the form, if password doesn't conform to schema or both fields don't match, display an error
     const passwordValidation = () => {
         if (schema.validate(user.password)) {
             setError(false);
