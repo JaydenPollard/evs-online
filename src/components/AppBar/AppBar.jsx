@@ -50,13 +50,6 @@ function SearchAppBar(props) {
         <div className={classes.root}>
             <AppBar position="static" color="primary">
                 <Toolbar>
-                    <IconButton
-                        className={classes.menuButton}
-                        color="inherit"
-                        aria-label="Open drawer"
-                    >
-                        <MenuIcon />
-                    </IconButton>
                     <Typography
                         className={classes.title}
                         variant="h4"
@@ -76,18 +69,7 @@ function SearchAppBar(props) {
                             </Link>
                         </Button>
                     </div>
-                    <div className={classes.search}>
-                        <div className={classes.searchIcon}>
-                            <SearchIcon />
-                        </div>
-                        <InputBase
-                            placeholder="Search…"
-                            classes={{
-                                root: classes.inputRoot,
-                                input: classes.inputInput
-                            }}
-                        />
-                    </div>
+                    <div className={classes.search} />
                     <div>{loginStatus()}</div>
                     <div>
                         <Button
