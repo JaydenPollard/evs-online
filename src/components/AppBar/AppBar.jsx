@@ -112,6 +112,20 @@ function SearchAppBar(props) {
                             </Link>
                         </Button>
                     </div>
+                    <div>
+                        <Button
+                            variant="contained"
+                            color="inherit"
+                            style={{ marginLeft: "8px" }}
+                        >
+                            <Link
+                                to="/accesslog"
+                                style={{ textDecoration: "none" }}
+                            >
+                                View Access Log
+                            </Link>
+                        </Button>
+                    </div>
                 </Toolbar>
             </AppBar>
         </div>
