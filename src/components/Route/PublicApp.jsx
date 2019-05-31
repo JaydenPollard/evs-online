@@ -1,7 +1,8 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { Route, Redirect } from "react-router-dom";
+import { Route } from "react-router-dom";
 
+// anyone can access this
 const PublicRoutes = ({ user, component: Comp, ...rest }) => {
     return (
         <Route

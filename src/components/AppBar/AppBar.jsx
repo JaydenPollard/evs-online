@@ -88,7 +88,30 @@ function SearchAppBar(props) {
                             }}
                         />
                     </div>
-                    {loginStatus()}
+                    <div>
+                        <Button variant="contained" color="inherit">
+                            <Link
+                                to="/login"
+                                style={{ textDecoration: "none" }}
+                            >
+                                Login
+                            </Link>
+                        </Button>
+                    </div>
+                    <div>
+                        <Button
+                            variant="contained"
+                            color="inherit"
+                            style={{ marginLeft: "8px" }}
+                        >
+                            <Link
+                                to="/register"
+                                style={{ textDecoration: "none" }}
+                            >
+                                Register
+                            </Link>
+                        </Button>
+                    </div>
                 </Toolbar>
             </AppBar>
         </div>

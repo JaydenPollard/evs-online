@@ -1,10 +1,11 @@
 import React from "react";
 import { Route, Redirect } from "react-router-dom";
 import PropTypes from "prop-types";
-import * as firebase from "firebase/app";
-import "firebase/auth";
+// import * as firebase from "firebase/app";
+// import "firebase/auth";
 import { isMemberAdmin } from "../../logic/common/firebaseauth.function";
 
+// staff only
 const InternalRoutes = ({ user, component: Comp, ...rest }) => {
     return (
         <Route

@@ -13,10 +13,9 @@ import { handleDelete } from "../../logic/log/deleteLog";
 export default function SearchedBlo(props) {
     const accLog = props;
     const [accessHistory, setAccessHistory] = useState([]);
-    const userID = props.testid;
-
+    const userID = accLog.testid;
     const rootRef = firebase.database.ref(`AccessLog/${userID}/`);
-    const copyAccHis = [...accessHistory];
+    // const copyAccHis = [...accessHistory];
     const [selected, setSelected] = useState([]);
 
     function handleSelectAllClick(event) {
@@ -106,6 +105,7 @@ export default function SearchedBlo(props) {
                                         </TableCell>
                                     </TableRow>
                                 );
+                            return null;
                         })}
                     </TableBody>
                 </Table>

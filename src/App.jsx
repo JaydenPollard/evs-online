@@ -6,15 +6,16 @@ import {
     createMuiTheme,
     CssBaseline
 } from "@material-ui/core";
-
 import * as firebase from "firebase/app";
-import AccessMan from "./layouts/AccessManLayout/accessManLayout";
+import RegistrationPage from "./layouts/RegistrationPageLayout/RegistrationPageLayout";
 import LoginPage from "./layouts/LoginPageLayout/LoginPageLayout";
 import ManagementPage from "./layouts/UserManagementLayout/UserManagementLayout";
 import SearchOrders from "./layouts/OrderLayout/SearchOrders/SearchOrders";
 import NewOrder from "./layouts/OrderLayout/NewOrder/NewOrder";
+import AccessMan from "./layouts/AccessManLayout/accessManLayout";
 import ViewMoviesLayout from "./layouts/MovieLayout/ViewMoviesLayout/ViewMoviesLayout";
 import PublicRoutes from "./components/Route/PublicApp";
+
 import PrivateRoutes from "./components/Route/PrivateApp";
 import MovieContentProcessingLayout from "./layouts/MovieLayout/MovieContentProcessingLayout/MovieContentProcessingLayout";
 import "firebase/auth";
@@ -30,18 +31,18 @@ const App = () => {
     const [userArr, setUserArr] = useState("");
     firebase.auth.onAuthStateChanged(user => {
         setUserArr(user.uid);
-        console.log(userArr);
-    }); // keep user logged in even when page is refreshed
-
+    });
     return (
         <MuiThemeProvider theme={theme}>
             <CssBaseline />
             <BrowserRouter>
                 <Switch>
                     <Route path="/home" exact component={ViewMoviesLayout} />
+                    <Route path="/login" exact component={LoginPage} />
                     <Route
-                        path="/accesslog"
-                        component={() => <AccessMan user={userArr} />}
+                        path="/register"
+                        exact
+                        component={RegistrationPage}
                     />
                     <Route
                         path="/order/search"
@@ -49,7 +50,11 @@ const App = () => {
                         component={SearchOrders}
                     />
                     <Route path="/order/new" exact component={NewOrder} />
-                    <Route path="/login" exact component={LoginPage} />
+                    <Route
+                        path="/accesslog"
+                        component={() => <AccessMan user={userArr} />}
+                    />
+
                     <Route
                         path="/management/users"
                         exact
