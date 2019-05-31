@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import PropTypes from "prop-types";
 import moment from "moment";
 import Table from "@material-ui/core/Table";
 import TableCell from "@material-ui/core/TableCell";
@@ -25,7 +24,6 @@ export default function SearchedBlo(props) {
             setSelected(newSelecteds);
             return;
         }
-        setSelected([]);
     }
 
     const isSelected = name => selected.indexOf(name) !== -1;

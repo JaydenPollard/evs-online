@@ -100,14 +100,16 @@ export default function AccessManLayout(props) {
                         </MuiPickersUtilsProvider>{" "}
                     </Grid>{" "}
                     <Grid item xs={3}>
-                        <button
+                        <Button
+                            variant="contained"
+                            color="inherit"
                             type="submit"
                             onClick={e => {
                                 setShAll(false);
                             }}
                         >
                             Search
-                        </button>
+                        </Button>
                     </Grid>
                 </Grid>
                 <div>{checkView(shAll)}</div>
