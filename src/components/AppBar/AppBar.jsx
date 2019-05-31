@@ -16,10 +16,10 @@ import "firebase/auth";
 
 function SearchAppBar(props) {
     const { classes } = props;
-    const userInfo = props;
+    const userInfo = firebase.auth.currentUser;
     // Check login status to modify app bar
     function loginStatus() {
-        if (userInfo.user == null)
+        if (userInfo == null)
             return (
                 <div>
                     <Button variant="contained" color="inherit">
@@ -38,7 +38,7 @@ function SearchAppBar(props) {
                         onClick={e => {
                             firebase.auth.signOut();
                         }}
-                        to="/"
+                        to="/home"
                     >
                         Logout
                     </Link>
@@ -88,16 +88,7 @@ function SearchAppBar(props) {
                             }}
                         />
                     </div>
-                    <div>
-                        <Button variant="contained" color="inherit">
-                            <Link
-                                to="/login"
-                                style={{ textDecoration: "none" }}
-                            >
-                                Login
-                            </Link>
-                        </Button>
-                    </div>
+                    <div>{loginStatus()}</div>
                     <div>
                         <Button
                             variant="contained"

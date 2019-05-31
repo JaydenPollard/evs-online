@@ -12,13 +12,13 @@ import {
 } from "@material-ui/core";
 import moment from "moment";
 import CssBaseline from "@material-ui/core/CssBaseline";
-// import Image from "../../assests/popcorn-login-background.jpg";
+
 import { TextValidator, ValidatorForm } from "react-material-ui-form-validator";
 import * as firebase from "firebase";
 import "firebase/auth";
 import "firebase/database";
+import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import { loginPageLayoutStyles } from "./LoginPageLayoutStyles";
-// import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 
 function LoginPage(props) {
     const { classes } = props;
@@ -57,14 +57,12 @@ function LoginPage(props) {
             <main className={classes.main}>
                 <CssBaseline />
                 <Paper className={classes.paper}>
-                    <Avatar className={classes.avatar} />
+                    <Avatar className={classes.avatar}>
+                        <LockOutlinedIcon />
+                    </Avatar>
                     <Typography component="h1" variant="h5">
                         Log in
                     </Typography>
-                    {/* <form
-                        className={classes.form}
-                        onSubmit={e => e.preventDefault() && false}
-                    > */}
                     <ValidatorForm onSubmit={login}>
                         <FormControl margin="normal" required fullWidth>
                             <Typography> Enter your email </Typography>
@@ -102,7 +100,6 @@ function LoginPage(props) {
 
                         <Typography> {err} </Typography>
                     </ValidatorForm>
-                    {/* </form> */}
                 </Paper>
             </main>
         </div>

@@ -9,12 +9,7 @@ const PublicRoutes = ({ user, component: Comp, ...rest }) => {
             {...rest}
             component={props => {
                 // will be fixed to create public and private route
-                // if (user)
-                //     return (
-                //         <Redirect to="/home" /> )
-                // else
-                // return (
-                //     <Comp {...props} user={user} />)
+
                 return <Comp {...props} user={user} />;
             }}
         />

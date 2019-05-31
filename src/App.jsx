@@ -14,8 +14,6 @@ import SearchOrders from "./layouts/OrderLayout/SearchOrders/SearchOrders";
 import NewOrder from "./layouts/OrderLayout/NewOrder/NewOrder";
 import AccessMan from "./layouts/AccessManLayout/accessManLayout";
 import ViewMoviesLayout from "./layouts/MovieLayout/ViewMoviesLayout/ViewMoviesLayout";
-import PublicRoutes from "./components/Route/PublicApp";
-import PrivateRoutes from "./components/Route/PrivateApp";
 import MovieContentProcessingLayout from "./layouts/MovieLayout/MovieContentProcessingLayout/MovieContentProcessingLayout";
 import "firebase/auth";
 

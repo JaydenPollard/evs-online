@@ -3,11 +3,11 @@ import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import Grid from "@material-ui/core/Grid";
 import { Button, TextField, Typography } from "@material-ui/core";
-// import { makeStyles } from "@material-ui/core/styles";
 import DateFnsUtils from "@date-io/date-fns";
 import { MuiPickersUtilsProvider } from "material-ui-pickers";
 import * as firebase from "firebase/app";
 import "firebase/database";
+import { Link } from "react-router-dom";
 import "firebase/auth";
 import SearchedBlo from "../../components/LogComponent/SearchedTable";
 import HistoryBlo from "../../components/LogComponent/Generaltable";
@@ -15,9 +15,7 @@ import AppBar from "../../components/AppBar/AppBar";
 
 function AccessMan(props) {
     const userLogedInID = props;
-    const [date, setDate] = useState([]);
-    const [time, setTime] = useState([]);
-    const [logKey, setLogKey] = useState([]);
+
     const [searchedDate, setSearchedDate] = useState();
     const [shAll, setShAll] = useState(true);
 
@@ -72,10 +70,6 @@ function AccessMan(props) {
                     dateRecord.push(temp[k].date);
                     timeRecord.push(temp[k].time);
                 }
-
-                setDate(dateRecord);
-                setLogKey(tempLogKey);
-                setTime(timeRecord);
             });
     }, []);
     return (
@@ -129,14 +123,9 @@ function AccessMan(props) {
                     {" "}
                     Show all{" "}
                 </Button>
-                <Button
-                    type="submit"
-                    onClick={e => {
-                        props.history.push("/home");
-                    }}
-                >
+                <Button type="submit">
                     {" "}
-                    Home{" "}
+                    <Link to="/home"> Home </Link>
                 </Button>
             </div>
         </div>
